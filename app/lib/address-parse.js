@@ -37,13 +37,12 @@ const areas = addressJson.reduce((per, cur) => {
 }, [])
 
 
-let provinceString = JSON.stringify(provinces)
-let cityString = JSON.stringify(cities)
-let areaString = JSON.stringify(areas)
+const provinceString = JSON.stringify(provinces)
+const cityString = JSON.stringify(cities)
+const areaString = JSON.stringify(areas)
 
 log(provinces)
 log(cities)
-log(areas)
 
 log(provinces.length + cities.length + areas.length)
 
@@ -55,13 +54,11 @@ log(provinces.length + cities.length + areas.length)
  * @constructor
  */
 const AddressParse = (address, options) => {
-    const { type = 0, extraGovData = {}, textFilter = [], nameMaxLength = 4 } = typeof options === 'object' ? options : (typeof options === 'number' ? { type: options } : {})
+    const { type = 0, textFilter = [], nameMaxLength = 4 } = typeof options === 'object' ? options : (typeof options === 'number' ? { type: options } : {})
 
     if (!address) {
         return {}
     }
-
-    setExtraGovData(extraGovData);
 
     const parseResult = {
         phone: '',
@@ -160,28 +157,6 @@ const AddressParse = (address, options) => {
         area: (area && area.name) || '',
         detail: (detail && detail.length > 0 && detail.join('')) || ''
     })
-}
-
-/**
- * 设置额外的国家地理信息
- * @param extraGovData
- */
-const setExtraGovData = (extraGovData) => {
-    const { province, city, area } = extraGovData;
-    if (province) {
-        provinces.push(...province);
-        provinceString = JSON.stringify(provinces);
-    }
-
-    if (province) {
-        cities.push(...city);
-        cityString = JSON.stringify(cities);
-    }
-
-    if (province) {
-        areas.push(...area);
-        areaString = JSON.stringify(areas);
-    }
 }
 
 /**
@@ -332,14 +307,17 @@ const parseRegion = (fragment, hasParseResult) => {
             let replaceName = ''
             for (let i = name.length; i > 1; i--) {
                 const temp = name.substring(0, i)
+                // 找到省份信息
                 if (fragment.indexOf(temp) === 0) {
+                    console.log("省份关键字:" + temp)
                     replaceName = temp
                     break
                 }
             }
             if (replaceName) {
                 province.push(tempProvince)
-                fragment = fragment.replace(new RegExp(replaceName, 'g'), '')
+                fragment = replaceArea(fragment,name, replaceName)
+                console.log("去除省份后:"+ fragment)
                 break
             }
         }
@@ -358,13 +336,15 @@ const parseRegion = (fragment, hasParseResult) => {
                     for (let i = name.length; i > 1; i--) {
                         const temp = name.substring(0, i)
                         if (fragment.indexOf(temp) === 0) {
+                            console.log("市信息关键字:" + temp)
                             replaceName = temp
                             break
                         }
                     }
                     if (replaceName) {
                         city.push(tempCity)
-                        fragment = fragment.replace(new RegExp(replaceName, 'g'), '')
+                        fragment = replaceArea(fragment,replaceName, name)
+                        console.log("去除市区后:"+ fragment)
                         break
                     }
                 }
@@ -408,7 +388,7 @@ const parseRegion = (fragment, hasParseResult) => {
                     area.push(tempArea)
                     !currentCity && city.push(cities.find(item => item.code === cityCode))
                     !currentProvince && province.push(provinces.find(item => item.code === provinceCode))
-                    fragment = fragment.replace(replaceName, '')
+                    fragment = replaceArea(fragment,replaceName,name)
                     break
                 }
             }
@@ -525,15 +505,27 @@ const cleanAddress = (address, textFilter = []) => {
 
     // 自定义去除关键字，可自行添加
     const search = [
+        '建议使用官方推荐',
+        '上门取件服务',
         '详细地址',
         '收货地址',
         '收件地址',
+        '收件电话',
+        '寄件电话',
+        '寄件地址',
+        '退货地址',
+        '收件地址',
         '地址',
         '所在地区',
+        '地区',
         '姓名',
+        '发件人',
+        '寄件人',
         '收货人',
         '收件人',
         '联系人',
+        '寄回',
+        '寄',
         '收',
         '邮编',
         '联系电话',
@@ -555,6 +547,21 @@ const cleanAddress = (address, textFilter = []) => {
     address = address.replace(/ {2,}/g, ' ')
 
     return address
+}
+
+/**
+ * 省市区清洗
+ * 去除匹配到的省市区全名和短名
+ * @param fragment
+ * @param shortName
+ * @param fullName
+ */
+const replaceArea = (fragment, shortName, fullName) => {
+    return  fragment
+        // 从字符串里面去除找到的省/市全名
+        .replace(new RegExp(fullName,'g'), '')
+        // 从字符串里面去除第一个找到的关键字
+        .replace(new RegExp(shortName), '')
 }
 
 export default AddressParse
