@@ -144,7 +144,7 @@ const AddressParse = (address, options) => {
         }
     }
 
-    log(JSON.stringify(parseResult))
+    log("解析后结果:",JSON.stringify(parseResult))
 
     const provinceName = province && province.name
     let cityName = city && city.name
@@ -322,6 +322,8 @@ const parseRegion = (fragment, hasParseResult) => {
             }
         }
     }
+
+    console.log("开始查找市;省:" + JSON.stringify(province))
     if (hasParseResult.city[0]) {
         city = hasParseResult.city
     } else {
@@ -350,6 +352,7 @@ const parseRegion = (fragment, hasParseResult) => {
                 }
             } else {
                 // 没有省，市不可能重名
+                console.log("未找到省份信息")
                 for (let i = name.length; i > 1; i--) {
                     const replaceName = name.substring(0, i)
                     if (fragment.indexOf(replaceName) === 0) {
@@ -366,16 +369,21 @@ const parseRegion = (fragment, hasParseResult) => {
         }
     }
 
+    if(fragment.startsWith("县")){
+        fragment = fragment.replace(new RegExp("县"),'')
+    }
+    console.log("匹配区县;开始查找区县;省:"+ JSON.stringify(province)+ ",市:" + JSON.stringify(city))
+    console.log(fragment)
     // 从区市县开始查找
     for (const tempArea of areas) {
         const {name, provinceCode, cityCode} = tempArea
         const currentProvince = province[0]
         const currentCity = city[0]
-
         // 有省或者市
         if (currentProvince || currentCity) {
             if ((currentProvince && currentProvince.code === provinceCode)
-                || (currentCity && currentCity.code) === cityCode) {
+                || (currentCity && currentCity.code === cityCode)) {
+                console.log("匹配区县;有省或者市;currentProvince:" + JSON.stringify(currentProvince) + "currentCity:" +JSON.stringify(currentCity))
                 let replaceName = ''
                 for (let i = name.length; i > 1; i--) {
                     const temp = name.substring(0, i)
@@ -415,6 +423,7 @@ const parseRegion = (fragment, hasParseResult) => {
         detail.push(fragment)
     }
 
+    console.log("匹配结果:",province,city,area,detail)
     return {
         province,
         city,
