@@ -1,11 +1,6 @@
 import zhCnNames from './names'
-import addressJson from './provinceList'
+import addressJson from './data/area.json'
 
-const log = (...infos) => {
-    if (process.env.NODE_ENV !== 'production') {
-        console.log(...infos)
-    }
-}
 const filterCity = ['行政区划']
 addressJson.forEach(item => {
     if (item.children) {
@@ -18,21 +13,28 @@ addressJson.forEach(item => {
         })
     }
 })
-log('完整的数据：', addressJson);
+console.log('完整的数据：', addressJson);
 const provinces = addressJson.reduce((per, cur) => {
     const {children, ...others} = cur
     return per.concat(others)
 }, [])
 
 const cities = addressJson.reduce((per, cur) => {
-    return per.concat(cur.children ? cur.children.map(({children, ...others}) => ({...others, provinceCode: cur.code})) : [])
+    return per.concat(cur.children ? cur.children.map(({children, ...others}) => ({
+        ...others,
+        provinceCode: cur.code
+    })) : [])
 }, [])
 
 const areas = addressJson.reduce((per, cur) => {
     const provinceCode = cur.code
     return per.concat(cur.children ? cur.children.reduce((p, c) => {
         const cityCode = c.code
-        return p.concat(c.children ? c.children.map(({children, ...others}) => ({...others, cityCode, provinceCode,})) : [])
+        return p.concat(c.children ? c.children.map(({children, ...others}) => ({
+            ...others,
+            cityCode,
+            provinceCode,
+        })) : [])
     }, []) : [])
 }, [])
 
@@ -41,10 +43,10 @@ const provinceString = JSON.stringify(provinces)
 const cityString = JSON.stringify(cities)
 const areaString = JSON.stringify(areas)
 
-log(provinces)
-log(cities)
+console.log(provinces)
+console.log(cities)
 
-log(provinces.length + cities.length + areas.length)
+console.log(provinces.length + cities.length + areas.length)
 
 /**
  * 需要解析的地址，type是解析的方式，默认是正则匹配
@@ -54,7 +56,11 @@ log(provinces.length + cities.length + areas.length)
  * @constructor
  */
 const AddressParse = (address, options) => {
-    const { type = 0, textFilter = [], nameMaxLength = 4 } = typeof options === 'object' ? options : (typeof options === 'number' ? { type: options } : {})
+    const {
+        type = 0,
+        textFilter = [],
+        nameMaxLength = 4
+    } = typeof options === 'object' ? options : (typeof options === 'number' ? {type: options} : {})
 
     if (!address) {
         return {}
@@ -69,24 +75,24 @@ const AddressParse = (address, options) => {
         name: '',
     }
     address = cleanAddress(address, textFilter)
-    log('清洗后address --->', address)
+    console.log('清洗后address --->', address)
 
     // 识别手机号
     const resultPhone = filterPhone(address)
     address = resultPhone.address
     parseResult.phone = resultPhone.phone
-    log('获取电话的结果 --->', address)
+    console.log('获取电话的结果 --->', address)
 
     const resultCode = filterPostalCode(address)
     address = resultCode.address
     parseResult.postalCode = resultCode.postalCode
-    log('获取邮编的结果 --->', address)
+    console.log('获取邮编的结果 --->', address)
 
     // 地址分割，排序
     let splitAddress = address.split(' ').filter(item => item).map(item => item.trim())
     // 这里先不排序了，排序可能出现问题，比如：北京 北京市
     splitAddress = sortAddress(splitAddress)
-    log('分割地址 --->', splitAddress)
+    console.log('分割地址 --->', splitAddress)
 
     const d1 = new Date().getTime()
 
@@ -108,11 +114,11 @@ const AddressParse = (address, options) => {
         }
     })
 
-    log('--->', splitAddress)
+    console.log('--->', splitAddress)
 
     const d2 = new Date().getTime()
 
-    log('解析耗时--->', d2 - d1)
+    console.log('解析耗时--->', d2 - d1)
 
     const province = parseResult.province[0]
     const city = parseResult.city[0]
@@ -121,13 +127,13 @@ const AddressParse = (address, options) => {
 
     detail = detail.map(item => item.replace(new RegExp(`${province && province.name}|${city && city.name}|${area && area.name}`, 'g'), ''))
     detail = Array.from(new Set(detail))
-    log('去重后--->', detail)
+    console.log('去重后--->', detail)
 
     // 地址都解析完了，姓名应该是在详细地址里面
     if (detail && detail.length > 0) {
         const copyDetail = [...detail].filter(item => !!item)
         copyDetail.sort((a, b) => a.length - b.length)
-        log('copyDetail --->', copyDetail)
+        console.log('copyDetail --->', copyDetail)
         // 排序后从最短的开始找名字，没找到的话就看第一个是不是咯
         const index = copyDetail.findIndex(item => judgeFragmentIsName(item, nameMaxLength))
         let name = ''
@@ -144,17 +150,23 @@ const AddressParse = (address, options) => {
         }
     }
 
-    log("解析后结果:",JSON.stringify(parseResult))
+    console.log("解析后结果:", JSON.stringify(parseResult))
 
     const provinceName = province && province.name
+    const provinceCode = province && province.code
     let cityName = city && city.name
-    if (~['市辖区', '区', '县', '镇'].indexOf(cityName)) {
-        cityName = provinceName
-    }
+    const cityCode = city && city.code
+    const areaCode = area && area.code
+    // if (~['市辖区', '区', '县', '镇'].indexOf(cityName)) {
+    //     cityName = provinceName
+    // }
     return Object.assign(parseResult, {
         province: provinceName || '',
+        provinceCode: provinceCode || '',
         city: cityName || '',
+        cityCode: cityCode || '',
         area: (area && area.name) || '',
+        areaCode: areaCode || '',
         detail: (detail && detail.length > 0 && detail.join('')) || ''
     })
 }
@@ -186,7 +198,7 @@ const sortAddress = (splitAddress) => {
  * @returns {{area: (Array|*|string), province: (Array|*|string), city: (Array|*|string|string), detail: (*|Array)}}
  */
 const parseRegionWithRegexp = (fragment, hasParseResult) => {
-    log('----- 当前使用正则匹配模式 -----')
+    console.log('----- 当前使用正则匹配模式 -----')
     let province = hasParseResult.province || [], city = hasParseResult.city || [], area = hasParseResult.area || [],
         detail = []
 
@@ -295,7 +307,7 @@ const parseRegionWithRegexp = (fragment, hasParseResult) => {
  * @returns {{area: Array, province: Array, city: Array, detail: Array}}
  */
 const parseRegion = (fragment, hasParseResult) => {
-    log('----- 当前使用树查找模式 -----')
+    console.log('----- 当前使用树查找模式 -----')
     let province = [], city = [], area = [], detail = []
 
     if (hasParseResult.province[0]) {
@@ -316,8 +328,8 @@ const parseRegion = (fragment, hasParseResult) => {
             }
             if (replaceName) {
                 province.push(tempProvince)
-                fragment = replaceArea(fragment,name, replaceName)
-                console.log("去除省份后:"+ fragment)
+                fragment = replaceArea(fragment, name, replaceName)
+                console.log("去除省份后:" + fragment)
                 break
             }
         }
@@ -335,7 +347,7 @@ const parseRegion = (fragment, hasParseResult) => {
             if (currentProvince) {
                 if (currentProvince.code === provinceCode) {
                     let replaceName = ''
-                    for (let i = name.length; i > 1; i--) {
+                    for (let i = name.length; i >= 1; i--) {
                         const temp = name.substring(0, i)
                         if (fragment.indexOf(temp) === 0) {
                             console.log("市信息关键字:" + temp)
@@ -345,8 +357,8 @@ const parseRegion = (fragment, hasParseResult) => {
                     }
                     if (replaceName) {
                         city.push(tempCity)
-                        fragment = replaceArea(fragment,replaceName, name)
-                        console.log("去除市区后:"+ fragment)
+                        fragment = replaceArea(fragment, replaceName, name)
+                        console.log("去除市区后:" + fragment)
                         break
                     }
                 }
@@ -369,10 +381,7 @@ const parseRegion = (fragment, hasParseResult) => {
         }
     }
 
-    if(fragment.startsWith("县")){
-        fragment = fragment.replace(new RegExp("县"),'')
-    }
-    console.log("匹配区县;开始查找区县;省:"+ JSON.stringify(province)+ ",市:" + JSON.stringify(city))
+    console.log("匹配区县;开始查找区县;省:" + JSON.stringify(province) + ",市:" + JSON.stringify(city))
     console.log(fragment)
     // 从区市县开始查找
     for (const tempArea of areas) {
@@ -383,7 +392,7 @@ const parseRegion = (fragment, hasParseResult) => {
         if (currentProvince || currentCity) {
             if ((currentProvince && currentProvince.code === provinceCode)
                 || (currentCity && currentCity.code === cityCode)) {
-                console.log("匹配区县;有省或者市;currentProvince:" + JSON.stringify(currentProvince) + "currentCity:" +JSON.stringify(currentCity))
+                console.log("匹配区县;有省或者市;currentProvince:" + JSON.stringify(currentProvince) + "currentCity:" + JSON.stringify(currentCity))
                 let replaceName = ''
                 for (let i = name.length; i > 1; i--) {
                     const temp = name.substring(0, i)
@@ -396,7 +405,7 @@ const parseRegion = (fragment, hasParseResult) => {
                     area.push(tempArea)
                     !currentCity && city.push(cities.find(item => item.code === cityCode))
                     !currentProvince && province.push(provinces.find(item => item.code === provinceCode))
-                    fragment = replaceArea(fragment,replaceName,name)
+                    fragment = replaceArea(fragment, replaceName, name)
                     break
                 }
             }
@@ -423,7 +432,7 @@ const parseRegion = (fragment, hasParseResult) => {
         detail.push(fragment)
     }
 
-    console.log("匹配结果:",province,city,area,detail)
+    console.log("匹配结果:", province, city, area, detail)
     return {
         province,
         city,
@@ -443,7 +452,7 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
     }
 
     // 如果包含下列称呼，则认为是名字，可自行添加
-    const nameCall = ['先生', '小姐', '同志', '哥哥', '姐姐', '妹妹', '弟弟', '妈妈', '爸爸', '爷爷', '奶奶', '姑姑', '舅舅']
+    const nameCall = ['先生', '小姐', '女士']
     if (nameCall.find(item => ~fragment.indexOf(item))) {
         return fragment
     }
@@ -566,9 +575,9 @@ const cleanAddress = (address, textFilter = []) => {
  * @param fullName
  */
 const replaceArea = (fragment, shortName, fullName) => {
-    return  fragment
+    return fragment
         // 从字符串里面去除找到的省/市全名
-        .replace(new RegExp(fullName,'g'), '')
+        .replace(new RegExp(fullName, 'g'), '')
         // 从字符串里面去除第一个找到的关键字
         .replace(new RegExp(shortName), '')
 }
