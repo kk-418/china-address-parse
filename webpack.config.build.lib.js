@@ -1,6 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
 
 const dirApp = path.join(__dirname, 'app');
 
@@ -36,4 +38,23 @@ module.exports = {
             title: 'zh-address-parse'
         })
     ],
+
+    optimization: {
+        chunkIds: 'total-size',
+        mangleExports: 'size',
+        minimizer: [
+            new UglifyJsPlugin({
+                uglifyOptions: {
+                    extractComments: false,
+                    comments: false,
+                    warnings: false,
+                    parse: {},
+                    compress: {
+                        drop_console: true,
+                    },
+                    ie8: false,
+                },
+            }
+        )],
+    },
 };
