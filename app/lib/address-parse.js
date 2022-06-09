@@ -206,10 +206,13 @@ const parseRegionWithRegexp = (fragment, hasParseResult) => {
     if (province.length === 0) {
         for (let i = 1; i < fragment.length; i++) {
             const str = fragment.substring(0, i + 1)
-            const regexProvince = new RegExp(`\{\"code\":\"[0-9]{1,6}\",\"name\":\"${str}[\u4E00-\u9FA5]*?\"}`, 'g')
+            // [\u4E00-\u9FA5] 表示中文
+            const regexProvince = new RegExp(`\{\"code\":[0-9]{6},\"name\":\"${str}[\u4E00-\u9FA5]*?\"}`, 'g')
             const matchProvince = provinceString.match(regexProvince)
             if (matchProvince) {
                 const provinceObj = JSON.parse(matchProvince[0])
+                console.log("匹配到省:"+ JSON.stringify(provinceObj))
+                // 找到字符串中与省名称相比的最长匹配字符串
                 if (matchProvince.length === 1) {
                     province = []
                     matchStr = str
@@ -221,15 +224,16 @@ const parseRegionWithRegexp = (fragment, hasParseResult) => {
         }
 
         if (province[0]) {
-            fragment = fragment.replace(new RegExp(matchStr, 'g'), '')
+            fragment = replaceArea(fragment,matchStr,province[0].name)
         }
 
     }
 
     if (city.length === 0) {
-        for (let i = 1; i < fragment.length; i++) {
+        for (let i = 0; i < fragment.length; i++) {
             const str = fragment.substring(0, i + 1)
-            const regexCity = new RegExp(`\{\"code\":\"[0-9]{1,6}\",\"name\":\"${str}[\u4E00-\u9FA5]*?\",\"provinceCode\":\"${province[0] ? `${province[0].code}` : '[0-9]{1,6}'}\"\}`, 'g')
+            console.log("市匹配字符串:"+str)
+            const regexCity = new RegExp(`\{\"code\":[0-9]{6},\"name\":\"${str}[\u4E00-\u9FA5]*?\",\"provinceCode\":${province[0] ? `${province[0].code}` : '[0-9]{6}'}\}`, 'g')
             const matchCity = cityString.match(regexCity)
             if (matchCity) {
                 const cityObj = JSON.parse(matchCity[0])
@@ -242,11 +246,12 @@ const parseRegionWithRegexp = (fragment, hasParseResult) => {
                 break
             }
         }
+        // 如果匹配到了市, 把市的对应省份加到province里面
         if (city[0]) {
             const {provinceCode} = city[0]
-            fragment = fragment.replace(new RegExp(matchStr, 'g'), '')
+            fragment = replaceArea(fragment, matchStr, city[0].name)
             if (province.length === 0) {
-                const regexProvince = new RegExp(`\{\"code\":\"${provinceCode}\",\"name\":\"[\u4E00-\u9FA5]+?\"}`, 'g')
+                const regexProvince = new RegExp(`\{\"code\":${provinceCode},\"name\":\"[\u4E00-\u9FA5]+?\"}`, 'g')
                 const matchProvince = provinceString.match(regexProvince)
                 province.push(JSON.parse(matchProvince[0]))
             }
@@ -257,7 +262,7 @@ const parseRegionWithRegexp = (fragment, hasParseResult) => {
     if (area.length === 0) {
         for (let i = 1; i < fragment.length; i++) {
             const str = fragment.substring(0, i + 1)
-            const regexArea = new RegExp(`\{\"code\":\"[0-9]{1,9}\",\"name\":\"${str}[\u4E00-\u9FA5]*?\",\"cityCode\":\"${city[0] ? city[0].code : '[0-9]{1,6}'}\",\"provinceCode\":\"${province[0] ? `${province[0].code}` : '[0-9]{1,6}'}\"\}`, 'g')
+            const regexArea = new RegExp(`\{\"code\":[0-9]{6},\"name\":\"${str}[\u4E00-\u9FA5]*?\",\"cityCode\":${city[0] ? city[0].code : '[0-9]{6}'},\"provinceCode\":${province[0] ? `${province[0].code}` : '[0-9]{6}'}\}`, 'g')
             const matchArea = areaString.match(regexArea)
             if (matchArea) {
                 const areaObj = JSON.parse(matchArea[0])
@@ -272,14 +277,14 @@ const parseRegionWithRegexp = (fragment, hasParseResult) => {
         }
         if (area[0]) {
             const {provinceCode, cityCode} = area[0]
-            fragment = fragment.replace(matchStr, '')
+            fragment = replaceArea(fragment,matchStr,area[0].name)
             if (province.length === 0) {
-                const regexProvince = new RegExp(`\{\"code\":\"${provinceCode}\",\"name\":\"[\u4E00-\u9FA5]+?\"}`, 'g')
+                const regexProvince = new RegExp(`\{\"code\":${provinceCode},\"name\":\"[\u4E00-\u9FA5]+?\"}`, 'g')
                 const matchProvince = provinceString.match(regexProvince)
                 province.push(JSON.parse(matchProvince[0]))
             }
             if (city.length === 0) {
-                const regexCity = new RegExp(`\{\"code\":\"${cityCode}\",\"name\":\"[\u4E00-\u9FA5]+?\",\"provinceCode\":\"${provinceCode}\"\}`, 'g')
+                const regexCity = new RegExp(`\{\"code\":${cityCode},\"name\":\"[\u4E00-\u9FA5]+?\",\"provinceCode\":${provinceCode}\}`, 'g')
                 const matchCity = cityString.match(regexCity)
                 city.push(JSON.parse(matchCity[0]))
             }
@@ -365,6 +370,7 @@ const parseRegion = (fragment, hasParseResult) => {
             } else {
                 // 没有省，市不可能重名
                 console.log("未找到省份信息")
+                // 市最少可能有一个字,如:县
                 for (let i = name.length; i > 1; i--) {
                     const replaceName = name.substring(0, i)
                     if (fragment.indexOf(replaceName) === 0) {
@@ -444,6 +450,7 @@ const parseRegion = (fragment, hasParseResult) => {
 /**
  * 判断是否是名字
  * @param fragment
+ * @param nameMaxLength 名字的最大长度
  * @returns {string}
  */
 const judgeFragmentIsName = (fragment, nameMaxLength) => {
@@ -551,14 +558,12 @@ const cleanAddress = (address, textFilter = []) => {
         '联系人手机号码',
         '手机号码',
         '手机号',
-        '自治区直辖县级行政区划',
-        '省直辖县级行政区划',
     ].concat(textFilter)
     search.forEach(str => {
         address = address.replace(new RegExp(str, 'g'), ' ')
     })
 
-    const pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\]\.<>/?~！@#￥……&*（）——|{}【】‘；：”“’。，、？]", 'g')
+    const pattern = new RegExp("[`~!@#$^&*()=|{}':;',\.<>/?~！@#￥……&*（）——|{}【】‘；：”“’。，、？]", 'g')
     address = address.replace(pattern, ' ')
 
     // 多个空格replace为一个
