@@ -1,21 +1,9 @@
 import zhCnNames from './names.json'
 import addressJson from './data/area.json'
 
-const filterCity = ['行政区划']
 
 const singleWordCities =['县']
 
-addressJson.forEach(item => {
-    if (item.children) {
-        item.children.forEach((city, cityIndex) => {
-            const index = ~filterCity.findIndex(filter => ~city.name.indexOf(filter))
-            if (index) {
-                item.children = item.children.concat(city.children || [])
-                item.children.splice(cityIndex, 1)
-            }
-        })
-    }
-})
 // console.log('完整的数据：', addressJson);
 const provinces = addressJson.reduce((per, cur) => {
     const {children, ...others} = cur
