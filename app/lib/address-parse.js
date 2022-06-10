@@ -1,7 +1,10 @@
-import zhCnNames from './names'
+import zhCnNames from './names.json'
 import addressJson from './data/area.json'
 
 const filterCity = ['行政区划']
+
+const singleWordCities =['县']
+
 addressJson.forEach(item => {
     if (item.children) {
         item.children.forEach((city, cityIndex) => {
@@ -13,7 +16,7 @@ addressJson.forEach(item => {
         })
     }
 })
-console.log('完整的数据：', addressJson);
+// console.log('完整的数据：', addressJson);
 const provinces = addressJson.reduce((per, cur) => {
     const {children, ...others} = cur
     return per.concat(others)
@@ -43,22 +46,23 @@ const provinceString = JSON.stringify(provinces)
 const cityString = JSON.stringify(cities)
 const areaString = JSON.stringify(areas)
 
-console.log(provinces)
-console.log(cities)
-
-console.log(provinces.length + cities.length + areas.length)
+// console.log(provinces)
+// console.log(cities)
+//
+// console.log(provinces.length + cities.length + areas.length)
 
 /**
  * 需要解析的地址，type是解析的方式，默认是正则匹配
  * @param address
  * @param options?：type： 0:正则，1：树查找, textFilter： 清洗的字段
- * @returns {{}|({area: Array, province: Array, phone: string, city: Array, name: string, detail: Array} & {area: (*|string), province: (*|string), city: (*|string), detail: (Array|boolean|string|string)})}
+ * @returns {{}|({area: Array, province: Array, telNumber: string, city: Array, name: string, detail: Array} & {area: (*|string), province: (*|string), city: (*|string), detail: (Array|boolean|string|string)})}
  * @constructor
  */
 const AddressParse = (address, options) => {
     const {
         type = 0,
         textFilter = [],
+        // 最大为10,因为有些地方会带订单尾号;如:张小小[2568] 这种
         nameMaxLength = 4
     } = typeof options === 'object' ? options : (typeof options === 'number' ? {type: options} : {})
 
@@ -67,7 +71,7 @@ const AddressParse = (address, options) => {
     }
 
     const parseResult = {
-        phone: '',
+        telNumber: '',
         province: [],
         city: [],
         area: [],
@@ -77,16 +81,19 @@ const AddressParse = (address, options) => {
     address = cleanAddress(address, textFilter)
     console.log('清洗后address --->', address)
 
-    // 识别手机号
-    const resultPhone = filterPhone(address)
-    address = resultPhone.address
-    parseResult.phone = resultPhone.phone
+    // 识别电话
+    const resultTelNumber = filterTelNumber(address)
+    address = resultTelNumber.address
+    parseResult.telNumber = resultTelNumber.telNumber
     console.log('获取电话的结果 --->', address)
 
+    // 识别邮编
     const resultCode = filterPostalCode(address)
     address = resultCode.address
     parseResult.postalCode = resultCode.postalCode
     console.log('获取邮编的结果 --->', address)
+
+    // 识别名字
 
     // 地址分割，排序
     let splitAddress = address.split(' ').filter(item => item).map(item => item.trim())
@@ -129,25 +136,54 @@ const AddressParse = (address, options) => {
     detail = Array.from(new Set(detail))
     console.log('去重后--->', detail)
 
-    // 地址都解析完了，姓名应该是在详细地址里面
-    if (detail && detail.length > 0) {
-        const copyDetail = [...detail].filter(item => !!item)
-        copyDetail.sort((a, b) => a.length - b.length)
-        console.log('copyDetail --->', copyDetail)
-        // 排序后从最短的开始找名字，没找到的话就看第一个是不是咯
-        const index = copyDetail.findIndex(item => judgeFragmentIsName(item, nameMaxLength))
-        let name = ''
-        if (~index) {
-            name = copyDetail[index]
-        } else if (copyDetail[0].length <= nameMaxLength && /[\u4E00-\u9FA5]/.test(copyDetail[0])) {
-            name = copyDetail[0]
+    // 地址都解析完了，从剩余字符串数组里面找姓名
+    if(detail){
+        // 只剩最后一个字符串了,姓名应该是在详细地址里面
+        if(detail.length === 1 && detail[0].length > nameMaxLength){
+            let lastNameIndexs = []
+            const addressDetail = detail[0]
+            console.log("匹配名字;只剩最后一个字符串;待匹配字符串:" + addressDetail)
+            for(const lastName of zhCnNames){
+                // 找到最短的匹配百家姓的名字
+                const lastIndex = addressDetail.lastIndexOf(lastName);
+                if(lastIndex !== -1){
+                    const regexNameWithOrder = new RegExp(`.*${lastName}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
+                    if(addressDetail.length - lastIndex <= 4 || addressDetail.match(regexNameWithOrder)){
+                        lastNameIndexs.push(lastIndex)
+                    }
+                }
+            }
+
+            if(lastNameIndexs.length > 0){
+                // 从lastIndex大到小排序
+                lastNameIndexs.sort(function(a,b){return b-a})
+                // 取最短的
+                parseResult.name = addressDetail.substring(lastNameIndexs[0], addressDetail.length)
+                // 从字符串里面删掉名字
+                detail[0] = addressDetail.substring(0, lastNameIndexs[0])
+            }
+
+
+        }else if(detail.length > 1) {
+            let name = ''
+            const copyDetail = [...detail].filter(item => !!item)
+            copyDetail.sort((a, b) => a.length - b.length)
+            console.log('copyDetail --->', copyDetail)
+            // 排序后从最短的开始找名字，没找到的话就看第一个是不是咯
+            const index = copyDetail.findIndex(item => judgeFragmentIsName(item, nameMaxLength))
+            if (~index) {
+                console.log("匹配到名字:" + index)
+                name = copyDetail[index]
+            } else if (copyDetail[0].length <= nameMaxLength && /[\u4E00-\u9FA5]/.test(copyDetail[0])) {
+                name = copyDetail[0]
+            }
+            // 找到了名字就从详细地址里面删除它
+            if (name) {
+                parseResult.name = name
+                detail.splice(detail.findIndex(item => item === name), 1)
+            }
         }
 
-        // 找到了名字就从详细地址里面删除它
-        if (name) {
-            parseResult.name = name
-            detail.splice(detail.findIndex(item => item === name), 1)
-        }
     }
 
     console.log("解析后结果:", JSON.stringify(parseResult))
@@ -203,6 +239,7 @@ const parseRegionWithRegexp = (fragment, hasParseResult) => {
         detail = []
 
     let matchStr = ''
+    // 开始匹配省
     if (province.length === 0) {
         for (let i = 1; i < fragment.length; i++) {
             const str = fragment.substring(0, i + 1)
@@ -229,10 +266,11 @@ const parseRegionWithRegexp = (fragment, hasParseResult) => {
 
     }
 
+    // 开始匹配市
     if (city.length === 0) {
-        for (let i = 0; i < fragment.length; i++) {
+        // 找到市区在字符串中的最长匹配,最短两个字
+        for (let i = 1; i < fragment.length; i++) {
             const str = fragment.substring(0, i + 1)
-            console.log("市匹配字符串:"+str)
             const regexCity = new RegExp(`\{\"code\":[0-9]{6},\"name\":\"${str}[\u4E00-\u9FA5]*?\",\"provinceCode\":${province[0] ? `${province[0].code}` : '[0-9]{6}'}\}`, 'g')
             const matchCity = cityString.match(regexCity)
             if (matchCity) {
@@ -255,8 +293,25 @@ const parseRegionWithRegexp = (fragment, hasParseResult) => {
                 const matchProvince = provinceString.match(regexProvince)
                 province.push(JSON.parse(matchProvince[0]))
             }
+            // 没有匹配到市,看看是不是单字符市名
+        } else {
+            for(const singleWordCity of singleWordCities){
+                if(fragment.indexOf(singleWordCity) !== 0){
+                    continue
+                }
+                const regexCity = new RegExp(`\{\"code\":[0-9]{6},\"name\":\"${singleWordCity}[\u4E00-\u9FA5]*?\",\"provinceCode\":${province[0] ? `${province[0].code}` : '[0-9]{6}'}\}`, 'g')
+                const matchCity = cityString.match(regexCity)
+                if (matchCity) {
+                    const cityObj = JSON.parse(matchCity[0])
+                    if (matchCity.length === 1) {
+                        city = []
+                        matchStr = singleWordCity
+                        city.push(cityObj)
+                        fragment = fragment.replace(new RegExp(singleWordCity),'')
+                    }
+                }
+            }
         }
-
     }
 
     if (area.length === 0) {
@@ -352,7 +407,7 @@ const parseRegion = (fragment, hasParseResult) => {
             if (currentProvince) {
                 if (currentProvince.code === provinceCode) {
                     let replaceName = ''
-                    for (let i = name.length; i >= 1; i--) {
+                    for (let i = name.length; i > 1; i--) {
                         const temp = name.substring(0, i)
                         if (fragment.indexOf(temp) === 0) {
                             console.log("市信息关键字:" + temp)
@@ -363,14 +418,20 @@ const parseRegion = (fragment, hasParseResult) => {
                     if (replaceName) {
                         city.push(tempCity)
                         fragment = replaceArea(fragment, replaceName, name)
-                        console.log("去除市区后:" + fragment)
                         break
+                    }
+                    // 未找到市信息,看看是不是市为"县"
+                    for(const singleWordCity of singleWordCities){
+                        if (fragment.indexOf(singleWordCity) === 0) {
+                            console.log("市信息关键字:" + singleWordCity)
+                            fragment = fragment.replace(new RegExp(singleWordCity),'')
+                            break
+                        }
                     }
                 }
             } else {
                 // 没有省，市不可能重名
                 console.log("未找到省份信息")
-                // 市最少可能有一个字,如:县
                 for (let i = name.length; i > 1; i--) {
                     const replaceName = name.substring(0, i)
                     if (fragment.indexOf(replaceName) === 0) {
@@ -380,14 +441,15 @@ const parseRegion = (fragment, hasParseResult) => {
                         break
                     }
                 }
+
                 if (city.length > 0) {
                     break
                 }
             }
         }
     }
-
-    console.log("匹配区县;开始查找区县;省:" + JSON.stringify(province) + ",市:" + JSON.stringify(city))
+    console.log("匹配区县;开始;匹配字符串" + fragment)
+    console.log("匹配区县;查找区县;省:" + JSON.stringify(province) + ",市:" + JSON.stringify(city))
     console.log(fragment)
     // 从区市县开始查找
     for (const tempArea of areas) {
@@ -454,50 +516,76 @@ const parseRegion = (fragment, hasParseResult) => {
  * @returns {string}
  */
 const judgeFragmentIsName = (fragment, nameMaxLength) => {
+    // 如果没有中文
     if (!fragment || !/[\u4E00-\u9FA5]/.test(fragment)) {
         return ''
     }
 
+    // 姓名最大不能超过10
+    if(fragment.length > 10){
+        return ''
+    }
+
     // 如果包含下列称呼，则认为是名字，可自行添加
-    const nameCall = ['先生', '小姐', '女士']
+    const nameCall = ['先生', '小姐', '女士','天猫', '售后']
     if (nameCall.find(item => ~fragment.indexOf(item))) {
         return fragment
     }
 
+    // 包含以下字符判定不是姓名
     const filters = ['街道', '乡镇', '镇', '乡']
     if (~filters.findIndex(item => ~fragment.indexOf(item))) {
         return '';
     }
 
-    // 如果百家姓里面能找到这个姓，并且长度在1-5之间
-    const nameFirst = fragment.substring(0, 1)
-    if (fragment.length <= nameMaxLength && fragment.length > 1 && ~zhCnNames.indexOf(nameFirst)) {
-        return fragment
+    for(const lastName of zhCnNames){
+        // 字符串是否以百家姓开头
+        if(fragment.indexOf(lastName) === 0){
+            // 名字带订单信息 regex
+            const regexNameWithOrder = new RegExp(`${lastName}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
+            if(fragment.length <= nameMaxLength){
+                console.log("匹配名字;字符串以百家姓开头:" + fragment)
+                return fragment;
+            // 名字带订单信息
+            }else  if(fragment.length <= nameMaxLength + 6 && fragment.match(regexNameWithOrder)){
+                console.log("匹配名字;字符串以百家姓开头而且有订单信息:" + fragment)
+                return fragment;
+            }
+        }
     }
 
+    // 百家姓里面没有找到
     return ''
 }
 
 /**
  * 匹配电话
  * @param address
- * @returns {{address: *, phone: string}}
+ * @returns {{address: *, telNumber: string}}
  */
-const filterPhone = (address) => {
-    let phone = ''
+const filterTelNumber = (address) => {
+    let telNumber = ''
     // 整理电话格式
     address = address.replace(/(\d{3})-(\d{4})-(\d{4})/g, '$1$2$3')
     address = address.replace(/(\d{3}) (\d{4}) (\d{4})/g, '$1$2$3')
     address = address.replace(/(\d{4}) \d{4} \d{4}/g, '$1$2$3')
     address = address.replace(/(\d{4})/g, '$1')
 
-    const mobileReg = /(\d{7,12})|(\d{3,4}-\d{6,8})|(86-[1][0-9]{10})|(86[1][0-9]{10})|([1][0-9]{10})/g
-    const mobile = mobileReg.exec(address)
-    if (mobile) {
-        phone = mobile[0]
-        address = address.replace(mobile[0], ' ')
+    const mobileReg = /(86-?1[3-9][0-9]{9})|(1[3-9][0-9]{9})|(0\d{2,3}-?\d{7,8})|((4|8)00[0-9]{7})/g
+    const telNumbers = mobileReg.exec(address)
+    if (telNumbers) {
+        telNumber = telNumbers[0]
+        const phone86Regex = new RegExp("^86-*")
+        // 去除86开头
+        const phone86Match = telNumber.match(phone86Regex)
+        console.log("匹配电话,phone86Match:" + phone86Match)
+        if(phone86Match){
+            telNumber = telNumber.replace(phone86Regex,'')
+            console.log("匹配电话,删除86:" + telNumber)
+        }
+        address = address.replace(telNumbers[0], ' ')
     }
-    return {address, phone}
+    return {address, telNumber}
 }
 
 /**
@@ -530,6 +618,7 @@ const cleanAddress = (address, textFilter = []) => {
 
     // 自定义去除关键字，可自行添加
     const search = [
+        '感谢.*配合',
         '建议使用官方推荐',
         '上门取件服务',
         '详细地址',
@@ -542,7 +631,6 @@ const cleanAddress = (address, textFilter = []) => {
         '收件地址',
         '地址',
         '所在地区',
-        '地区',
         '姓名',
         '发件人',
         '寄件人',
@@ -563,7 +651,8 @@ const cleanAddress = (address, textFilter = []) => {
         address = address.replace(new RegExp(str, 'g'), ' ')
     })
 
-    const pattern = new RegExp("[`~!@#$^&*()=|{}':;',\.<>/?~！@#￥……&*（）——|{}【】‘；：”“’。，、？]", 'g')
+    // 去除特殊字符串
+    const pattern = new RegExp("[`~!@#$^&*()=|{}':;',\.<>/?~！@#￥……&*——|{}【】‘；：”“’。，、？]", 'g')
     address = address.replace(pattern, ' ')
 
     // 多个空格replace为一个

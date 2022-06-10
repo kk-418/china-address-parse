@@ -41,7 +41,6 @@ module.exports = {
 
     optimization: {
         chunkIds: 'total-size',
-        mangleExports: 'size',
         minimizer: [
             new UglifyJsPlugin({
                 uglifyOptions: {
