@@ -499,14 +499,14 @@
     "parsedResult": {
       "telNumber": "13311111111",
       "province": "河南省",
-      "city": "",
-      "area": "",
-      "detail": "省直辖县级行政区划济源市沁园路丹尼斯",
+      "city": "省直辖县级行政区划",
+      "area": "济源市",
+      "detail": "沁园路丹尼斯",
       "name": "刘海江",
       "postalCode": "",
       "provinceCode": 410000,
-      "cityCode": "",
-      "areaCode": ""
+      "cityCode": 419000,
+      "areaCode": 419001
     }
   },
   {
@@ -717,6 +717,21 @@
       "provinceCode": 440000,
       "cityCode": 445200,
       "areaCode": 445281
+    }
+  },
+  {
+    "s": "南宫雪 海南省省直辖县级行政区划东方市龙潭镇龙潭一中新校门13311111111",
+    "parsedResult": {
+      "telNumber": "13311111111",
+      "province": "海南省",
+      "city": "省直辖县级行政区划",
+      "area": "东方市",
+      "detail": "龙潭镇龙潭一中新校门",
+      "name": "南宫雪",
+      "postalCode": "",
+      "provinceCode": 460000,
+      "cityCode": 469000,
+      "areaCode": 469007
     }
   }
 ]
