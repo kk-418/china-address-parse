@@ -644,7 +644,7 @@ const cleanAddress = (address, textFilter = []) => {
     })
 
     // 去除特殊字符串
-    const pattern = new RegExp("[`~!@#$^&*()=|{}':;',\.<>/?~！@#￥……&*——|{}【】‘；：”“’。，、？]", 'g')
+    const pattern = new RegExp("[`~!@#$^&*()=|{}':;',\.<>/?~！@#￥……&*——|{}【】‘；：”“’。，、？☎]", 'g')
     address = address.replace(pattern, ' ')
 
     // 多个空格replace为一个
