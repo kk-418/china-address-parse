@@ -524,13 +524,13 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
     }
 
     // 如果包含下列称呼，则认为是名字，可自行添加
-    const nameCall = ['先生', '小姐', '女士','天猫', '售后','退货组']
+    const nameCall = ['先生', '小姐', '女士','天猫','旗舰店', '售后','退货组']
     if (nameCall.find(item => ~fragment.indexOf(item))) {
         return fragment
     }
 
     // 包含以下字符判定不是姓名
-    const filtersReg = /县|街道|乡镇|镇|乡|村|小区|\d+[号栋楼室]|单元/
+    const filtersReg = /县|街道|乡镇|镇|乡|村|小区|\d+[号栋楼室幢]|单元/
     const filtersMatch = filtersReg.exec(fragment)
     if (filtersMatch) {
         // console.log("匹配名字;filtersMatch:" + filtersMatch)
@@ -549,6 +549,7 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
             }else  if(fragment.length <= nameMaxLength + 6 && fragment.match(regexNameWithOrder)){
                 console.log("匹配名字;字符串以百家姓开头而且有订单信息:" + fragment)
                 return fragment;
+                // 名字带店铺字样
             }
         }
     }
