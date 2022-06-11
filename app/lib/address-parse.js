@@ -530,7 +530,7 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
     }
 
     // 包含以下字符判定不是姓名
-    const filtersReg = /县|街道|乡镇|镇|乡|村|小区|\d+[号栋楼室幢]|单元/
+    const filtersReg = /县|街道|镇|乡|村|小区|公寓|\d+[号栋楼室幢]|单元/
     const filtersMatch = filtersReg.exec(fragment)
     if (filtersMatch) {
         // console.log("匹配名字;filtersMatch:" + filtersMatch)
