@@ -7,7 +7,7 @@ declare namespace zhAddressParse{
         city: string;
         area: string;
         detail: string;
-        phone: string;
+        telNumber: string;
         postalCode: string;
     }
 
@@ -20,6 +20,7 @@ declare namespace zhAddressParse{
 
     export type OptionType = {
         type?: 0 | 1;
+        mode?: 0 | 1;
         textFilter?: string[];
         nameMaxLength?: number;
         extraGovData?: Partial<Record<'province' | 'city' | 'area', GovData[]>>;

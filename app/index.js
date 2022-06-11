@@ -9,9 +9,10 @@ import $ from 'jquery'
 
 const parse = () => {
     let type = 0
+    let mode = 0
     const onTextAreaBlur = (e) => {
         const address = e.target.value
-        const parseResult = AddressParse(address, { type, textFilter: ['电話', '電話', '聯系人'] })
+        const parseResult = AddressParse(address, { type, mode, textFilter: [] })
         console.log(parseResult)
         $('#result').empty();
         $('#result').append(`<ul>${Object.entries(parseResult).map(([k, v]) => `<li>${k}：${v}</li>`).join('')}</ul>`)
@@ -26,6 +27,11 @@ const parse = () => {
     $('#select').val(type)
     $('#select').change((e) => {
         type = Number(e.target.value)
+    })
+
+    $('#selectMode').val(mode)
+    $('#selectMode').change((e) => {
+        mode = Number(e.target.value)
     })
 }
 
