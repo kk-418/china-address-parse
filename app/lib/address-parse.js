@@ -624,7 +624,10 @@ const cleanAddress = (address, textFilter = []) => {
 
     // 自定义去除关键字，可自行添加
     const search = [
-        '请?寄回.*清单',
+        '(不|拒)(收|签).*到付件?',
+        '到付.*(不|拒)(收|签)',
+        '拒收(圆通|申通|中通|顺丰|韵达|极兔|邮政|EMS)快?递?',
+        '请?(寄回|退回).*(清单|产品)',
         '仓?库?签收.*处理',
         '感谢.*配合',
         '建议使用官方推荐',
@@ -639,6 +642,7 @@ const cleanAddress = (address, textFilter = []) => {
         '寄(回|出|件|方)?',
         '(姓名|名字)',
         '邮编',
+        '(有?赠品|人为损坏|已清洗)'
     ].concat(textFilter)
     search.forEach(str => {
         address = address.replace(new RegExp(str, 'g'), ' ')
@@ -666,7 +670,7 @@ const replaceArea = (fragment, shortName, fullName) => {
         // 从字符串里面去除找到的省/市全名
         .replace(new RegExp(fullName, 'g'), '')
         // 从字符串里面去除第一个找到的关键字
-        .replace(new RegExp(shortName), '')
+        .replace(new RegExp(shortName + '(省|市|区)?'), '')
 }
 
 export default AddressParse
