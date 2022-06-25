@@ -612,7 +612,8 @@ const filterPostalCode = (address) => {
 
 /**
  * 地址清洗
- * @param address
+ * @param address 待清洗的字符串
+ * @param textFilter 删除的正则表达式
  * @returns {*}
  */
 const cleanAddress = (address, textFilter = []) => {
