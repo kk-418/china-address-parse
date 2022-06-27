@@ -178,6 +178,11 @@ const AddressParse = (address, options) => {
 
     console.log("解析后结果:", JSON.stringify(parseResult))
 
+    // 删除掉无用词组
+    detail = cleanUselessWords(detail)
+
+    console.log("清洗后的detail:", detail)
+
     const provinceName = province && province.name
     const provinceCode = province && province.code
     let cityName = city && city.name
@@ -214,7 +219,7 @@ const sortAddress = (splitAddress) => {
     const getIndex = (str) => {
         return splitAddress.findIndex(item => ~item.indexOf(str))
     }
-    ['省','自治区', '市', '区', '县', '镇','村'].forEach(item => {
+    ['省','自治区', '市', '区', '县', '街道','镇','村'].forEach(item => {
         let index = getIndex(item)
         if (~index) {
             result.push(splitAddress.splice(index, 1)[0])
@@ -513,25 +518,27 @@ const parseRegion = (fragment, hasParseResult) => {
  * @returns {string}
  */
 const judgeFragmentIsName = (fragment, nameMaxLength) => {
+    const cleanedFragment = cleanParentheses(fragment)
+    console.log("匹配名字;start;",cleanedFragment)
     // 如果为空
-    if (!fragment) {
+    if (!cleanedFragment) {
         return ''
     }
 
     // 姓名最大不能超过nameMaxLength + 订单尾号[1234]
-    if(fragment.length > nameMaxLength + 6){
+    if(cleanedFragment.length > nameMaxLength + 6){
         return ''
     }
 
     // 如果包含下列称呼，则认为是名字，可自行添加
-    const nameCall = ['先生', '小姐', '女士','天猫','旗舰店', '售后','退货组']
-    if (nameCall.find(item => ~fragment.indexOf(item))) {
-        return fragment
+    const nameCall = ['先生', '小姐', '女士', '老师', '天猫', '旗舰店', '售后', '退货组']
+    if (nameCall.find(item => ~cleanedFragment.indexOf(item))) {
+        return cleanedFragment
     }
 
     // 包含以下字符判定不是姓名
     const filtersReg = /县|街道|镇|乡|村|小区|公寓|\d+[号栋楼室幢]|单元/
-    const filtersMatch = filtersReg.exec(fragment)
+    const filtersMatch = filtersReg.exec(cleanedFragment)
     if (filtersMatch) {
         // console.log("匹配名字;filtersMatch:" + filtersMatch)
         return '';
@@ -539,16 +546,16 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
 
     for(const lastName of zhCnNames){
         // 字符串是否以百家姓开头
-        if(fragment.indexOf(lastName) === 0){
+        if(cleanedFragment.indexOf(lastName) === 0){
             // 名字带订单信息 regex
             const regexNameWithOrder = new RegExp(`${lastName}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
-            if(fragment.length <= nameMaxLength){
-                console.log("匹配名字;字符串以百家姓开头:" + fragment)
-                return fragment;
+            if(cleanedFragment.length <= nameMaxLength){
+                console.log("匹配名字;字符串以百家姓开头:" + cleanedFragment)
+                return cleanedFragment;
             // 名字带订单信息
-            }else  if(fragment.length <= nameMaxLength + 6 && fragment.match(regexNameWithOrder)){
-                console.log("匹配名字;字符串以百家姓开头而且有订单信息:" + fragment)
-                return fragment;
+            }else  if(cleanedFragment.length <= nameMaxLength + 6 && cleanedFragment.match(regexNameWithOrder)){
+                console.log("匹配名字;字符串以百家姓开头而且有订单信息:" + cleanedFragment)
+                return cleanedFragment;
                 // 名字带店铺字样
             }
         }
@@ -556,9 +563,9 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
     // 百家姓里面没有找到
 
     // 判断是否纯字符和数字下划线
-    const pureLetterNumberMatch = fragment.match(new RegExp('^\w+$'))
+    const pureLetterNumberMatch = cleanedFragment.match(new RegExp('^\w+$'))
     if(pureLetterNumberMatch){
-        console.log("匹配名字;纯字母和数字下划线:" + fragment)
+        console.log("匹配名字;纯字母和数字下划线:" + cleanedFragment)
         return fragment;
     }
     return ''
@@ -625,9 +632,10 @@ const cleanAddress = (address, textFilter = []) => {
 
     // 自定义去除关键字，可自行添加
     const search = [
+        '请.*否则.*拒收',
         '(不|拒)(收|签).*到付件?',
         '到付.*(不|拒)(收|签)',
-        '拒收(圆通|申通|中通|顺丰|韵达|极兔|邮政|EMS)快?递?',
+        '拒收(圆通|申通|中通|顺丰|韵达|极兔|邮政|EMS|信丰)?(快递|物流)?',
         '请?(寄回|退回).*(清单|产品)',
         '仓?库?签收.*处理',
         '感谢.*配合',
@@ -650,7 +658,7 @@ const cleanAddress = (address, textFilter = []) => {
     })
 
     // 去除特殊字符串
-    const pattern = new RegExp("[`~!@#$^&*()=|{}':;',\.<>/?~！@#￥……&*——|{}【】‘；：”“’。，、？☎]", 'g')
+    const pattern = new RegExp("[`~!@#$^&*=|{}':;',\.<>/?~！@#￥……&*——|{}【】‘；：”“’。，、？☎]", 'g')
     address = address.replace(pattern, ' ')
 
     // 多个空格replace为一个
@@ -672,6 +680,33 @@ const replaceArea = (fragment, shortName, fullName) => {
         .replace(new RegExp(fullName, 'g'), '')
         // 从字符串里面去除第一个找到的关键字
         .replace(new RegExp(shortName + '(省|市|区)?'), '')
+}
+
+/**
+ * 删除无用词组
+ * @param words
+ * @returns {*}
+ */
+const cleanUselessWords = (words) => {
+    console.log("删除无用词组;start;"  + words)
+    const uselessWords = new RegExp("^(如|或|的|注意?|否则|不然|北京|上海|天津|重庆)$", 'g')
+
+    words = words.filter(item => {
+        const cleanedItem = cleanParentheses(item)
+        return cleanedItem.length !== 0 && !cleanedItem.match(uselessWords)
+    })
+    console.log("删除无用词组;end;detail:"  + words)
+    return words;
+}
+
+/**
+ * 删除括号
+ * @param word
+ * @returns {*}
+ */
+const cleanParentheses = (word) => {
+    const parenthesesPattern = new RegExp("[\\[\\]（） ()]", 'g')
+    return word.replace(parenthesesPattern, '')
 }
 
 export default AddressParse
