@@ -537,7 +537,7 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
     }
 
     // 包含以下字符判定不是姓名
-    const filtersReg = /县|街道|镇|乡|村|小区|公寓|\d+[号栋楼室幢]|单元/
+    const filtersReg = /县|街道|镇|乡|村|小区|公寓|\d+[号栋楼室幢]|单元|菜鸟驿站/
     const filtersMatch = filtersReg.exec(cleanedFragment)
     if (filtersMatch) {
         // console.log("匹配名字;filtersMatch:" + filtersMatch)
@@ -651,7 +651,7 @@ const cleanAddress = (address, textFilter = []) => {
         '寄(回|出|件|方)?',
         '(姓名|名字)',
         '邮编',
-        '(有?赠品|人为损坏|已清洗)'
+        '(如?有?赠品|人为损坏|已清洗)'
     ].concat(textFilter)
     search.forEach(str => {
         address = address.replace(new RegExp(str, 'g'), ' ')
