@@ -129,28 +129,35 @@ const AddressParse = (address, options) => {
     if(detail){
         // 只剩最后一个字符串了,姓名应该是在详细地址里面
         if(detail.length === 1 && detail[0].length > nameMaxLength){
-            let lastNameIndexs = []
             const addressDetail = detail[0]
             console.log("匹配名字;只剩最后一个字符串;待匹配字符串:" + addressDetail)
-            for(const lastName of zhCnNames){
-                // 找到最短的匹配百家姓的名字
-                const lastIndex = addressDetail.lastIndexOf(lastName);
-                if(lastIndex !== -1){
-                    const regexNameWithOrder = new RegExp(`.*${lastName}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
-                    if(addressDetail.length - lastIndex <= 4 || addressDetail.match(regexNameWithOrder)){
-                        lastNameIndexs.push(lastIndex)
-                    }
-                }
+            // 从detail里面找
+            const name = getNameFromString(addressDetail)
+            // 如果找到了,就从字符串里面删除
+            if(name) {
+                parseResult.name = name
+                detail[0] = addressDetail.replace(new RegExp(name),'')
             }
-
-            if(lastNameIndexs.length > 0){
-                // 从lastIndex大到小排序
-                lastNameIndexs.sort(function(a,b){return b-a})
-                // 取最短的
-                parseResult.name = addressDetail.substring(lastNameIndexs[0], addressDetail.length)
-                // 从字符串里面删掉名字
-                detail[0] = addressDetail.substring(0, lastNameIndexs[0])
-            }
+            //
+            // for(const lastName of zhCnNames){
+            //     // 找到最短的匹配百家姓的名字
+            //     const lastIndex = addressDetail.lastIndexOf(lastName);
+            //     if(lastIndex !== -1){
+            //         const regexNameWithOrder = new RegExp(`.*${lastName}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
+            //         if(addressDetail.length - lastIndex <= 4 || addressDetail.match(regexNameWithOrder)){
+            //             lastNameIndexs.push(lastIndex)
+            //         }
+            //     }
+            // }
+            //
+            // if(lastNameIndexs.length > 0){
+            //     // 从lastIndex大到小排序
+            //     lastNameIndexs.sort(function(a,b){return b-a})
+            //     // 取最短的
+            //     parseResult.name = addressDetail.substring(lastNameIndexs[0], addressDetail.length)
+            //     // 从字符串里面删掉名字
+            //     detail[0] = addressDetail.substring(0, lastNameIndexs[0])
+            // }
 
 
         }else if(detail.length > 1) {
@@ -178,16 +185,17 @@ const AddressParse = (address, options) => {
 
     console.log("解析后结果:", JSON.stringify(parseResult))
 
-    // 删除掉无用词组
-    detail = cleanUselessWords(detail)
 
-    console.log("清洗后的detail:", detail)
 
     const provinceName = province && province.name
     const provinceCode = province && province.code
     let cityName = city && city.name
     const cityCode = city && city.code
     const areaCode = area && area.code
+    // 删除掉无用词组
+    detail = cleanUselessWords(detail, provinceName)
+
+    console.log("清洗后的detail:", detail)
     // if (~['市辖区', '区', '县', '镇'].indexOf(cityName)) {
     //     cityName = provinceName
     // }
@@ -537,18 +545,18 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
     }
 
     // 包含以下字符判定不是姓名
-    const filtersReg = /县|街道|镇|乡|村|小区|公寓|\d+[号栋楼室幢]|单元|菜鸟驿站/
+    const filtersReg = /县|街道|镇|乡|村|小区|公寓|\d+[号栋楼室幢]|单元|菜鸟驿站|大学/
     const filtersMatch = filtersReg.exec(cleanedFragment)
     if (filtersMatch) {
         // console.log("匹配名字;filtersMatch:" + filtersMatch)
         return '';
     }
 
-    for(const lastName of zhCnNames){
+    for(const lastNamePair of zhCnNames){
         // 字符串是否以百家姓开头
-        if(cleanedFragment.indexOf(lastName) === 0){
+        if(cleanedFragment.indexOf(lastNamePair[0]) === 0 && !isMutuallyExclusiveNameWord(lastNamePair,cleanedFragment, 0)){
             // 名字带订单信息 regex
-            const regexNameWithOrder = new RegExp(`${lastName}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
+            const regexNameWithOrder = new RegExp(`${lastNamePair}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
             if(cleanedFragment.length <= nameMaxLength){
                 console.log("匹配名字;字符串以百家姓开头:" + cleanedFragment)
                 return cleanedFragment;
@@ -685,15 +693,16 @@ const replaceArea = (fragment, shortName, fullName) => {
 /**
  * 删除无用词组
  * @param words
+ * @param provinceName 省份名称
  * @returns {*}
  */
-const cleanUselessWords = (words) => {
+const cleanUselessWords = (words, provinceName) => {
     console.log("删除无用词组;start;"  + words)
-    const uselessWords = new RegExp("^(如|或|的|注意?|否则|不然|北京|上海|天津|重庆)$", 'g')
+    const uselessWords = new RegExp("^(如|或|的|注意?|否则|不然)$", 'g')
 
     words = words.filter(item => {
         const cleanedItem = cleanParentheses(item)
-        return cleanedItem.length !== 0 && !cleanedItem.match(uselessWords)
+        return cleanedItem.length !== 0 && !cleanedItem.match(uselessWords) && cleanedItem !== provinceName.substring(0,2)
     })
     console.log("删除无用词组;end;detail:"  + words)
     return words;
@@ -707,6 +716,77 @@ const cleanUselessWords = (words) => {
 const cleanParentheses = (word) => {
     const parenthesesPattern = new RegExp("[\\[\\]（） ()]", 'g')
     return word.replace(parenthesesPattern, '')
+}
+
+/**
+ * 从字符串里面获取名字
+ * @param addressDetail
+ * @returns {string}
+ */
+const getNameFromString = (addressDetail) => {
+
+    let lastNameIndexs = []
+
+    for(const lastNamePairs of zhCnNames){
+        // 找到最短的匹配百家姓的名字
+        const lastNameIndex = addressDetail.lastIndexOf(lastNamePairs[0]);
+
+        // 百家姓里面找到了
+        if(lastNameIndex !== -1){
+            // 百家姓与前缀字符不组成词组
+            if(isMutuallyExclusiveNameWord(lastNamePairs, addressDetail, lastNameIndex)){
+                continue;
+            }
+            const regexNameWithOrder = new RegExp(`.*${lastNamePairs}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
+            if(addressDetail.length - lastNameIndex <= 4 || addressDetail.match(regexNameWithOrder)){
+                lastNameIndexs.push(lastNameIndex)
+            }
+        }
+    }
+
+    if(lastNameIndexs.length > 0){
+        // 从lastIndex大到小排序
+        lastNameIndexs.sort(function(a,b){return b-a})
+        // 取最短的返回
+        return addressDetail.substring(lastNameIndexs[0], addressDetail.length)
+    }
+}
+
+/**
+ *
+ * 判断百家姓里面是否有互斥词组
+ * @param lastNamePairs
+ * @param s
+ * @param lastNameIndex
+ */
+const isMutuallyExclusiveNameWord = (lastNamePairs,s,lastNameIndex) => {
+    const lastName = lastNamePairs[0]
+    const mutuallyExclusivePrefixWords = lastNamePairs[1]
+    // console.log("从字符串里面获取名字;mutuallyExclusivePrefixWords",mutuallyExclusivePrefixWords)
+    if( mutuallyExclusivePrefixWords ){
+        for(let mutuallyExclusiveWord of mutuallyExclusivePrefixWords){
+            mutuallyExclusiveWord += lastName
+            // console.log("从字符串里面获取名字;mutuallyExclusivePrefixWords;", s.lastIndexOf(mutuallyExclusiveWord),mutuallyExclusiveWord.length, lastName.length, lastNameIndex)
+            if(s.lastIndexOf(mutuallyExclusiveWord) + mutuallyExclusiveWord.length - lastName.length === lastNameIndex){
+                return true
+            }
+        }
+    }
+
+    const mutuallyExclusiveSuffixWords = lastNamePairs[2]
+    // console.log("从字符串里面获取名字;mutuallyExclusiveSuffixWords",mutuallyExclusiveSuffixWords)
+
+    if(mutuallyExclusiveSuffixWords) {
+        for(let mutuallyExclusiveWord of mutuallyExclusiveSuffixWords){
+            // console.log("从字符串里面获取名字;mutuallyExclusiveSuffixWords;", s.lastIndexOf(mutuallyExclusiveWord),mutuallyExclusiveWord.length, lastNameIndex)
+            mutuallyExclusiveWord = lastName + mutuallyExclusiveWord
+            if(s.lastIndexOf(mutuallyExclusiveWord) === lastNameIndex){
+                return true
+            }
+        }
+    }
+
+    return false
 }
 
 export default AddressParse

@@ -1,22 +1,5 @@
 [
-  {
-    "s": "收件人: (唐哈)张哈哈\n收件电话: 13111111111\n收件地址: 江苏省南通市海门市叠石桥村委会有赠品请退回寄回产品如已清洗或人为损坏或到付件一律拒签",
-    "options": {
-      "mode": 1
-    },
-    "parsedResult": {
-      "telNumber": "13111111111",
-      "province": "江苏省",
-      "city": "南通市",
-      "area": "海门区",
-      "detail": "叠石桥村委会",
-      "name": "(唐哈)张哈哈",
-      "postalCode": "",
-      "provinceCode": 32,
-      "cityCode": 3206,
-      "areaCode": 320614
-    }
-  },
+
   {
     "s": "北京 北京市 顺义区 胜利街道宜宾南区2-2-401 小程序模式测试 ww 13311111111",
     "options": {
@@ -33,6 +16,36 @@
       "provinceCode": 11,
       "cityCode": 1101,
       "areaCode": 110113
+    }
+  },
+  {
+    "s": "收件人: (唐哈)张哈哈\n收件电话: 13111111111\n收件地址: 江苏省南通市海门市叠石桥村委会有赠品请退回寄回产品如已清洗或人为损坏或到付件一律拒签",
+    "parsedResult": {
+      "telNumber": "13111111111",
+      "province": "江苏省",
+      "city": "南通市",
+      "area": "海门区",
+      "detail": "叠石桥村委会",
+      "name": "(唐哈)张哈哈",
+      "postalCode": "",
+      "provinceCode": 32,
+      "cityCode": 3206,
+      "areaCode": 320614
+    }
+  },
+  {
+    "s": "北京市东城区北京师范大学",
+    "parsedResult": {
+      "telNumber": "",
+      "province": "北京市",
+      "city": "市辖区",
+      "area": "东城区",
+      "detail": "北京师范大学",
+      "name": "",
+      "postalCode": "",
+      "provinceCode": 11,
+      "cityCode": 1101,
+      "areaCode": 110101
     }
   },
   {
