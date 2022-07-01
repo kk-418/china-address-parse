@@ -138,28 +138,6 @@ const AddressParse = (address, options) => {
                 parseResult.name = name
                 detail[0] = addressDetail.replace(new RegExp(name),'')
             }
-            //
-            // for(const lastName of zhCnNames){
-            //     // 找到最短的匹配百家姓的名字
-            //     const lastIndex = addressDetail.lastIndexOf(lastName);
-            //     if(lastIndex !== -1){
-            //         const regexNameWithOrder = new RegExp(`.*${lastName}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
-            //         if(addressDetail.length - lastIndex <= 4 || addressDetail.match(regexNameWithOrder)){
-            //             lastNameIndexs.push(lastIndex)
-            //         }
-            //     }
-            // }
-            //
-            // if(lastNameIndexs.length > 0){
-            //     // 从lastIndex大到小排序
-            //     lastNameIndexs.sort(function(a,b){return b-a})
-            //     // 取最短的
-            //     parseResult.name = addressDetail.substring(lastNameIndexs[0], addressDetail.length)
-            //     // 从字符串里面删掉名字
-            //     detail[0] = addressDetail.substring(0, lastNameIndexs[0])
-            // }
-
-
         }else if(detail.length > 1) {
             let name = ''
             const copyDetail = [...detail].filter(item => !!item)
