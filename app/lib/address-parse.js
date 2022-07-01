@@ -655,7 +655,7 @@ const cleanAddress = (address, textFilter = []) => {
         '所在地区',
         '联系人',
         '(寄|发)件人?',
-        '收(货|件|方)?人?',
+        '收(货|件|方)?(人|地)?',
         '寄(回|出|件|方)?',
         '(姓名|名字)',
         '邮编',
@@ -691,14 +691,16 @@ const replaceArea = (fragment, shortName, fullName) => {
 }
 
 /**
- * 删除无用词组
+ * 地址姓名全都都已经解析完了,去除无用词组和单个字
+ *
  * @param words
  * @param provinceName 省份名称
  * @returns {*}
  */
 const cleanUselessWords = (words, provinceName) => {
     console.log("删除无用词组;start;"  + words)
-    const uselessWords = new RegExp("^(如|或|的|注意?|否则|不然)$", 'g')
+    // 去除单个字以及无用词组
+    const uselessWords = new RegExp("^(.|注意?|否则|不然)$", 'g')
 
     words = words.filter(item => {
         const cleanedItem = cleanParentheses(item)
