@@ -534,7 +534,7 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
         // 字符串是否以百家姓开头
         if(cleanedFragment.indexOf(lastNamePair[0]) === 0 && !isMutuallyExclusiveNameWord(lastNamePair,cleanedFragment, 0)){
             // 名字带订单信息 regex
-            const regexNameWithOrder = new RegExp(`${lastNamePair}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
+            const regexNameWithOrder = new RegExp(`${lastNamePair[0]}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
             if(cleanedFragment.length <= nameMaxLength){
                 console.log("匹配名字;字符串以百家姓开头:" + cleanedFragment)
                 return cleanedFragment;
@@ -707,17 +707,17 @@ const getNameFromString = (addressDetail) => {
 
     let lastNameIndexs = []
 
-    for(const lastNamePairs of zhCnNames){
+    for(const lastNamePair of zhCnNames){
         // 找到最短的匹配百家姓的名字
-        const lastNameIndex = addressDetail.lastIndexOf(lastNamePairs[0]);
+        const lastNameIndex = addressDetail.lastIndexOf(lastNamePair[0]);
 
         // 百家姓里面找到了
         if(lastNameIndex !== -1){
             // 百家姓与前缀字符不组成词组
-            if(isMutuallyExclusiveNameWord(lastNamePairs, addressDetail, lastNameIndex)){
+            if(isMutuallyExclusiveNameWord(lastNamePair, addressDetail, lastNameIndex)){
                 continue;
             }
-            const regexNameWithOrder = new RegExp(`.*${lastNamePairs}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
+            const regexNameWithOrder = new RegExp(`.*${lastNamePair[0]}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
             if(addressDetail.length - lastNameIndex <= 4 || addressDetail.match(regexNameWithOrder)){
                 lastNameIndexs.push(lastNameIndex)
             }
@@ -735,13 +735,13 @@ const getNameFromString = (addressDetail) => {
 /**
  *
  * 判断百家姓里面是否有互斥词组
- * @param lastNamePairs
+ * @param lastNamePair
  * @param s
  * @param lastNameIndex
  */
-const isMutuallyExclusiveNameWord = (lastNamePairs,s,lastNameIndex) => {
-    const lastName = lastNamePairs[0]
-    const mutuallyExclusivePrefixWords = lastNamePairs[1]
+const isMutuallyExclusiveNameWord = (lastNamePair,s,lastNameIndex) => {
+    const lastName = lastNamePair[0]
+    const mutuallyExclusivePrefixWords = lastNamePair[1]
     // console.log("从字符串里面获取名字;mutuallyExclusivePrefixWords",mutuallyExclusivePrefixWords)
     if( mutuallyExclusivePrefixWords ){
         for(let mutuallyExclusiveWord of mutuallyExclusivePrefixWords){
@@ -753,7 +753,7 @@ const isMutuallyExclusiveNameWord = (lastNamePairs,s,lastNameIndex) => {
         }
     }
 
-    const mutuallyExclusiveSuffixWords = lastNamePairs[2]
+    const mutuallyExclusiveSuffixWords = lastNamePair[2]
     // console.log("从字符串里面获取名字;mutuallyExclusiveSuffixWords",mutuallyExclusiveSuffixWords)
 
     if(mutuallyExclusiveSuffixWords) {
