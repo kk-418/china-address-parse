@@ -523,7 +523,7 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
     }
 
     // 包含以下字符判定不是姓名
-    const filtersReg = /县|街道|镇|乡|村|小区|公寓|\d+[号栋楼室幢]|单元|菜鸟驿站|大学/
+    const filtersReg = /县|街道|镇|乡|村|小区|公寓|[\da-zA-Z]+[号栋楼室幢]|单元|菜鸟驿站|大学|学院/
     const filtersMatch = filtersReg.exec(cleanedFragment)
     if (filtersMatch) {
         // console.log("匹配名字;filtersMatch:" + filtersMatch)
@@ -534,7 +534,7 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
         // 字符串是否以百家姓开头
         if(cleanedFragment.indexOf(lastNamePair[0]) === 0 && !isMutuallyExclusiveNameWord(lastNamePair,cleanedFragment, 0)){
             // 名字带订单信息 regex
-            const regexNameWithOrder = new RegExp(`${lastNamePair[0]}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
+            const regexNameWithOrder = new RegExp(`${lastNamePair[0]}[\u4E00-\u9FA5]{0,3}\[?*\d{1,4}\]?`, 'g')
             if(cleanedFragment.length <= nameMaxLength){
                 console.log("匹配名字;字符串以百家姓开头:" + cleanedFragment)
                 return cleanedFragment;

@@ -1,5 +1,4 @@
 [
-
   {
     "s": "北京 北京市 顺义区 胜利街道宜宾南区2-2-401 小程序模式测试 ww 13311111111",
     "options": {
@@ -16,6 +15,25 @@
       "provinceCode": 11,
       "cityCode": 1101,
       "areaCode": 110113
+    }
+  },
+
+  {
+    "s": "李哈哈[9859]\n13311111111\n广东省 深圳市 龙岗区 布吉华龙新村60栋002[9859]",
+    "options": {
+      "mode": 1
+    },
+    "parsedResult": {
+      "telNumber": "13311111111",
+      "province": "广东省",
+      "city": "深圳市",
+      "area": "龙岗区",
+      "detail": "布吉华龙新村60栋002[9859]",
+      "name": "李哈哈[9859]",
+      "postalCode": "",
+      "provinceCode": 44,
+      "cityCode": 4403,
+      "areaCode": 440307
     }
   },
   {
