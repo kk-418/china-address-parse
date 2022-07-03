@@ -511,17 +511,6 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
         return ''
     }
 
-    // 姓名最大不能超过nameMaxLength + 订单尾号[1234]
-    if(cleanedFragment.length > nameMaxLength + 4){
-        return ''
-    }
-
-    // 如果包含下列称呼，则认为是名字，可自行添加
-    const nameCall = ['先生', '小姐', '女士', '老师', '天猫', '旗舰店', '售后', '退货组']
-    if (nameCall.find(item => ~cleanedFragment.indexOf(item))) {
-        return cleanedFragment
-    }
-
     // 包含以下字符判定不是姓名
     const filtersReg = /县|街道|镇|乡|村|小区|公寓|[\da-zA-Z]+[号栋楼室幢]|单元|菜鸟驿站|大学|学院/
     const filtersMatch = filtersReg.exec(cleanedFragment)
@@ -530,12 +519,24 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
         return '';
     }
 
+
+    // 如果包含下列称呼，则认为是名字，可自行添加
+    const nameCall = ['先生', '小姐', '女士', '老师', '天猫', '旗舰店', '售后', '退货组']
+    if (nameCall.find(item => ~cleanedFragment.indexOf(item))) {
+        return cleanedFragment
+    }
+
+    // 姓名最大不能超过nameMaxLength + 订单尾号[1234]
+    if(cleanedFragment.length > nameMaxLength + 4){
+        return ''
+    }
+
     for(const lastNamePair of zhCnNames){
         // 字符串是否以百家姓开头
         if(cleanedFragment.indexOf(lastNamePair[0]) === 0 && !isMutuallyExclusiveNameWord(lastNamePair,cleanedFragment, 0)){
             // 名字带订单信息 regex
             console.log("匹配名字;lastNamePair",lastNamePair)
-            const regexNameWithOrder = new RegExp(`${lastNamePair[0]}[\u4E00-\u9FA5]{0,3}\d{1,4}`, 'g')
+            const regexNameWithOrder = new RegExp(`${lastNamePair[0]}[\u4E00-\u9FA5]{0,3}[0-9]{1,4}`, 'g')
             if(cleanedFragment.length <= nameMaxLength){
                 console.log("匹配名字;字符串以百家姓开头:" + cleanedFragment)
                 return cleanedFragment;
@@ -637,7 +638,8 @@ const cleanAddress = (address, textFilter = []) => {
         '寄(回|出|件|方)?',
         '(姓名|名字)',
         '邮编',
-        '(如?有?赠品|人为损坏|已清洗)'
+        '(如|若)?有?赠品',
+        '(人为损坏|已清洗|优先|安排|退款|订单|编号|旺旺名|您|写上)'
     ].concat(textFilter)
     search.forEach(str => {
         address = address.replace(new RegExp(str, 'g'), ' ')
