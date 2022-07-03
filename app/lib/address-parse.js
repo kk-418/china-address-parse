@@ -512,7 +512,7 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
     }
 
     // 姓名最大不能超过nameMaxLength + 订单尾号[1234]
-    if(cleanedFragment.length > nameMaxLength + 6){
+    if(cleanedFragment.length > nameMaxLength + 4){
         return ''
     }
 
@@ -534,7 +534,8 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
         // 字符串是否以百家姓开头
         if(cleanedFragment.indexOf(lastNamePair[0]) === 0 && !isMutuallyExclusiveNameWord(lastNamePair,cleanedFragment, 0)){
             // 名字带订单信息 regex
-            const regexNameWithOrder = new RegExp(`${lastNamePair[0]}[\u4E00-\u9FA5]{0,3}\[?*\d{1,4}\]?`, 'g')
+            console.log("匹配名字;lastNamePair",lastNamePair)
+            const regexNameWithOrder = new RegExp(`${lastNamePair[0]}[\u4E00-\u9FA5]{0,3}\d{1,4}`, 'g')
             if(cleanedFragment.length <= nameMaxLength){
                 console.log("匹配名字;字符串以百家姓开头:" + cleanedFragment)
                 return cleanedFragment;
@@ -542,7 +543,6 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
             }else  if(cleanedFragment.length <= nameMaxLength + 6 && cleanedFragment.match(regexNameWithOrder)){
                 console.log("匹配名字;字符串以百家姓开头而且有订单信息:" + cleanedFragment)
                 return cleanedFragment;
-                // 名字带店铺字样
             }
         }
     }
@@ -717,7 +717,7 @@ const getNameFromString = (addressDetail) => {
             if(isMutuallyExclusiveNameWord(lastNamePair, addressDetail, lastNameIndex)){
                 continue;
             }
-            const regexNameWithOrder = new RegExp(`.*${lastNamePair[0]}[\u4E00-\u9FA5]{0,3}\[*\d{1,4}\]`, 'g')
+            const regexNameWithOrder = new RegExp(`.*${lastNamePair[0]}[\u4E00-\u9FA5]{0,3}\d{1,4}`, 'g')
             if(addressDetail.length - lastNameIndex <= 4 || addressDetail.match(regexNameWithOrder)){
                 lastNameIndexs.push(lastNameIndex)
             }
