@@ -522,7 +522,7 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
 
     // 如果包含下列称呼，则认为是名字，可自行添加
     const nameCall = ['先生', '小姐', '女士', '老师', '天猫', '旗舰店', '售后', '退货组']
-    if (nameCall.find(item => ~cleanedFragment.indexOf(item))) {
+    if (nameCall.find(item => ~cleanedFragment.indexOf(item)) && cleanedFragment.length <= 12) {
         return cleanedFragment
     }
 
@@ -717,8 +717,10 @@ const getNameFromString = (addressDetail) => {
         if(lastNameIndex !== -1){
             // 百家姓与前缀字符不组成词组
             if(isMutuallyExclusiveNameWord(lastNamePair, addressDetail, lastNameIndex)){
+                console.log("匹配名字;getNameFromString;lastNamePair:",lastNamePair)
                 continue;
             }
+            console.log("匹配名字;getNameFromString;success;lastNamePair:",lastNamePair)
             const regexNameWithOrder = new RegExp(`.*${lastNamePair[0]}[\u4E00-\u9FA5]{0,3}\d{1,4}`, 'g')
             if(addressDetail.length - lastNameIndex <= 4 || addressDetail.match(regexNameWithOrder)){
                 lastNameIndexs.push(lastNameIndex)
@@ -760,9 +762,10 @@ const isMutuallyExclusiveNameWord = (lastNamePair,s,lastNameIndex) => {
 
     if(mutuallyExclusiveSuffixWords) {
         for(let mutuallyExclusiveWord of mutuallyExclusiveSuffixWords){
-            // console.log("从字符串里面获取名字;mutuallyExclusiveSuffixWords;", s.lastIndexOf(mutuallyExclusiveWord),mutuallyExclusiveWord.length, lastNameIndex)
             mutuallyExclusiveWord = lastName + mutuallyExclusiveWord
-            if(s.lastIndexOf(mutuallyExclusiveWord) === lastNameIndex){
+            const mutuallyExclusiveWordIndex = s.lastIndexOf(mutuallyExclusiveWord)
+            // console.log("从字符串里面获取名字;mutuallyExclusiveSuffixWords;",mutuallyExclusiveWordIndex ,mutuallyExclusiveWord.length, lastNameIndex)
+            if(mutuallyExclusiveWordIndex === lastNameIndex){
                 return true
             }
         }
