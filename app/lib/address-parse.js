@@ -132,7 +132,7 @@ const AddressParse = (address, options) => {
             const addressDetail = detail[0]
             console.log("匹配名字;只剩最后一个字符串;待匹配字符串:" + addressDetail)
             // 从detail里面找
-            const name = getNameFromString(addressDetail)
+            const name = getNameFromString(addressDetail, nameMaxLength)
             // 如果找到了,就从字符串里面删除
             if(name) {
                 parseResult.name = name
@@ -502,6 +502,7 @@ const parseRegion = (fragment, hasParseResult) => {
  * @param fragment
  * @param nameMaxLength 名字的最大长度
  * @returns {string}
+ * TODO 字符串为姓名的可能分数排序
  */
 const judgeFragmentIsName = (fragment, nameMaxLength) => {
     const cleanedFragment = cleanParentheses(fragment)
@@ -536,7 +537,7 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
         if(cleanedFragment.indexOf(lastNamePair[0]) === 0 && !isMutuallyExclusiveNameWord(lastNamePair,cleanedFragment, 0)){
             // 名字带订单信息 regex
             console.log("匹配名字;lastNamePair",lastNamePair)
-            const regexNameWithOrder = new RegExp(`${lastNamePair[0]}[\u4E00-\u9FA5]{0,3}[0-9]{1,4}`, 'g')
+            const regexNameWithOrder = new RegExp(`${lastNamePair[0]}[\u4E00-\u9FA5]{0,3}(分机)?[0-9]{1,4}`, 'g')
             if(cleanedFragment.length <= nameMaxLength){
                 console.log("匹配名字;字符串以百家姓开头:" + cleanedFragment)
                 return cleanedFragment;
@@ -622,8 +623,8 @@ const cleanAddress = (address, textFilter = []) => {
         '请.*(否则|不然).*拒收',
         '(不|拒).*到付件?',
         '到付.*(不|拒)(收|签)',
-        '拒收(圆通|申通|中通|顺丰|韵达|极兔|邮政|EMS|信丰)?(快递|物流)?',
-        '请?(寄回|退回).*(清单|产品)',
+        '拒.*(快递|物流)?',
+        '请?(寄|退)回.*(清单|产品)',
         '仓?库?签收.*处理',
         '(感|谢)谢.*配合',
         '建议使用官方推荐',
@@ -705,7 +706,7 @@ const cleanParentheses = (word) => {
  * @param addressDetail
  * @returns {string}
  */
-const getNameFromString = (addressDetail) => {
+const getNameFromString = (addressDetail, nameMaxLength) => {
 
     let lastNameIndexs = []
 
@@ -720,9 +721,7 @@ const getNameFromString = (addressDetail) => {
                 console.log("匹配名字;getNameFromString;lastNamePair:",lastNamePair)
                 continue;
             }
-            console.log("匹配名字;getNameFromString;success;lastNamePair:",lastNamePair)
-            const regexNameWithOrder = new RegExp(`.*${lastNamePair[0]}[\u4E00-\u9FA5]{0,3}\d{1,4}`, 'g')
-            if(addressDetail.length - lastNameIndex <= 4 || addressDetail.match(regexNameWithOrder)){
+            if(judgeFragmentIsName(addressDetail.substring(lastNameIndex, addressDetail.length), nameMaxLength)){
                 lastNameIndexs.push(lastNameIndex)
             }
         }
