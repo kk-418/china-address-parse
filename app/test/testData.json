@@ -19,10 +19,37 @@
   },
 
   {
+    "s": "寄件地址:\n云南省红河州弥勒市弥阳镇铺田社区弥西哨村\n王小小13311111111",
+    "parsedResult": {
+      "telNumber": "13311111111",
+      "province": "云南省",
+      "city": "红河哈尼族彝族自治州",
+      "area": "弥勒市",
+      "detail": "弥阳镇铺田社区弥西哨村",
+      "name": "王小小",
+      "postalCode": "",
+      "provinceCode": 53,
+      "cityCode": 5325,
+      "areaCode": 532504
+    }
+  },
+  {
+    "s": "联商务13311111111广东省广州市番禺区东环街道 东沙村 下黄坊 汪波三街 北七巷 4号 ",
+    "parsedResult": {
+      "telNumber": "13311111111",
+      "province": "广东省",
+      "city": "广州市",
+      "area": "番禺区",
+      "detail": "东环街道东沙村下黄坊汪波三街北七巷4号",
+      "name": "联商务",
+      "postalCode": "",
+      "provinceCode": 44,
+      "cityCode": 4401,
+      "areaCode": 440113
+    }
+  },
+  {
     "s": "李哈哈[9859]\n13311111111\n广东省 深圳市 龙岗区 布吉华龙新村60栋002[9859]",
-    "options": {
-      "mode": 1
-    },
     "parsedResult": {
       "telNumber": "13311111111",
       "province": "广东省",
