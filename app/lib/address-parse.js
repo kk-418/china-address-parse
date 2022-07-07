@@ -82,12 +82,20 @@ const AddressParse = (address, options) => {
     parseResult.postalCode = resultCode.postalCode
     console.log('获取邮编的结果 --->', address)
 
-    // 识别名字
 
     // 地址分割，排序
     let splitAddress = address.split(' ').filter(item => item).map(item => item.trim())
+
+
+    // 看看第一个是不是名字
+    if(!absolutelyNotName(splitAddress[0])){
+        parseResult.name = splitAddress[0];
+        splitAddress.splice(0,1)
+    }
+
     // 这里先不排序了，排序可能出现问题，比如：北京 北京市
     splitAddress = sortAddress(splitAddress)
+
     console.log('分割地址 --->', splitAddress)
 
     const d1 = new Date().getTime()
@@ -126,7 +134,7 @@ const AddressParse = (address, options) => {
     console.log('去重后--->', detail)
 
     // 地址都解析完了，从剩余字符串数组里面找姓名
-    if(detail){
+    if(!parseResult.name && detail){
         // 只剩最后一个字符串了,姓名应该是在详细地址里面
         if(detail.length === 1 && detail[0].length > nameMaxLength){
             const addressDetail = detail[0]
@@ -512,10 +520,8 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
         return ''
     }
 
-    // 包含以下字符判定不是姓名
-    const filtersReg = /县|街道|镇|乡|村|小区|公寓|[\da-zA-Z]+[号栋楼室幢]|单元|菜鸟驿站|大学|学院/
-    const filtersMatch = filtersReg.exec(cleanedFragment)
-    if (filtersMatch) {
+    const isAbsolutelyNotName = absolutelyNotName(cleanedFragment)
+    if (isAbsolutelyNotName) {
         // console.log("匹配名字;filtersMatch:" + filtersMatch)
         return '';
     }
@@ -557,6 +563,22 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
         return fragment;
     }
     return ''
+}
+
+const absolutelyNotName = (cleanedFragment) => {
+    // 包含以下字符判定不是姓名
+    const filtersReg = /省|市|区|自治|街|县|镇|乡|村|公寓|[0-9]*[号栋楼室幢]|单元|菜鸟驿站|大学|学院|便利/
+    const filtersMatch = filtersReg.exec(cleanedFragment)
+    if(filtersMatch){
+        return true;
+    }
+    for (const tempProvince of provinces) {
+        const {name} = tempProvince
+        if (cleanedFragment.includes(name.substring(0,2))){
+            return true
+        }
+    }
+    return false;
 }
 
 /**
@@ -668,7 +690,7 @@ const replaceArea = (fragment, shortName, fullName) => {
         // 从字符串里面去除找到的省/市全名
         .replace(new RegExp(fullName, 'g'), '')
         // 从字符串里面去除第一个找到的关键字
-        .replace(new RegExp(shortName + '(省|市|区)?'), '')
+        .replace(new RegExp(shortName + '(省|市|自治区|区|自治州|州)?'), '')
 }
 
 /**
