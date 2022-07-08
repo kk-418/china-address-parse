@@ -567,7 +567,7 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
 
 const absolutelyNotName = (cleanedFragment) => {
     // 包含以下字符判定不是姓名
-    const filtersReg = /省|市|区|自治|街|县|镇|乡|村|公寓|[0-9]*[号栋楼室幢]|单元|菜鸟驿站|大学|学院|便利/
+    const filtersReg = /省|市|区|自治|街|县|镇|乡|村|公寓|[0-9a-zA-Z一二三四五六七八九十]+[栋楼]|号|室|幢|单元|菜鸟驿站|[小中大]学|学院|便利|大厦|广场|馆|医院|路口|超市/
     const filtersMatch = filtersReg.exec(cleanedFragment)
     if(filtersMatch){
         return true;
@@ -645,7 +645,7 @@ const cleanAddress = (address, textFilter = []) => {
         '请.*(否则|不然).*拒收',
         '(不|拒).*到付件?',
         '到付.*(不|拒)(收|签)',
-        '拒.*(快递|物流)?',
+        '拒.*(百世|极兔|信丰|京东|申通|圆通|中通|韵达|邮政|EMS)(快递|物流)?',
         '请?(寄|退)回.*(清单|产品)',
         '仓?库?签收.*处理',
         '(感|谢)谢.*配合',
@@ -662,7 +662,8 @@ const cleanAddress = (address, textFilter = []) => {
         '(姓名|名字)',
         '邮编',
         '(如|若)?有?赠品',
-        '(人为损坏|已清洗|优先|安排|退款|订单|编号|旺旺名|您|写上)'
+        '(人为损坏|已清洗|优先|安排|退款|订单|编号|旺旺名|您|写上)',
+        '发[：: ]'
     ].concat(textFilter)
     search.forEach(str => {
         address = address.replace(new RegExp(str, 'g'), ' ')
