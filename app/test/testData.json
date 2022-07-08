@@ -17,7 +17,21 @@
       "areaCode": 110113
     }
   },
-
+  {
+    "s": "发：浙江省台州市椒江景和大厦 丫丫 13311111111",
+    "parsedResult": {
+      "telNumber": "13311111111",
+      "province": "浙江省",
+      "city": "台州市",
+      "area": "椒江区",
+      "detail": "景和大厦",
+      "name": "丫丫",
+      "postalCode": "",
+      "provinceCode": 33,
+      "cityCode": 3310,
+      "areaCode": 331002
+    }
+  },
   {
     "s": "寄件地址:\n云南省红河州弥勒市弥阳镇铺田社区弥西哨村\n王小小13311111111",
     "parsedResult": {
