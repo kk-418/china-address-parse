@@ -567,7 +567,7 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
 
 const absolutelyNotName = (cleanedFragment) => {
     // 包含以下字符判定不是姓名
-    const filtersReg = /省|市|区|自治|街|县|镇|乡|村|公寓|[0-9a-zA-Z一二三四五六七八九十]+[栋楼]|号|室|幢|单元|菜鸟驿站|[小中大]学|学院|便利|大厦|广场|馆|医院|路口|超市/
+    const filtersReg = /省|市|区|自治|街|县|镇|乡|村|公寓|[0-9a-zA-Z一二三四五六七八九十]+[栋楼]|号|室|幢|门|座|单元|菜鸟驿站|[小中大]学|学院|便利|大厦|广场|馆|医院|路口|超市|产业园/
     const filtersMatch = filtersReg.exec(cleanedFragment)
     if(filtersMatch){
         return true;
