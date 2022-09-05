@@ -94,7 +94,7 @@ const AddressParse = (address, options) => {
     }
 
     // 这里先不排序了，排序可能出现问题，比如：北京 北京市
-    splitAddress = sortAddress(splitAddress)
+    // splitAddress = sortAddress(splitAddress)
 
     console.log('分割地址 --->', splitAddress)
 
@@ -643,12 +643,12 @@ const cleanAddress = (address, textFilter = []) => {
     // 自定义去除关键字，可自行添加
     const search = [
         '请.*(否则|不然).*拒收',
-        '(不|拒).*到付件?',
+        '(不|拒|勿).*到付件?',
         '到付.*(不|拒)(收|签)',
-        '(拒|不).*(百世|极兔|信丰|京东|申通|圆通|中通|韵达|邮政|EMS)(快递|物流)?',
+        '(拒|不).*(百世|极兔|信丰|京东|申通|圆通|中通|韵达|邮政|EMS|顺丰|到付)(快递|物流)?',
         '请?(寄|退)回.*(清单|产品)',
         '仓?库?签收.*处理',
-        '(感|谢)谢.*配合',
+        '感?谢.*配合',
         '建议使用官方推荐',
         '(支持.*)?上门取件(服务)?',
         '(详细|收货|收件|寄件|退货|发货|发件|寄回|售后|取件)?地址',
@@ -670,7 +670,7 @@ const cleanAddress = (address, textFilter = []) => {
     })
 
     // 去除特殊字符串
-    const pattern = new RegExp("[`~!@#$^&*=|{}':;',\.<>/?~！@#￥……&*——|{}【】‘；：”“’。，、？☎]", 'g')
+    const pattern = new RegExp("[`~!@#$^&*=|{}':;,\.<>/?！￥…—【】‘；：”“’。，、？☎]", 'g')
     address = address.replace(pattern, ' ')
 
     // 多个空格replace为一个
