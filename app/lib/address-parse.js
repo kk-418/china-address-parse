@@ -192,15 +192,18 @@ const AddressParse = (address, options) => {
             cityName = provinceName
         }
     }
-    return Object.assign(parseResult, {
-        province: provinceName || '',
+    return {
+        name: parseResult.name || '',
+        telNumber: parseResult.telNumber || '',
+        provinceName: provinceName || '',
         provinceCode: provinceCode || '',
-        city: cityName || '',
+        cityName: cityName || '',
         cityCode: cityCode || '',
-        area: (area && area.name) || '',
-        areaCode: areaCode || '',
-        detail: (detail && detail.length > 0 && detail.join('')) || ''
-    })
+        countyName: (area && area.name) || '',
+        countyCode: areaCode || '',
+        detailInfo: (detail && detail.length > 0 && detail.join('')) || '',
+        postalCode: parseResult.postalCode || ''
+    }
 }
 
 /**
