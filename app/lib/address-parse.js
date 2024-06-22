@@ -102,7 +102,6 @@ const AddressParse = (address, options) => {
 
     // 找省市区和详细地址
     splitAddress.forEach((item, index) => {
-        // 识别地址
         if (!parseResult.province[0] || !parseResult.city[0] || !parseResult.area[0]) {
             // 两个方法都可以解析，正则和树查找
             let parse = {}
@@ -118,7 +117,7 @@ const AddressParse = (address, options) => {
         }
     })
 
-    console.log('--->', splitAddress)
+    console.log('识别地址后--->', splitAddress)
 
     const d2 = new Date().getTime()
 
@@ -367,7 +366,7 @@ const parseRegionWithRegexp = (fragment, hasParseResult) => {
  */
 const parseRegion = (fragment, hasParseResult) => {
     console.log('----- 当前使用树查找模式 -----')
-    let province = [], city = [], area = [], detail = []
+    let province = [], city = [], area = [], detail = [],score=0
 
     if (hasParseResult.province[0]) {
         province = hasParseResult.province
@@ -478,16 +477,13 @@ const parseRegion = (fragment, hasParseResult) => {
             }
         } else {
             // 没有省市，区县市有可能重名，这里暂时不处理，因为概率极低，可以根据添加市解决
-            for (let i = name.length; i > 1; i--) {
-                const replaceName = name.substring(0, i)
-                if (fragment.indexOf(replaceName) === 0) {
+                if (fragment.startsWith(name)) {
                     area.push(tempArea)
                     city.push(cities.find(item => item.code === cityCode))
                     province.push(provinces.find(item => item.code === provinceCode))
-                    fragment = fragment.replace(replaceName, '')
+                    fragment = fragment.replace(name, '')
                     break
                 }
-            }
             if (area.length > 0) {
                 break
             }
@@ -569,6 +565,7 @@ const judgeFragmentIsName = (fragment, nameMaxLength) => {
 }
 
 const absolutelyNotName = (cleanedFragment) => {
+    console.log("absolutelyNotName;cleanedFragment:",cleanedFragment)
     // 包含以下字符判定不是姓名
     const filtersReg = /省|市|区|自治|街|县|镇|乡|村|公寓|[0-9a-zA-Z一二三四五六七八九十]+[栋楼]|号|室|幢|门|座|单元|菜鸟驿站|[小中大]学|学院|便利|大厦|广场|馆|医院|路口|超市|产业园|大道|前台/
     const filtersMatch = filtersReg.exec(cleanedFragment)
@@ -577,7 +574,8 @@ const absolutelyNotName = (cleanedFragment) => {
     }
     for (const tempProvince of provinces) {
         const {name} = tempProvince
-        if (cleanedFragment.includes(name.substring(0,2))){
+        if (cleanedFragment.startsWith(name.substring(0,2))){
+            console.log("absolutelyNotName;第一个绝对不是名字-->",cleanedFragment)
             return true
         }
     }
@@ -707,7 +705,7 @@ const cleanUselessWords = (words, provinceName) => {
 
     words = words.filter(item => {
         const cleanedItem = cleanParentheses(item)
-        return cleanedItem.length !== 0 && !cleanedItem.match(uselessWords) && cleanedItem !== provinceName.substring(0,2)
+        return cleanedItem.length !== 0 && !cleanedItem.match(uselessWords) && provinceName && cleanedItem !== provinceName.substring(0,2)
     })
     console.log("删除无用词组;end;detail:"  + words)
     return words;
