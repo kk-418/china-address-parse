@@ -886,5 +886,35 @@
       "cityCode": 4690,
       "countyCode": 469007
     }
+  },
+  {
+    "s": "金牛座,13311111111,广东省中山市中山市西区街道沙朗镇盈通二街",
+    "parsedResult": {
+      "telNumber": "13311111111",
+      "provinceName": "广东省",
+      "cityName": "中山市",
+      "countyName": "西区街道",
+      "detailInfo": "沙朗镇盈通二街",
+      "name": "金牛座",
+      "postalCode": "",
+      "provinceCode": 44,
+      "cityCode": 4420,
+      "countyCode": 442000004
+    }
+  },
+  {
+    "s": "梅江苏,13311111111,江苏省南京市鼓楼区建宁路搜索发的",
+    "parsedResult": {
+      "telNumber": "13311111111",
+      "provinceName": "江苏省",
+      "cityName": "南京市",
+      "countyName": "鼓楼区",
+      "detailInfo": "建宁路搜索发的",
+      "name": "梅江苏",
+      "postalCode": "",
+      "provinceCode": 32,
+      "cityCode": 3201,
+      "countyCode": 320106
+    }
   }
 ]
