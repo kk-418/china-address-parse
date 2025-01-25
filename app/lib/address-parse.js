@@ -450,40 +450,69 @@ const parseRegion = (fragment, hasParseResult) => {
     console.log("匹配区县;查找区县;省:" + JSON.stringify(province) + ",市:" + JSON.stringify(city))
     console.log(fragment)
     // 从区市县开始查找
-    for (const tempArea of areas) {
-        const {name, provinceCode, cityCode} = tempArea
-        const currentProvince = province[0]
-        const currentCity = city[0]
-        // 有省或者市
-        if (currentProvince || currentCity) {
-            if ((currentProvince && currentProvince.code === provinceCode)
-                || (currentCity && currentCity.code === cityCode)) {
-                console.log("匹配区县;有省或者市;currentProvince:" + JSON.stringify(currentProvince) + "currentCity:" + JSON.stringify(currentCity))
-                let replaceName = ''
-                for (let i = name.length; i > 1; i--) {
-                    const temp = name.substring(0, i)
-                    if (fragment.indexOf(temp) === 0) {
-                        replaceName = temp
-                        break
+    const currentProvince = province[0]
+    const currentCity = city[0]
+    // 有省或者市
+    if (currentProvince || currentCity) {
+        let bestMatch = null; // 用于记录最佳匹配的 tempArea 和 bestReplaceName
+        let bestReplaceName = ''; // 用于记录得分最高的 replaceName
+        let bestScore = 0; // 用于记录最高得分
+
+        console.log(111,currentProvince, currentCity)
+        for (const tempArea of areas) {
+            const {name, provinceCode, cityCode} = tempArea;
+            if(name === '鼓楼区'){
+                console.log(112,currentProvince,currentCity,tempArea)
+            }
+            // 如果有省,则省必须相同
+
+            if(currentProvince && currentProvince.code !== provinceCode){
+                continue;
+            }
+            if(currentCity && currentCity.code !== cityCode){
+                continue;
+            }
+            console.log("匹配区县;有省或者市;currentProvince:" + JSON.stringify(currentProvince) + "currentCity:" + JSON.stringify(currentCity));
+            for (let i = name.length; i > 1; i--) {
+                const temp = name.substring(0, i);
+                if (fragment.indexOf(temp) === 0) {
+                    const score = i; // 得分等于匹配的长度
+                    if (score === name.length) {
+                        // 如果得分为满分，直接设为 best 并跳出循环
+                        bestReplaceName = temp;
+                        bestScore = score;
+                        bestMatch = tempArea; // 记录最佳匹配的 tempArea
+                        console.log('bestMatch',bestMatch)
+                        break;
+                    }
+                    if (score > bestScore) {
+                        // 如果当前得分高于之前的最高得分，更新 bestScore 和 bestReplaceName
+                        bestScore = score;
+                        bestReplaceName = temp;
+                        bestMatch = tempArea; // 记录最佳匹配的 tempArea
+                        console.log('bestMatch',bestMatch)
                     }
                 }
-                if (replaceName) {
-                    area.push(tempArea)
-                    !currentCity && city.push(cities.find(item => item.code === cityCode))
-                    !currentProvince && province.push(provinces.find(item => item.code === provinceCode))
-                    fragment = replaceArea(fragment, replaceName, name)
-                    break
-                }
             }
-        } else {
+        }
+// 在整个 areas 遍历结束后，检查是否有最佳匹配
+        if (bestMatch) {
+            area.push(bestMatch);
+            !currentCity && city.push(cities.find(item => item.code === bestMatch.cityCode));
+            !currentProvince && province.push(provinces.find(item => item.code === bestMatch.provinceCode));
+            fragment = replaceArea(fragment, bestReplaceName, bestMatch.name);
+        }
+    }else {
+        for (const tempArea of areas) {
+            const {name, provinceCode, cityCode} = tempArea
             // 没有省市，区县市有可能重名，这里暂时不处理，因为概率极低，可以根据添加市解决
-                if (fragment.startsWith(name)) {
-                    area.push(tempArea)
-                    city.push(cities.find(item => item.code === cityCode))
-                    province.push(provinces.find(item => item.code === provinceCode))
-                    fragment = fragment.replace(name, '')
-                    break
-                }
+            if (fragment.startsWith(name)) {
+                area.push(tempArea)
+                city.push(cities.find(item => item.code === cityCode))
+                province.push(provinces.find(item => item.code === provinceCode))
+                fragment = fragment.replace(name, '')
+                break
+            }
             if (area.length > 0) {
                 break
             }
