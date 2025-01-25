@@ -205,25 +205,6 @@ const AddressParse = (address, options) => {
     }
 }
 
-/**
- * 按照省市区县镇排序
- * @param splitAddress
- * @returns {*[]}
- */
-const sortAddress = (splitAddress) => {
-    const result = [];
-    const getIndex = (str) => {
-        return splitAddress.findIndex(item => ~item.indexOf(str))
-    }
-    ['省','自治区', '市', '区', '县', '街道','镇','村'].forEach(item => {
-        let index = getIndex(item)
-        if (~index) {
-            result.push(splitAddress.splice(index, 1)[0])
-        }
-    })
-
-    return [...result, ...splitAddress];
-}
 
 /**
  * 利用正则表达式解析
@@ -458,14 +439,9 @@ const parseRegion = (fragment, hasParseResult) => {
         let bestReplaceName = ''; // 用于记录得分最高的 replaceName
         let bestScore = 0; // 用于记录最高得分
 
-        console.log(111,currentProvince, currentCity)
         for (const tempArea of areas) {
             const {name, provinceCode, cityCode} = tempArea;
-            if(name === '鼓楼区'){
-                console.log(112,currentProvince,currentCity,tempArea)
-            }
             // 如果有省,则省必须相同
-
             if(currentProvince && currentProvince.code !== provinceCode){
                 continue;
             }
