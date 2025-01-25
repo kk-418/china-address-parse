@@ -916,5 +916,20 @@
       "cityCode": 3201,
       "countyCode": 320106
     }
+  },
+  {
+    "s": "李好好 13311111111 内蒙古自治区巴彦淖尔市乌拉特后旗 财苑华府东门北7号",
+    "parsedResult": {
+      "telNumber": "13311111111",
+      "provinceName": "内蒙古自治区",
+      "cityName": "巴彦淖尔市",
+      "countyName": "乌拉特后旗",
+      "detailInfo": "财苑华府东门北7号",
+      "name": "李好好",
+      "postalCode": "",
+      "provinceCode": 15,
+      "cityCode": 1508,
+      "countyCode": 150825
+    }
   }
 ]
