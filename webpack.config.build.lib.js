@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 
 const dirApp = path.join(__dirname, 'app');
@@ -42,18 +42,17 @@ module.exports = {
     optimization: {
         chunkIds: 'total-size',
         minimizer: [
-            new UglifyJsPlugin({
-                uglifyOptions: {
-                    extractComments: false,
-                    comments: false,
-                    warnings: false,
-                    parse: {},
+            new TerserPlugin({
+                terserOptions: {
                     compress: {
                         drop_console: true,
                     },
-                    ie8: false,
+                    format: {
+                        comments: false,
+                    },
                 },
-            }
-        )],
+                extractComments: false,
+            })
+        ],
     },
 };

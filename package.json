@@ -8,9 +8,9 @@
   "main": "./index.js",
   "typings": "./index.d.ts",
   "scripts": {
-    "dev": "cross-env NODE_ENV=dev webpack-dev-server --progress --mode development --config webpack.config.dev.js",
-    "build": "cross-env NODE_ENV=production webpack -p --progress --mode production --config webpack.config.build.js",
-    "build-lib": "cross-env NODE_ENV=production webpack -p --progress --mode production --config webpack.config.build.lib.js",
+    "dev": "cross-env NODE_ENV=dev webpack serve --progress --mode development --config webpack.config.dev.js",
+    "build": "cross-env NODE_ENV=production webpack --progress --mode production --config webpack.config.build.js",
+    "build-lib": "cross-env NODE_ENV=production webpack --progress --mode production --config webpack.config.build.lib.js",
     "push-release": "sh ./scripts/release.sh",
     "push-dev": "sh ./scripts/dev.sh",
     "fetch-data": "babel-node app/lib/getMcaGovData.js",
@@ -23,29 +23,27 @@
   "dependencies": {
     "jest": "^28.1.1",
     "jquery": "^3.4.1",
-    "lodash": "^4.17.15",
-    "uglifyjs-webpack-plugin": "^2.2.0"
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "@babel/cli": "^7.28.3",
     "@babel/core": "^7.28.4",
     "@babel/node": "^7.28.0",
     "@babel/preset-env": "^7.28.3",
-    "babel-loader": "^8.4.1",
+    "babel-loader": "^9.2.0",
     "cheerio": "^1.0.0-rc.3",
-    "clean-webpack-plugin": "^3.0.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "core-js": "^3.45.1",
     "cross-env": "^7.0.3",
-    "css-loader": "^3.2.0",
-    "file-loader": "^4.2.0",
-    "html-webpack-plugin": "^3.2.0",
+    "css-loader": "^7.1.2",
+    "html-webpack-plugin": "^5.6.0",
     "identity-obj-proxy": "^3.0.0",
     "sass": "^1.30.0",
-    "sass-loader": "^8.0.0",
-    "style-loader": "^1.0.0",
-    "url-loader": "^2.1.0",
-    "webpack": "^4.40.2",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^5.7.3"
+    "sass-loader": "^16.0.0",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0",
+    "webpack-merge": "^6.0.1"
   }
 }

@@ -16,6 +16,9 @@ const appHtmlTitle = 'zh-address-parse';
  */
 module.exports = {
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+    cache: {
+        type: 'filesystem'
+    },
     entry: {
         vendor: [
             'lodash'
@@ -95,9 +98,9 @@ module.exports = {
             // IMAGES
             {
                 test: /\.(jpe?g|png|gif)$/,
-                loader: 'file-loader',
-                options: {
-                    name: '[path][name].[ext]'
+                type: 'asset/resource',
+                generator: {
+                    filename: '[path][name].[ext]'
                 }
             }
         ]
