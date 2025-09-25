@@ -1,935 +1,810 @@
 [
   {
     "s": "北京 北京市 顺义区 胜利街道宜宾南区2-2-401 小程序模式测试 ww 13311111111",
-    "options": {
-      "mode": 1
-    },
     "parsedResult": {
+      "name": "ww",
       "telNumber": "13311111111",
       "provinceName": "北京市",
       "cityName": "北京市",
-      "countyName": "顺义区",
-      "detailInfo": "胜利街道宜宾南区2-2-401小程序模式测试",
-      "name": "ww",
-      "postalCode": "",
-      "provinceCode": 11,
-      "cityCode": 1101,
-      "countyCode": 110113
+      "subCityDivisionName": "顺义区",
+      "address": "胜利街道宜宾南区2-2-401小程序模式测试",
+      "postalCode": ""
+    },
+    "options": {
+      "mode": 1
     }
   },
   {
     "s": "发：浙江省台州市椒江景和大厦 丫丫 13311111111",
     "parsedResult": {
+      "name": "丫丫",
       "telNumber": "13311111111",
       "provinceName": "浙江省",
       "cityName": "台州市",
-      "countyName": "椒江区",
-      "detailInfo": "景和大厦",
-      "name": "丫丫",
-      "postalCode": "",
-      "provinceCode": 33,
-      "cityCode": 3310,
-      "countyCode": 331002
-    }
+      "subCityDivisionName": "椒江区",
+      "address": "景和大厦",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "寄件地址:\n云南省红河州弥勒市弥阳镇铺田社区弥西哨村\n王小小13311111111",
     "parsedResult": {
+      "name": "王小小",
       "telNumber": "13311111111",
       "provinceName": "云南省",
       "cityName": "红河哈尼族彝族自治州",
-      "countyName": "弥勒市",
-      "detailInfo": "弥阳镇铺田社区弥西哨村",
-      "name": "王小小",
-      "postalCode": "",
-      "provinceCode": 53,
-      "cityCode": 5325,
-      "countyCode": 532504
-    }
+      "subCityDivisionName": "弥勒市",
+      "address": "弥阳镇铺田社区弥西哨村",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "联商务13311111111广东省广州市番禺区东环街道 东沙村 下黄坊 汪波三街 北七巷 4号 ",
     "parsedResult": {
+      "name": "联商务",
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "广州市",
-      "countyName": "番禺区",
-      "detailInfo": "东环街道东沙村下黄坊汪波三街北七巷4号",
-      "name": "联商务",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4401,
-      "countyCode": 440113
-    }
+      "subCityDivisionName": "番禺区",
+      "address": "东环街道东沙村下黄坊汪波三街北七巷4号",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "李哈哈[9859]\n13311111111\n广东省 深圳市 龙岗区 布吉华龙新村60栋002[9859]",
     "parsedResult": {
+      "name": "李哈哈[9859]",
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "龙岗区",
-      "detailInfo": "布吉华龙新村60栋002[9859]",
-      "name": "李哈哈[9859]",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440307
-    }
+      "subCityDivisionName": "龙岗区",
+      "address": "布吉华龙新村60栋002[9859]",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "收件人: (唐哈)张哈哈\n收件电话: 13111111111\n收件地址: 江苏省南通市海门市叠石桥村委会有赠品请退回寄回产品如已清洗或人为损坏或到付件一律拒签",
     "parsedResult": {
+      "name": "(唐哈)张哈哈",
       "telNumber": "13111111111",
       "provinceName": "江苏省",
       "cityName": "南通市",
-      "countyName": "海门区",
-      "detailInfo": "叠石桥村委会",
-      "name": "(唐哈)张哈哈",
-      "postalCode": "",
-      "provinceCode": 32,
-      "cityCode": 3206,
-      "countyCode": 320614
-    }
+      "subCityDivisionName": "海门区",
+      "address": "叠石桥村委会",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "北京市东城区北京师范大学",
     "parsedResult": {
+      "name": "",
       "telNumber": "",
       "provinceName": "北京市",
       "cityName": "市辖区",
-      "countyName": "东城区",
-      "detailInfo": "北京师范大学",
-      "name": "",
-      "postalCode": "",
-      "provinceCode": 11,
-      "cityCode": 1101,
-      "countyCode": 110101
-    }
+      "subCityDivisionName": "东城区",
+      "address": "北京师范大学",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "曹哈哈（天猫-TT），13311111111，浙江省 嘉兴市 平湖市    浙江省嘉兴市平湖市新埭镇平兴公路199号1号库115门\n 【签收无误后在【5个工作日左右】完成退/换处理】",
     "parsedResult": {
+      "name": "曹哈哈（天猫-TT）",
       "telNumber": "13311111111",
       "provinceName": "浙江省",
       "cityName": "嘉兴市",
-      "countyName": "平湖市",
-      "detailInfo": "新埭镇平兴公路199号1号库115门",
-      "name": "曹哈哈（天猫-TT）",
-      "postalCode": "",
-      "provinceCode": 33,
-      "cityCode": 3304,
-      "countyCode": 330482
-    }
+      "subCityDivisionName": "平湖市",
+      "address": "新埭镇平兴公路199号1号库115门",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "北京 北京市 顺义区 胜利街道宜宾南区2-2-401 ww 13311111111",
     "parsedResult": {
+      "name": "ww",
       "telNumber": "13311111111",
       "provinceName": "北京市",
       "cityName": "市辖区",
-      "countyName": "顺义区",
-      "detailInfo": "胜利街道宜宾南区2-2-401",
-      "name": "ww",
-      "postalCode": "",
-      "provinceCode": 11,
-      "cityCode": 1101,
-      "countyCode": 110113
-    }
+      "subCityDivisionName": "顺义区",
+      "address": "胜利街道宜宾南区2-2-401",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "帕兰朵静蜜 13311111111 广东省汕头市潮南区 胪岗镇祁妍服饰（一楼静蜜电商）",
     "parsedResult": {
+      "name": "帕兰朵静蜜",
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "汕头市",
-      "countyName": "潮南区",
-      "detailInfo": "胪岗镇祁妍服饰（一楼静蜜电商）",
-      "name": "帕兰朵静蜜",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4405,
-      "countyCode": 440514
-    }
+      "subCityDivisionName": "潮南区",
+      "address": "胪岗镇祁妍服饰（一楼静蜜电商）",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "太阳鲜鲜 盐田区山海四季城F栋17A，13111111111",
     "parsedResult": {
+      "name": "太阳鲜鲜",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "盐田区",
-      "detailInfo": "山海四季城F栋17A",
-      "name": "太阳鲜鲜",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440308
-    }
+      "subCityDivisionName": "盐田区",
+      "address": "山海四季城F栋17A",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "盐田区山海四季城F栋2f，13111111111 太阳鲜鲜",
     "parsedResult": {
+      "name": "太阳鲜鲜",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "盐田区",
-      "detailInfo": "山海四季城F栋2f",
-      "name": "太阳鲜鲜",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440308
-    }
+      "subCityDivisionName": "盐田区",
+      "address": "山海四季城F栋2f",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "谢先生，深圳市龙岗区南湾街道尚峰花园4C2231 13111111111",
     "parsedResult": {
+      "name": "谢先生",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "龙岗区",
-      "detailInfo": "南湾街道尚峰花园4C2231",
-      "name": "谢先生",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440307
-    }
+      "subCityDivisionName": "龙岗区",
+      "address": "南湾街道尚峰花园4C2231",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "盐田区山海四季城D栋17A    周敏 13111111111",
     "parsedResult": {
+      "name": "周敏",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "盐田区",
-      "detailInfo": "山海四季城D栋17A",
-      "name": "周敏",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440308
-    }
+      "subCityDivisionName": "盐田区",
+      "address": "山海四季城D栋17A",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "广东省深圳市盐田区东海三街山海四季城F4E，李侯明，13111111111",
     "parsedResult": {
+      "name": "李侯明",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "盐田区",
-      "detailInfo": "东海三街山海四季城F4E",
-      "name": "李侯明",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440308
-    }
+      "subCityDivisionName": "盐田区",
+      "address": "东海三街山海四季城F4E",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "深圳市盐田区，大梅沙万科东海岸221栋，周女士13111111111",
     "parsedResult": {
+      "name": "周女士",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "盐田区",
-      "detailInfo": "大梅沙万科东海岸221栋",
-      "name": "周女士",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440308
-    }
+      "subCityDivisionName": "盐田区",
+      "address": "大梅沙万科东海岸221栋",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "收货人: 杨燕艳    手机号码: 13111111111所在地区: 广东省深圳市龙岗区龙岗街道详细地址: 格水村三巷十号三楼",
     "parsedResult": {
+      "name": "杨燕艳",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "龙岗区",
-      "detailInfo": "龙岗街道格水村三巷十号三楼",
-      "name": "杨燕艳",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440307
-    }
+      "subCityDivisionName": "龙岗区",
+      "address": "龙岗街道格水村三巷十号三楼",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "地址:深圳市盐田区山海四季城A栋32D张欢 13111111111",
     "parsedResult": {
+      "name": "张欢",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "盐田区",
-      "detailInfo": "山海四季城A栋32D",
-      "name": "张欢",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440308
-    }
+      "subCityDivisionName": "盐田区",
+      "address": "山海四季城A栋32D",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "地址：深圳市龙华新区樟坑一区通博花园181栋 收件人：于生生 电话：13111111111",
     "parsedResult": {
+      "name": "于生生",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "龙华区",
-      "detailInfo": "新区樟坑一区通博花园181栋",
-      "name": "于生生",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440309
-    }
+      "subCityDivisionName": "龙华区",
+      "address": "新区樟坑一区通博花园181栋",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "所在地区: 湖南省株洲市醴陵市白兔潭镇,详细地址: 金牛居委会金牛路5号国超刘娇 131 1111 1111",
     "parsedResult": {
+      "name": "白兔潭镇",
       "telNumber": "13111111111",
       "provinceName": "湖南省",
       "cityName": "株洲市",
-      "countyName": "醴陵市",
-      "detailInfo": "金牛居委会金牛路5号国超刘娇",
-      "name": "白兔潭镇",
-      "postalCode": "",
-      "provinceCode": 43,
-      "cityCode": 4302,
-      "countyCode": 430281
-    }
+      "subCityDivisionName": "醴陵市",
+      "address": "金牛居委会金牛路5号国超刘娇",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "江西南昌市青山湖区广兰大道418号东华理工大学核工系南区9栋1112室 131 1111 1111 孙轶念",
     "parsedResult": {
+      "name": "孙轶念",
       "telNumber": "13111111111",
       "provinceName": "江西省",
       "cityName": "南昌市",
-      "countyName": "青山湖区",
-      "detailInfo": "广兰大道418号东华理工大学核工系南区9栋1112室",
-      "name": "孙轶念",
-      "postalCode": "",
-      "provinceCode": 36,
-      "cityCode": 3601,
-      "countyCode": 360111
-    }
+      "subCityDivisionName": "青山湖区",
+      "address": "广兰大道418号东华理工大学核工系南区9栋1112室",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "湖北黄石市牧羊湖水机路华瑞南岸星城一栋一单元2202。 \n刘月红13111111111",
     "parsedResult": {
+      "name": "刘月红",
       "telNumber": "13111111111",
       "provinceName": "湖北省",
       "cityName": "黄石市",
-      "countyName": "",
-      "detailInfo": "牧羊湖水机路华瑞南岸星城一栋一单元2202",
-      "name": "刘月红",
-      "postalCode": "",
-      "provinceCode": 42,
-      "cityCode": 4202,
-      "countyCode": ""
-    }
+      "subCityDivisionName": "",
+      "address": "牧羊湖水机路华瑞南岸星城一栋一单元2202",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "盐田区北山道山海四季城F20D 韩先生 13111111111",
     "parsedResult": {
+      "name": "韩先生",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "盐田区",
-      "detailInfo": "北山道山海四季城F20D",
-      "name": "韩先生",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440308
-    }
+      "subCityDivisionName": "盐田区",
+      "address": "北山道山海四季城F20D",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "深圳市盐田区盐田街道东海三街8号山海四季花园  曾候丽  13111111111",
     "parsedResult": {
+      "name": "曾候丽",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "盐田区",
-      "detailInfo": "盐田街道东海三街8号山海四季花园",
-      "name": "曾候丽",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440308
-    }
+      "subCityDivisionName": "盐田区",
+      "address": "盐田街道东海三街8号山海四季花园",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "深圳市罗湖区凤凰路中山花园1栋582室，刘蓝琴，电話13111111111",
     "parsedResult": {
+      "name": "刘蓝琴",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "罗湖区",
-      "detailInfo": "凤凰路中山花园1栋582室",
-      "name": "刘蓝琴",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440303
-    }
+      "subCityDivisionName": "罗湖区",
+      "address": "凤凰路中山花园1栋582室",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "袁月青13111111111四川省成都市高新西区百叶路1号电子科技大学成都学院计算机(分院)",
     "parsedResult": {
+      "name": "袁月青",
       "telNumber": "13111111111",
       "provinceName": "四川省",
       "cityName": "成都市",
-      "countyName": "",
-      "detailInfo": "高新西区百叶路1号电子科技大学成都学院计算机(分院)",
-      "name": "袁月青",
-      "postalCode": "",
-      "provinceCode": 51,
-      "cityCode": 5101,
-      "countyCode": ""
-    }
+      "subCityDivisionName": "",
+      "address": "高新西区百叶路1号电子科技大学成都学院计算机(分院)",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "盐田区山海四季城F栋1B，卢燕13111111111",
     "parsedResult": {
+      "name": "卢燕",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "盐田区",
-      "detailInfo": "山海四季城F栋1B",
-      "name": "卢燕",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440308
-    }
+      "subCityDivisionName": "盐田区",
+      "address": "山海四季城F栋1B",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "地址：广东省佛山市顺德区乐从天佑城E座2005室；联系人：熊翠花联系电话：13111111111；",
     "parsedResult": {
+      "name": "熊翠花",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "佛山市",
-      "countyName": "顺德区",
-      "detailInfo": "乐从天佑城E座2005室",
-      "name": "熊翠花",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4406,
-      "countyCode": 440606
-    }
+      "subCityDivisionName": "顺德区",
+      "address": "乐从天佑城E座2005室",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "深圳市南山区南光路龙坤居2栋D座714，收件人：张珍云，电话：13111111111",
     "parsedResult": {
+      "name": "张珍云",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "南山区",
-      "detailInfo": "南光路龙坤居2栋D座714",
-      "name": "张珍云",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440305
-    }
+      "subCityDivisionName": "南山区",
+      "address": "南光路龙坤居2栋D座714",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "深圳市盐田区万科东海岸21-102，收件人：叶侠，电话：131 1111 1111",
     "parsedResult": {
+      "name": "叶侠",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "盐田区",
-      "detailInfo": "万科东海岸21-102",
-      "name": "叶侠",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440308
-    }
+      "subCityDivisionName": "盐田区",
+      "address": "万科东海岸21-102",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "地址：深圳市 南山区 南商路碧海天家园A89B 联系电话：13111111111 黄发猜",
     "parsedResult": {
+      "name": "黄发猜",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "countyName": "南山区",
-      "detailInfo": "南商路碧海天家园A89B",
-      "name": "黄发猜",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4403,
-      "countyCode": 440305
-    }
+      "subCityDivisionName": "南山区",
+      "address": "南商路碧海天家园A89B",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "都匀市水岸绿洲小区2栋二单元2033  李玉 13111111111",
     "parsedResult": {
+      "name": "李玉",
       "telNumber": "13111111111",
       "provinceName": "贵州省",
       "cityName": "黔南布依族苗族自治州",
-      "countyName": "都匀市",
-      "detailInfo": "水岸绿洲小区2栋二单元2033",
-      "name": "李玉",
-      "postalCode": "",
-      "provinceCode": 52,
-      "cityCode": 5227,
-      "countyCode": 522701
-    }
+      "subCityDivisionName": "都匀市",
+      "address": "水岸绿洲小区2栋二单元2033",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "贵州省都匀市。甘塘镇绿茵湖村一组2号  刘雪莉     13111111111",
     "parsedResult": {
+      "name": "刘雪莉",
       "telNumber": "13111111111",
       "provinceName": "贵州省",
       "cityName": "黔南布依族苗族自治州",
-      "countyName": "都匀市",
-      "detailInfo": "甘塘镇绿茵湖村一组2号",
-      "name": "刘雪莉",
-      "postalCode": "",
-      "provinceCode": 52,
-      "cityCode": 5227,
-      "countyCode": 522701
-    }
+      "subCityDivisionName": "都匀市",
+      "address": "甘塘镇绿茵湖村一组2号",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "湛江市廉江市车板镇人才市场，0755-22107333.曹建林 邮编：713200",
     "parsedResult": {
+      "name": "曹建林",
       "telNumber": "0755-22107333",
       "provinceName": "广东省",
       "cityName": "湛江市",
-      "countyName": "廉江市",
-      "detailInfo": "车板镇人才市场",
-      "name": "曹建林",
-      "postalCode": "713200",
-      "provinceCode": 44,
-      "cityCode": 4408,
-      "countyCode": 440881
-    }
+      "subCityDivisionName": "廉江市",
+      "address": "车板镇人才市场",
+      "postalCode": "713200"
+    },
+    "options": {}
   },
   {
     "s": "广东省清远市 清城区洲心街道，金茂家园一栋一楼100号商铺   13111111111 聂小姐",
     "parsedResult": {
+      "name": "聂小姐",
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "清远市",
-      "countyName": "清城区",
-      "detailInfo": "洲心街道金茂家园一栋一楼100号商铺",
-      "name": "聂小姐",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4418,
-      "countyCode": 441802
-    }
+      "subCityDivisionName": "清城区",
+      "address": "洲心街道金茂家园一栋一楼100号商铺",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "江苏省 苏州市 吴江区 干将东路678号江苏大厦11楼 215000 徐天宇 13911111111",
     "parsedResult": {
+      "name": "徐天宇",
       "telNumber": "13911111111",
       "provinceName": "江苏省",
       "cityName": "苏州市",
-      "countyName": "吴江区",
-      "detailInfo": "干将东路678号江苏大厦11楼",
-      "name": "徐天宇",
-      "postalCode": "215000",
-      "provinceCode": 32,
-      "cityCode": 3205,
-      "countyCode": 320509
-    }
+      "subCityDivisionName": "吴江区",
+      "address": "干将东路678号江苏大厦11楼",
+      "postalCode": "215000"
+    },
+    "options": {}
   },
   {
     "s": "王小梅13911111111湖南省郴州市桂东县桂东县清泉镇",
     "parsedResult": {
+      "name": "王小梅",
       "telNumber": "13911111111",
       "provinceName": "湖南省",
       "cityName": "郴州市",
-      "countyName": "桂东县",
-      "detailInfo": "清泉镇",
-      "name": "王小梅",
-      "postalCode": "",
-      "provinceCode": 43,
-      "cityCode": 4310,
-      "countyCode": 431027
-    }
+      "subCityDivisionName": "桂东县",
+      "address": "清泉镇",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "莫席辉13911111111广西壮族自治区柳州市柳北区跃进路42号4栋20楼",
     "parsedResult": {
+      "name": "莫席辉",
       "telNumber": "13911111111",
       "provinceName": "广西壮族自治区",
       "cityName": "柳州市",
-      "countyName": "柳北区",
-      "detailInfo": "跃进路42号4栋20楼",
-      "name": "莫席辉",
-      "postalCode": "",
-      "provinceCode": 45,
-      "cityCode": 4502,
-      "countyCode": 450205
-    }
+      "subCityDivisionName": "柳北区",
+      "address": "跃进路42号4栋20楼",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "韩仁伟,13911111111,安徽省安庆市太湖县新仓镇，塔山村，前进组",
     "parsedResult": {
+      "name": "韩仁伟",
       "telNumber": "13911111111",
       "provinceName": "安徽省",
       "cityName": "安庆市",
-      "countyName": "太湖县",
-      "detailInfo": "新仓镇塔山村前进组",
-      "name": "韩仁伟",
-      "postalCode": "",
-      "provinceCode": 34,
-      "cityCode": 3408,
-      "countyCode": 340825
-    }
+      "subCityDivisionName": "太湖县",
+      "address": "新仓镇塔山村前进组",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "北京市北京市东城区建设路紫薇花园 13311111111 何晓旭",
     "parsedResult": {
+      "name": "何晓旭",
       "telNumber": "13311111111",
       "provinceName": "北京市",
       "cityName": "市辖区",
-      "countyName": "东城区",
-      "detailInfo": "建设路紫薇花园",
-      "name": "何晓旭",
-      "postalCode": "",
-      "provinceCode": 11,
-      "cityCode": 1101,
-      "countyCode": 110101
-    }
+      "subCityDivisionName": "东城区",
+      "address": "建设路紫薇花园",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "13311111111 上海市黄浦区 建设路 紫薇花园  何晓旭",
     "parsedResult": {
+      "name": "何晓旭",
       "telNumber": "13311111111",
       "provinceName": "上海市",
       "cityName": "市辖区",
-      "countyName": "黄浦区",
-      "detailInfo": "建设路紫薇花园",
-      "name": "何晓旭",
-      "postalCode": "",
-      "provinceCode": 31,
-      "cityCode": 3101,
-      "countyCode": 310101
-    }
+      "subCityDivisionName": "黄浦区",
+      "address": "建设路紫薇花园",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "王晓光 重庆市 垫江县 太平镇，13311111111",
     "parsedResult": {
+      "name": "王晓光",
       "telNumber": "13311111111",
       "provinceName": "重庆市",
       "cityName": "县",
-      "countyName": "垫江县",
-      "detailInfo": "太平镇",
-      "name": "王晓光",
-      "postalCode": "",
-      "provinceCode": 50,
-      "cityCode": 5002,
-      "countyCode": 500231
-    }
+      "subCityDivisionName": "垫江县",
+      "address": "太平镇",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "瓦丽丽，13311111111，甘肃省 兰州市 城关区 东岗街道向阳街道",
     "parsedResult": {
+      "name": "瓦丽丽",
       "telNumber": "13311111111",
       "provinceName": "甘肃省",
       "cityName": "兰州市",
-      "countyName": "城关区",
-      "detailInfo": "东岗街道向阳街道",
-      "name": "瓦丽丽",
-      "postalCode": "",
-      "provinceCode": 62,
-      "cityCode": 6201,
-      "countyCode": 620102
-    }
+      "subCityDivisionName": "城关区",
+      "address": "东岗街道向阳街道",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "刘海江13311111111河南省省直辖县级行政区划济源市沁园路丹尼斯",
     "parsedResult": {
+      "name": "刘海江",
       "telNumber": "13311111111",
       "provinceName": "河南省",
       "cityName": "省直辖县级行政区划",
-      "countyName": "济源市",
-      "detailInfo": "沁园路丹尼斯",
-      "name": "刘海江",
-      "postalCode": "",
-      "provinceCode": 41,
-      "cityCode": 4190,
-      "countyCode": 419001
-    }
+      "subCityDivisionName": "济源市",
+      "address": "沁园路丹尼斯",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "13311111111 广东省 东莞市 中堂镇潢涌大坦村二街四巷1号",
     "parsedResult": {
+      "name": "",
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "东莞市",
-      "countyName": "中堂镇",
-      "detailInfo": "潢涌大坦村二街四巷1号",
-      "name": "",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4419,
-      "countyCode": 441900128
-    }
+      "subCityDivisionName": "中堂镇",
+      "address": "潢涌大坦村二街四巷1号",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "韩丽丽 13311111111 广东省 东莞市 望牛墩镇赤滘村南昌南路53号",
     "parsedResult": {
+      "name": "韩丽丽",
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "东莞市",
-      "countyName": "望牛墩镇",
-      "detailInfo": "赤滘村南昌南路53号",
-      "name": "韩丽丽",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4419,
-      "countyCode": 441900127
-    }
+      "subCityDivisionName": "望牛墩镇",
+      "address": "赤滘村南昌南路53号",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "蔡丽凤,13311111111,江苏省盐城市其它区神州路御景湾7#1104",
     "parsedResult": {
+      "name": "蔡丽凤",
       "telNumber": "13311111111",
       "provinceName": "江苏省",
       "cityName": "盐城市",
-      "countyName": "",
-      "detailInfo": "其它区神州路御景湾71104",
-      "name": "蔡丽凤",
-      "postalCode": "",
-      "provinceCode": 32,
-      "cityCode": 3209,
-      "countyCode": ""
-    }
+      "subCityDivisionName": "",
+      "address": "其它区神州路御景湾71104",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "张彤，13311111111，黑龙江省 大兴安岭地区 加格达奇区 铁路南小区29号楼4单元5658sf",
     "parsedResult": {
+      "name": "张彤",
       "telNumber": "13311111111",
       "provinceName": "黑龙江省",
       "cityName": "大兴安岭地区",
-      "countyName": "加格达奇区",
-      "detailInfo": "铁路南小区29号楼4单元5658sf",
-      "name": "张彤",
-      "postalCode": "",
-      "provinceCode": 23,
-      "cityCode": 2327,
-      "countyCode": 232761
-    }
+      "subCityDivisionName": "加格达奇区",
+      "address": "铁路南小区29号楼4单元5658sf",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "黄梅, 13311111111, 江西省 抚州市 临川区 上顿渡镇江西省抚州市临川区上顿渡镇老公安局",
     "parsedResult": {
+      "name": "黄梅",
       "telNumber": "13311111111",
       "provinceName": "江西省",
       "cityName": "抚州市",
-      "countyName": "临川区",
-      "detailInfo": "上顿渡镇上顿渡镇老公安局",
-      "name": "黄梅",
-      "postalCode": "",
-      "provinceCode": 36,
-      "cityCode": 3610,
-      "countyCode": 361002
-    }
+      "subCityDivisionName": "临川区",
+      "address": "上顿渡镇上顿渡镇老公安局",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "何花菊，86-13311111111，辽宁省 盘锦市 盘山县 东郭镇 辽宁省盘锦市盘山县东郭镇 ，000000",
     "parsedResult": {
+      "name": "何花菊",
       "telNumber": "13311111111",
       "provinceName": "辽宁省",
       "cityName": "盘锦市",
-      "countyName": "盘山县",
-      "detailInfo": "东郭镇",
-      "name": "何花菊",
-      "postalCode": "000000",
-      "provinceCode": 21,
-      "cityCode": 2111,
-      "countyCode": 211122
-    }
+      "subCityDivisionName": "盘山县",
+      "address": "东郭镇",
+      "postalCode": "000000"
+    },
+    "options": {}
   },
   {
     "s": "雁平 86-13311111111 广东省 江门市 恩平市 牛江镇 岭南娟姑水果店",
     "parsedResult": {
+      "name": "雁平",
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "江门市",
-      "countyName": "恩平市",
-      "detailInfo": "牛江镇岭南娟姑水果店",
-      "name": "雁平",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4407,
-      "countyCode": 440785
-    }
+      "subCityDivisionName": "恩平市",
+      "address": "牛江镇岭南娟姑水果店",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "北京 北京市 顺义区 胜利街道宜宾南区2-2-401  李俊南 18210997754",
     "parsedResult": {
+      "name": "李俊南",
       "telNumber": "18210997754",
       "provinceName": "北京市",
       "cityName": "市辖区",
-      "countyName": "顺义区",
-      "detailInfo": "胜利街道宜宾南区2-2-401",
-      "name": "李俊南",
-      "postalCode": "",
-      "provinceCode": 11,
-      "cityCode": 1101,
-      "countyCode": 110113
-    }
+      "subCityDivisionName": "顺义区",
+      "address": "胜利街道宜宾南区2-2-401",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "南宫雪 重庆市县酉阳土家族苗族自治县龙潭镇龙潭一中新校门13311111111",
     "parsedResult": {
+      "name": "南宫雪",
       "telNumber": "13311111111",
       "provinceName": "重庆市",
       "cityName": "县",
-      "countyName": "酉阳土家族苗族自治县",
-      "detailInfo": "龙潭镇龙潭一中新校门",
-      "name": "南宫雪",
-      "postalCode": "",
-      "provinceCode": 50,
-      "cityCode": 5002,
-      "countyCode": 500242
-    }
+      "subCityDivisionName": "酉阳土家族苗族自治县",
+      "address": "龙潭镇龙潭一中新校门",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "南宫雪 新疆维吾尔自治区和田地区和田市xx小区 13311111111",
     "parsedResult": {
+      "name": "南宫雪",
       "telNumber": "13311111111",
       "provinceName": "新疆维吾尔自治区",
       "cityName": "和田地区",
-      "countyName": "和田市",
-      "detailInfo": "xx小区",
-      "name": "南宫雪",
-      "postalCode": "",
-      "provinceCode": 65,
-      "cityCode": 6532,
-      "countyCode": 653201
-    }
+      "subCityDivisionName": "和田市",
+      "address": "xx小区",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "南宫雪 新疆维吾尔自治区和田地区和田市xx小区 13311111111",
     "parsedResult": {
+      "name": "南宫雪",
       "telNumber": "13311111111",
       "provinceName": "新疆维吾尔自治区",
       "cityName": "和田地区",
-      "countyName": "和田市",
-      "detailInfo": "xx小区",
-      "name": "南宫雪",
-      "postalCode": "",
-      "provinceCode": 65,
-      "cityCode": 6532,
-      "countyCode": 653201
-    }
+      "subCityDivisionName": "和田市",
+      "address": "xx小区",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "售后，13311111111，福建省 福州市 闽侯县    祥谦镇五虎山工业区，洋山路与辅澜路交叉口五虎山小学旁， 福州优选仓储",
     "parsedResult": {
+      "name": "售后",
       "telNumber": "13311111111",
       "provinceName": "福建省",
       "cityName": "福州市",
-      "countyName": "闽侯县",
-      "detailInfo": "祥谦镇五虎山工业区洋山路与辅澜路交叉口五虎山小学旁福州优选仓储",
-      "name": "售后",
-      "postalCode": "",
-      "provinceCode": 35,
-      "cityCode": 3501,
-      "countyCode": 350121
-    }
+      "subCityDivisionName": "闽侯县",
+      "address": "祥谦镇五虎山工业区洋山路与辅澜路交叉口五虎山小学旁福州优选仓储",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "江苏省苏州市昆山市王家甸路99号周清13311111111",
     "parsedResult": {
+      "name": "周清",
       "telNumber": "13311111111",
       "provinceName": "江苏省",
       "cityName": "苏州市",
-      "countyName": "昆山市",
-      "detailInfo": "王家甸路99号",
-      "name": "周清",
-      "postalCode": "",
-      "provinceCode": 32,
-      "cityCode": 3205,
-      "countyCode": 320583
-    }
+      "subCityDivisionName": "昆山市",
+      "address": "王家甸路99号",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "英灵，13311111111，广东省 揭阳市 普宁市    池尾镇池尾街道上寮园53栋298网批 （注：请原包装退货，否则仓库拒收的，感谢您的配合）",
     "parsedResult": {
+      "name": "英灵",
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "揭阳市",
-      "countyName": "普宁市",
-      "detailInfo": "池尾镇池尾街道上寮园53栋298网批",
-      "name": "英灵",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4452,
-      "countyCode": 445281
-    }
+      "subCityDivisionName": "普宁市",
+      "address": "池尾镇池尾街道上寮园53栋298网批",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "南宫雪 海南省省直辖县级行政区划东方市龙潭镇龙潭一中新校门13311111111",
     "parsedResult": {
+      "name": "南宫雪",
       "telNumber": "13311111111",
       "provinceName": "海南省",
       "cityName": "省直辖县级行政区划",
-      "countyName": "东方市",
-      "detailInfo": "龙潭镇龙潭一中新校门",
-      "name": "南宫雪",
-      "postalCode": "",
-      "provinceCode": 46,
-      "cityCode": 4690,
-      "countyCode": 469007
-    }
+      "subCityDivisionName": "东方市",
+      "address": "龙潭镇龙潭一中新校门",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "金牛座,13311111111,广东省中山市中山市西区街道沙朗镇盈通二街",
     "parsedResult": {
+      "name": "金牛座",
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "中山市",
-      "countyName": "西区街道",
-      "detailInfo": "沙朗镇盈通二街",
-      "name": "金牛座",
-      "postalCode": "",
-      "provinceCode": 44,
-      "cityCode": 4420,
-      "countyCode": 442000004
-    }
+      "subCityDivisionName": "西区街道",
+      "address": "沙朗镇盈通二街",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "梅江苏,13311111111,江苏省南京市鼓楼区建宁路搜索发的",
     "parsedResult": {
+      "name": "梅江苏",
       "telNumber": "13311111111",
       "provinceName": "江苏省",
       "cityName": "南京市",
-      "countyName": "鼓楼区",
-      "detailInfo": "建宁路搜索发的",
-      "name": "梅江苏",
-      "postalCode": "",
-      "provinceCode": 32,
-      "cityCode": 3201,
-      "countyCode": 320106
-    }
+      "subCityDivisionName": "鼓楼区",
+      "address": "建宁路搜索发的",
+      "postalCode": ""
+    },
+    "options": {}
   },
   {
     "s": "李好好 13311111111 内蒙古自治区巴彦淖尔市乌拉特后旗 财苑华府东门北7号",
     "parsedResult": {
+      "name": "李好好",
       "telNumber": "13311111111",
       "provinceName": "内蒙古自治区",
       "cityName": "巴彦淖尔市",
-      "countyName": "乌拉特后旗",
-      "detailInfo": "财苑华府东门北7号",
-      "name": "李好好",
-      "postalCode": "",
-      "provinceCode": 15,
-      "cityCode": 1508,
-      "countyCode": 150825
-    }
+      "subCityDivisionName": "乌拉特后旗",
+      "address": "财苑华府东门北7号",
+      "postalCode": ""
+    },
+    "options": {}
   }
 ]

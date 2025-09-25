@@ -10,17 +10,22 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=dev webpack serve --progress --mode development --config webpack.config.dev.js",
     "build": "cross-env NODE_ENV=production webpack --progress --mode production --config webpack.config.build.js",
-    "build-lib": "cross-env NODE_ENV=production webpack --progress --mode production --config webpack.config.build.lib.js",
+    "build-lib": "pnpm run build-lib:default && pnpm run build-lib:nocode",
+    "build-lib:default": "cross-env NODE_ENV=production webpack --progress --mode production --config webpack.config.build.lib.js",
+    "build-lib:nocode": "cross-env NODE_ENV=production webpack --progress --mode production --config webpack.config.build.lib.nocode.js",
     "push-release": "sh ./scripts/release.sh",
     "push-dev": "sh ./scripts/dev.sh",
     "fetch-data": "babel-node app/lib/getMcaGovData.js",
-    "test": "npm run build-lib && yarn jest"
+    "test": "pnpm run build-lib && pnpm run test:default && pnpm run test:nocode",
+    "test:default": "TEST_FILE=zh-address-parse.min.js pnpm exec jest",
+    "test:nocode": "TEST_FILE=zh-address-parse.nocode.min.js pnpm exec jest"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/ldwonday/zh-address-parse.git"
   },
   "dependencies": {
+    "cn-division": "link:../../Library/pnpm/global/5/node_modules/cn-division",
     "jest": "^28.1.1",
     "jquery": "^3.4.1",
     "lodash": "^4.17.15"

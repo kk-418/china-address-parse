@@ -12,16 +12,18 @@ import TreeParser from '../parsers/TreeParser.js';
 import Logger from '../utils/logger.js';
 import { cleanAddress, cleanUselessWords } from '../utils/cleaner.js';
 import { absolutelyNotName, hasChinese } from '../utils/validator.js';
-import { DEFAULT_OPTIONS, PARSE_TYPE, RUN_MODE } from '../constants/config.js';
+import { DEFAULT_OPTIONS, PARSE_TYPE, RUN_MODE, DATA_SOURCE } from '../constants/config.js';
 import { MINIAPP_REWRITE_CITY_NAMES } from '../constants/keywords.js';
 
 class AddressParser {
-    constructor() {
-        this.dataManager = new DataManager();
+    constructor(dataSource = DATA_SOURCE.DEFAULT, includeCode = false) {
+        this.dataManager = new DataManager(dataSource, includeCode);
         this.logger = new Logger(false);
         this.phoneExtractor = new PhoneExtractor();
         this.postalCodeExtractor = new PostalCodeExtractor();
         this.nameExtractor = new NameExtractor(this.dataManager.getProvinces());
+        this._dataSource = dataSource;
+        this._includeCode = includeCode;
 
         // 创建解析器实例
         this.regexpParser = new RegexpParser(
@@ -156,12 +158,8 @@ class AddressParser {
     _parseRegions(splitAddress, parseResult, config) {
         splitAddress.forEach(item => {
             if (!parseResult.province[0] || !parseResult.city[0] || !parseResult.area[0]) {
-                let parser;
-                if (config.type === PARSE_TYPE.TREE) {
-                    parser = this.treeParser;
-                } else {
-                    parser = this.regexpParser;
-                }
+                // 统一使用TreeParser，不再使用RegexpParser
+                const parser = this.treeParser;
 
                 const parseRegionResult = parser.parse(item, parseResult);
                 parseResult.province = parseRegionResult.province || [];
@@ -209,18 +207,25 @@ class AddressParser {
             cityName = provinceName;
         }
 
-        return {
+        // 构建返回结果
+        const result = {
             name: parseResult.name || '',
             telNumber: parseResult.telNumber || '',
             provinceName: provinceName,
-            provinceCode: provinceCode,
             cityName: cityName,
-            cityCode: cityCode,
-            countyName: countyName,
-            countyCode: countyCode,
-            detailInfo: (detail && detail.length > 0 && detail.join('')) || '',
+            subCityDivisionName: countyName,
+            address: (detail && detail.length > 0 && detail.join('')) || '',
             postalCode: parseResult.postalCode || ''
         };
+
+        // 根据配置决定是否包含编码
+        if (config.includeCode || this._includeCode) {
+            result.provinceCode = provinceCode;
+            result.cityCode = cityCode;
+            result.subCityDivisionCode = countyCode;
+        }
+
+        return result;
     }
 
     /**
@@ -228,18 +233,24 @@ class AddressParser {
      * @private
      */
     _createEmptyResult() {
-        return {
+        const result = {
             name: '',
             telNumber: '',
             provinceName: '',
-            provinceCode: '',
             cityName: '',
-            cityCode: '',
-            countyName: '',
-            countyCode: '',
-            detailInfo: '',
+            subCityDivisionName: '',
+            address: '',
             postalCode: ''
         };
+
+        // 根据配置决定是否包含编码字段
+        if (this._includeCode) {
+            result.provinceCode = '';
+            result.cityCode = '';
+            result.subCityDivisionCode = '';
+        }
+
+        return result;
     }
 }
 

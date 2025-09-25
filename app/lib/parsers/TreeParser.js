@@ -228,7 +228,7 @@ class TreeParser extends BaseParser {
         for (const tempArea of this.areas) {
             const { name, provinceCode, cityCode } = tempArea;
 
-            if (fragment.startsWith(name)) {
+            if (name && typeof name === 'string' && typeof fragment === 'string' && fragment.startsWith(name)) {
                 const cleanedFragment = fragment.replace(name, '');
                 const matchedCity = this.getCityByCode(cityCode);
                 const matchedProvince = this.getProvinceByCode(provinceCode);

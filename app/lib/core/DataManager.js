@@ -4,12 +4,19 @@
  */
 
 import addressJson from '../data/area.json';
+import CNDivisionLoader from '../loaders/CNDivisionLoader.js';
+import CNDivisionAdapter from '../adapters/CNDivisionAdapter.js';
+import { DATA_SOURCE } from '../constants/config.js';
 
 class DataManager {
-    constructor() {
+    constructor(dataSource = DATA_SOURCE.DEFAULT, includeCode = false) {
         this._provinces = null;
         this._cities = null;
         this._areas = null;
+        this._dataSource = dataSource;
+        this._includeCode = includeCode;
+        this._cnDivisionLoader = null;
+
         this._initData();
     }
 
@@ -18,6 +25,25 @@ class DataManager {
      * @private
      */
     _initData() {
+        switch (this._dataSource) {
+            case DATA_SOURCE.CN_DIVISION_CODE:
+                this._initCNDivisionData(true);
+                break;
+            case DATA_SOURCE.CN_DIVISION_NOCODE:
+                this._initCNDivisionData(false);
+                break;
+            case DATA_SOURCE.DEFAULT:
+            default:
+                this._initDefaultData();
+                break;
+        }
+    }
+
+    /**
+     * 初始化默认数据（原有area.json格式）
+     * @private
+     */
+    _initDefaultData() {
         this._provinces = addressJson.reduce((acc, cur) => {
             const { children, ...others } = cur;
             return acc.concat(others);
@@ -41,6 +67,33 @@ class DataManager {
                 })) : []);
             }, []) : []);
         }, []);
+    }
+
+    /**
+     * 初始化cn-division数据
+     * @param {boolean} includeCode - 是否包含编码
+     * @private
+     */
+    _initCNDivisionData(includeCode) {
+        try {
+            if (!this._cnDivisionLoader) {
+                this._cnDivisionLoader = new CNDivisionLoader();
+            }
+
+            const rawData = includeCode
+                ? this._cnDivisionLoader.getCodeData()
+                : this._cnDivisionLoader.getNoCodeData();
+
+            const adaptedData = CNDivisionAdapter.adapt(rawData, includeCode);
+
+            this._provinces = adaptedData.provinces;
+            this._cities = adaptedData.cities;
+            this._areas = adaptedData.areas;
+
+        } catch (error) {
+            console.warn(`初始化cn-division数据失败，回退到默认数据: ${error.message}`);
+            this._initDefaultData();
+        }
     }
 
     /**

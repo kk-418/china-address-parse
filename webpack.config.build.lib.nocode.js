@@ -7,12 +7,12 @@ const TerserPlugin = require('terser-webpack-plugin');
 const dirApp = path.join(__dirname, 'app');
 
 /**
- * Webpack Configuration
+ * Webpack Configuration for NoCode Version
  */
 module.exports = {
-    entry: path.join(dirApp, 'lib/index.js'),
+    entry: path.join(dirApp, 'lib/index-nocode.js'),
     output: {
-        filename: 'zh-address-parse.min.js', //打包之后生成的文件名，可以随意写。
+        filename: 'zh-address-parse.nocode.min.js', //打包之后生成的文件名，可以随意写。
         library: 'ZhAddressParse', // 指定类库名,主要用于直接引用的方式(比如使用script 标签)
         libraryExport: "default", // 对外暴露default属性，就可以直接调用default里的属性
         globalObject: 'this', // 定义全局变量,兼容node和浏览器运行，避免出现"window is not defined"的情况
@@ -35,7 +35,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'index.html'),
-            title: 'zh-address-parse'
+            title: 'zh-address-parse-nocode'
         })
     ],
 
