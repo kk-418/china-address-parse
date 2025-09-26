@@ -85,7 +85,7 @@
       "name": "",
       "telNumber": "",
       "provinceName": "北京市",
-      "cityName": "市辖区",
+      "cityName": "北京市",
       "subCityDivisionName": "东城区",
       "address": "北京师范大学",
       "postalCode": ""
@@ -111,7 +111,7 @@
       "name": "ww",
       "telNumber": "13311111111",
       "provinceName": "北京市",
-      "cityName": "市辖区",
+      "cityName": "北京市",
       "subCityDivisionName": "顺义区",
       "address": "胜利街道宜宾南区2-2-401",
       "postalCode": ""
@@ -514,7 +514,7 @@
       "name": "何晓旭",
       "telNumber": "13311111111",
       "provinceName": "北京市",
-      "cityName": "市辖区",
+      "cityName": "北京市",
       "subCityDivisionName": "东城区",
       "address": "建设路紫薇花园",
       "postalCode": ""
@@ -527,7 +527,7 @@
       "name": "何晓旭",
       "telNumber": "13311111111",
       "provinceName": "上海市",
-      "cityName": "市辖区",
+      "cityName": "上海市",
       "subCityDivisionName": "黄浦区",
       "address": "建设路紫薇花园",
       "postalCode": ""
@@ -566,7 +566,7 @@
       "name": "刘海江",
       "telNumber": "13311111111",
       "provinceName": "河南省",
-      "cityName": "省直辖县级行政区划",
+      "cityName": "省直辖县级行政单位",
       "subCityDivisionName": "济源市",
       "address": "沁园路丹尼斯",
       "postalCode": ""
@@ -670,7 +670,7 @@
       "name": "李俊南",
       "telNumber": "18210997754",
       "provinceName": "北京市",
-      "cityName": "市辖区",
+      "cityName": "北京市",
       "subCityDivisionName": "顺义区",
       "address": "胜利街道宜宾南区2-2-401",
       "postalCode": ""
@@ -761,7 +761,7 @@
       "name": "南宫雪",
       "telNumber": "13311111111",
       "provinceName": "海南省",
-      "cityName": "省直辖县级行政区划",
+      "cityName": "省直辖县级行政单位",
       "subCityDivisionName": "东方市",
       "address": "龙潭镇龙潭一中新校门",
       "postalCode": ""

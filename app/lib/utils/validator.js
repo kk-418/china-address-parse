@@ -72,6 +72,11 @@ export function isMutuallyExclusiveNameWord(lastNamePair, text, index) {
 
     const [lastName, prefixWords, suffixWords] = lastNamePair;
 
+    // 如果只有姓氏没有互斥词组信息，则不存在互斥
+    if (!prefixWords && !suffixWords) {
+        return false;
+    }
+
     // 检查前缀互斥词
     if (prefixWords) {
         for (const word of prefixWords) {

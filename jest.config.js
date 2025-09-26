@@ -23,10 +23,6 @@ module.exports = {
         'node_modules/(?!(.*\\.mjs$))'
     ],
 
-    // 模块名映射，处理JSON导入
-    moduleNameMapper: {
-        '\\.(json)$': 'identity-obj-proxy'
-    },
 
     // 收集覆盖率的文件
     collectCoverageFrom: [

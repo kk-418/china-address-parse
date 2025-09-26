@@ -4,11 +4,14 @@
  * @author kk
  */
 
-import pcaCodeRaw from '../data/cn-division/pca-code.json' with { type: 'json' };
+import pcaCodeRaw from 'cn-division/dist/code/pca.json' with { type: 'json' };
+import { getMappingConfig } from '../constants/propertyMapping.js';
 
 class CNDivisionCodeLoader {
-    constructor() {
+    constructor(propertyMapping = {}) {
         this._cachedData = null;
+        // 获取属性映射配置，默认使用cn-division格式 c/n/ch
+        this.mapping = getMappingConfig(propertyMapping);
     }
 
     /**
@@ -39,30 +42,35 @@ class CNDivisionCodeLoader {
         const cities = [];
         const areas = [];
 
+        // 使用可配置的属性名
+        const { codeKey, nameKey, childrenKey } = this.mapping;
+
         data.forEach(provinceItem => {
             // 省份数据
             provinces.push({
-                code: provinceItem.c,
-                name: provinceItem.n
+                code: provinceItem[codeKey],
+                name: provinceItem[nameKey]
             });
 
-            if (provinceItem.ch && provinceItem.ch.length > 0) {
-                provinceItem.ch.forEach(cityItem => {
+            const provinceChildren = provinceItem[childrenKey];
+            if (provinceChildren && provinceChildren.length > 0) {
+                provinceChildren.forEach(cityItem => {
                     // 城市数据
                     cities.push({
-                        code: cityItem.c,
-                        name: cityItem.n,
-                        provinceCode: provinceItem.c
+                        code: cityItem[codeKey],
+                        name: cityItem[nameKey],
+                        provinceCode: provinceItem[codeKey]
                     });
 
-                    if (cityItem.ch && cityItem.ch.length > 0) {
-                        cityItem.ch.forEach(areaItem => {
+                    const cityChildren = cityItem[childrenKey];
+                    if (cityChildren && cityChildren.length > 0) {
+                        cityChildren.forEach(areaItem => {
                             // 区县数据
                             areas.push({
-                                code: areaItem.c,
-                                name: areaItem.n,
-                                cityCode: cityItem.c,
-                                provinceCode: provinceItem.c
+                                code: areaItem[codeKey],
+                                name: areaItem[nameKey],
+                                cityCode: cityItem[codeKey],
+                                provinceCode: provinceItem[codeKey]
                             });
                         });
                     }

@@ -60,9 +60,18 @@ class TreeParser extends BaseParser {
             }
         }
 
-        // 剩余部分作为详细地址
+        // 剩余部分作为详细地址，但需要去除重复的省市区信息
         if (fragment.length > 0) {
-            detail.push(fragment);
+            console.log('[DEBUG] 调用 _removeRepeatedRegions');
+            console.log('[DEBUG] fragment:', fragment);
+            console.log('[DEBUG] province[0]:', province[0]);
+            console.log('[DEBUG] city[0]:', city[0]);
+            console.log('[DEBUG] area[0]:', area[0]);
+            const cleanedFragment = this._removeRepeatedRegions(fragment, province[0], city[0], area[0]);
+            console.log('[DEBUG] cleanedFragment:', cleanedFragment);
+            if (cleanedFragment.length > 0) {
+                detail.push(cleanedFragment);
+            }
         }
 
         this.logger.log('匹配结果:', province, city, area, detail);
@@ -74,8 +83,15 @@ class TreeParser extends BaseParser {
      * @private
      */
     _parseProvince(fragment) {
+        // 确保fragment是字符串
+        if (!fragment || typeof fragment !== 'string') {
+            return { fragment: '', province: null };
+        }
+
         for (const tempProvince of this.provinces) {
             const { name } = tempProvince;
+            if (!name || typeof name !== 'string') continue;
+
             let replaceName = '';
 
             for (let i = name.length; i > 1; i--) {
@@ -102,8 +118,14 @@ class TreeParser extends BaseParser {
      * @private
      */
     _parseCity(fragment, currentProvince) {
+        // 确保fragment是字符串
+        if (!fragment || typeof fragment !== 'string') {
+            return { fragment: '', city: null };
+        }
+
         for (const tempCity of this.cities) {
             const { name, provinceCode } = tempCity;
+            if (!name || typeof name !== 'string') continue;
 
             // 如果有省份，必须匹配省份代码
             if (currentProvince && currentProvince.code !== provinceCode) {
@@ -148,6 +170,11 @@ class TreeParser extends BaseParser {
      * @private
      */
     _parseArea(fragment, currentProvince, currentCity) {
+        // 确保fragment是字符串
+        if (!fragment || typeof fragment !== 'string') {
+            return { fragment: '', area: null };
+        }
+
         if (!currentProvince && !currentCity) {
             // 没有省市信息，直接匹配完整区县名
             return this._parseAreaWithoutProvinceCity(fragment);
@@ -161,12 +188,18 @@ class TreeParser extends BaseParser {
      * @private
      */
     _parseAreaWithProvinceCity(fragment, currentProvince, currentCity) {
+        // 确保fragment是字符串
+        if (!fragment || typeof fragment !== 'string') {
+            return { fragment: '', area: null };
+        }
+
         let bestMatch = null;
         let bestReplaceName = '';
         let bestScore = 0;
 
         for (const tempArea of this.areas) {
             const { name, provinceCode, cityCode } = tempArea;
+            if (!name || typeof name !== 'string') continue;
 
             // 省份必须匹配
             if (currentProvince && currentProvince.code !== provinceCode) {
@@ -225,6 +258,11 @@ class TreeParser extends BaseParser {
      * @private
      */
     _parseAreaWithoutProvinceCity(fragment) {
+        // 确保fragment是字符串
+        if (!fragment || typeof fragment !== 'string') {
+            return { fragment: '', area: null };
+        }
+
         for (const tempArea of this.areas) {
             const { name, provinceCode, cityCode } = tempArea;
 
@@ -243,6 +281,194 @@ class TreeParser extends BaseParser {
         }
 
         return { fragment, area: null };
+    }
+
+    /**
+     * 根据省份名称查找省份对象
+     * @private
+     */
+    _getProvinceByName(provinceName) {
+        return this.provinces.find(p => p.name === provinceName) || null;
+    }
+
+    /**
+     * 根据城市名称查找城市对象
+     * @private
+     */
+    _getCityByName(cityName) {
+        return this.cities.find(c => c.name === cityName) || null;
+    }
+
+    /**
+     * 检查地址片段是否需要保护（避免过度清理）
+     * @param {string} fragment - 地址片段
+     * @returns {boolean} 是否需要保护
+     * @private
+     */
+    _shouldProtectFragment(fragment) {
+        if (!fragment) return false;
+
+        // 保护规则：包含教育机构的地址
+        const educationPatterns = [
+            /[市区县镇乡村街道][^市区县镇乡村街道]*(大学|学院|学校|中学|小学|师范)/,
+            /[市区县镇乡村街道][^市区县镇乡村街道]*(医院|银行|酒店|商场|公园|广场|大厦)/
+        ];
+
+        // 保护规则：街道社区等地标
+        const landmarkPatterns = [
+            /^[^省市区县]{2,4}(街道|社区|小区|花园|大厦|广场)/
+        ];
+
+        const allPatterns = [...educationPatterns, ...landmarkPatterns];
+        return allPatterns.some(pattern => pattern.test(fragment));
+    }
+
+    /**
+     * 构建完整的省市区路径
+     * @param {Object} province - 省份对象
+     * @param {Object} city - 城市对象
+     * @param {Object} area - 区县对象
+     * @returns {string} 完整路径
+     * @private
+     */
+    _buildFullRegionPath(province, city, area) {
+        let path = '';
+        if (province && province.name) path += province.name;
+        if (city && city.name) path += city.name;
+        if (area && area.name) path += area.name;
+        return path;
+    }
+
+    /**
+     * 只清理完整的重复路径
+     * @param {string} fragment - 地址片段
+     * @param {string} fullPath - 完整省市区路径
+     * @returns {string} 清理后的片段
+     * @private
+     */
+    _removeCompleteRepeatedPath(fragment, fullPath) {
+        if (!fullPath || fullPath.length < 6) return fragment;
+
+        // 只移除完整的重复路径
+        if (fragment.includes(fullPath)) {
+            return fragment.replace(fullPath, '').trim();
+        }
+
+        return fragment;
+    }
+
+    /**
+     * 去除详细地址中重复的省市区信息（智能保护版本）
+     * @param {string} fragment - 地址片段
+     * @param {Object} province - 已识别的省份
+     * @param {Object} city - 已识别的城市
+     * @param {Object} area - 已识别的区县
+     * @returns {string} 清理后的地址片段
+     * @private
+     */
+    _removeRepeatedRegions(fragment, province, city, area) {
+        if (!fragment) return '';
+
+        console.log('[DEBUG] _removeRepeatedRegions 被调用');
+        console.log('[DEBUG] 输入参数 - fragment:', fragment);
+        console.log('[DEBUG] 输入参数 - province:', province);
+        console.log('[DEBUG] 输入参数 - city:', city);
+        console.log('[DEBUG] 输入参数 - area:', area);
+
+        // 1. 检查是否需要保护
+        if (this._shouldProtectFragment(fragment)) {
+            console.log('[DEBUG] 片段受保护，使用保护模式清理');
+            // 对于需要保护的内容，只做最基础的重复路径清理
+            const fullPath = this._buildFullRegionPath(province, city, area);
+            return this._removeCompleteRepeatedPath(fragment, fullPath);
+        }
+
+        console.log('[DEBUG] 片段不受保护，使用完整清理模式');
+
+        // 2. 对于不需要保护的内容，进行完整的重复信息清理
+        let cleanedFragment = fragment;
+
+        // 构建所有可能的重复路径组合
+        const repeatedPaths = this._buildAllRepeatedPaths(province, city, area);
+
+        // 按长度从长到短排序，优先清理较长的重复路径
+        repeatedPaths.sort((a, b) => b.length - a.length);
+
+        // 逐个清理重复路径
+        for (const path of repeatedPaths) {
+            if (path.length >= 4) { // 只清理长度>=4的路径，避免误删
+                // 先检查是否包含这个路径
+                if (cleanedFragment.includes(path)) {
+                    this.logger.log(`清理重复路径: ${path}`);
+                    // 只替换第一次出现的，不使用全局替换
+                    cleanedFragment = cleanedFragment.replace(path, '');
+                }
+            }
+        }
+
+        // 清理多余的空格和标点
+        cleanedFragment = cleanedFragment
+            .replace(/\s+/g, '')
+            .replace(/^[，。、；：！？\s]+|[，。、；：！？\s]+$/g, '')
+            .trim();
+
+        return cleanedFragment;
+    }
+
+    /**
+     * 构建所有可能的重复路径组合
+     * @param {Object} province - 省份对象
+     * @param {Object} city - 城市对象
+     * @param {Object} area - 区县对象
+     * @returns {Array<string>} 所有可能的重复路径
+     * @private
+     */
+    _buildAllRepeatedPaths(province, city, area) {
+        const paths = [];
+
+        if (province && province.name) {
+            if (city && city.name) {
+                if (area && area.name) {
+                    // 完整路径：省+市+区
+                    paths.push(province.name + city.name + area.name);
+
+                    // 省+市
+                    paths.push(province.name + city.name);
+
+                    // 市+区
+                    paths.push(city.name + area.name);
+                } else {
+                    // 省+市
+                    paths.push(province.name + city.name);
+                }
+            }
+        } else if (city && city.name && area && area.name) {
+            // 市+区
+            paths.push(city.name + area.name);
+        }
+
+        // 添加单独的省市区名称（用于清理零散重复）
+        if (province && province.name && province.name.length >= 3) {
+            paths.push(province.name);
+        }
+        if (city && city.name && city.name.length >= 3) {
+            paths.push(city.name);
+        }
+        if (area && area.name && area.name.length >= 3) {
+            paths.push(area.name);
+        }
+
+        return paths;
+    }
+
+    /**
+     * 转义正则表达式特殊字符
+     * @param {string} string - 要转义的字符串
+     * @returns {string} 转义后的字符串
+     * @private
+     */
+    _escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 }
 

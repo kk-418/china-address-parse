@@ -52,29 +52,61 @@ class AddressParserNoCode {
 
         // 提取电话号码
         const phoneResult = this.phoneExtractor.extract(cleanedAddress);
-        cleanedAddress = phoneResult.cleanedText;
+        cleanedAddress = phoneResult.address;
         this.logger.info(`提取电话后: ${cleanedAddress}`);
 
         // 提取邮政编码
         const postalCodeResult = this.postalCodeExtractor.extract(cleanedAddress);
-        cleanedAddress = postalCodeResult.cleanedText;
+        cleanedAddress = postalCodeResult.address;
         this.logger.info(`提取邮编后: ${cleanedAddress}`);
 
-        // 清理无用词汇
-        cleanedAddress = cleanUselessWords(cleanedAddress, mergedOptions.textFilter);
-        this.logger.info(`清理无用词后: ${cleanedAddress}`);
+        // 分割地址
+        let splitAddress = String(cleanedAddress || '').split(' ').filter(item => item).map(item => item.trim());
 
-        // 只使用树解析器进行解析
-        const parseResult = this.treeParser.parse(cleanedAddress, mergedOptions);
+        // 检查第一个是否是姓名
+        let name = '';
+        if (splitAddress.length > 0 && !absolutelyNotName(splitAddress[0], this.dataManager.getProvinces())) {
+            name = splitAddress[0];
+            splitAddress.splice(0, 1);
+        }
 
-        // 提取姓名 - 从剩余的地址部分中提取
-        let remainingText = cleanedAddress;
-        if (parseResult.province) remainingText = remainingText.replace(parseResult.province, '');
-        if (parseResult.city) remainingText = remainingText.replace(parseResult.city, '');
-        if (parseResult.area) remainingText = remainingText.replace(parseResult.area, '');
-        if (parseResult.detail) remainingText = remainingText.replace(parseResult.detail.join(''), '');
+        // 初始化解析结果对象
+        const parseResult = {
+            province: [],
+            city: [],
+            area: [],
+            detail: []
+        };
 
-        const nameResult = this.nameExtractor.extract(remainingText, mergedOptions);
+        // 解析省市区和详细地址
+        this._parseRegions(splitAddress, parseResult, mergedOptions);
+
+        // 如果前面没有提取到姓名，从详细地址中提取
+        if (!name && parseResult.detail.length > 0) {
+            // 只剩最后一个字符串了,姓名应该是在详细地址里面
+            if (parseResult.detail.length === 1 && parseResult.detail[0].length > mergedOptions.nameMaxLength) {
+                const addressDetail = parseResult.detail[0];
+                // 从detail里面找
+                const extractedName = this.nameExtractor.getNameFromString(addressDetail, mergedOptions.nameMaxLength || 5);
+                // 如果找到了,就从字符串里面删除
+                if (extractedName) {
+                    name = extractedName;
+                    parseResult.detail[0] = addressDetail.replace(new RegExp(extractedName), '');
+                }
+            } else if (parseResult.detail.length > 1) {
+                const extractedName = this.nameExtractor.extractFromDetail(parseResult.detail, mergedOptions.nameMaxLength || 5);
+                if (extractedName) {
+                    name = extractedName;
+                    // 从详细地址中移除姓名
+                    const nameIndex = parseResult.detail.findIndex(item => item === extractedName);
+                    if (nameIndex !== -1) {
+                        parseResult.detail.splice(nameIndex, 1);
+                    }
+                }
+            }
+        }
+
+        const nameResult = { name };
 
         // 组装最终结果
         const result = this._buildResult(parseResult, phoneResult, postalCodeResult, nameResult);
@@ -93,11 +125,16 @@ class AddressParserNoCode {
      * @private
      */
     _buildResult(parseResult, phoneResult, postalCodeResult, nameResult) {
-        const { province, city, area, detail } = parseResult;
+        const province = parseResult.province[0];
+        const city = parseResult.city[0];
+        const area = parseResult.area[0];
 
-        // 处理城市名称（直辖市特殊处理）
-        let cityName = city || '';
-        const provinceName = province || '';
+        let provinceName = province ? province.name : '';
+        let cityName = city ? city.name : '';
+        let countyName = area ? area.name : '';
+
+        // 将detail数组合并为地址字符串
+        const address = parseResult.detail.join('').trim();
 
         // 重写城市名称规则
         for (const [oldName, newName] of Object.entries(MINIAPP_REWRITE_CITY_NAMES)) {
@@ -109,17 +146,47 @@ class AddressParserNoCode {
 
         const result = {
             name: nameResult.name || '',
-            telNumber: phoneResult.phoneNumber || '',
-            provinceName: provinceName,
-            cityName: cityName,
-            subCityDivisionName: area || '',
-            address: (detail && detail.length > 0 && detail.join('')) || '',
+            telNumber: phoneResult.telNumber || '',
+            provinceName: provinceName || '',
+            cityName: cityName || '',
+            subCityDivisionName: countyName || '',
+            address: address || '',
             postalCode: postalCodeResult.postalCode || ''
         };
 
         // 不带编码版本不包含编码字段
 
         return result;
+    }
+
+    /**
+     * 解析省市区
+     * @param {Array} splitAddress - 分割后的地址数组
+     * @param {Object} parseResult - 解析结果对象
+     * @param {Object} config - 解析配置
+     * @private
+     */
+    _parseRegions(splitAddress, parseResult, config) {
+        splitAddress.forEach(item => {
+            if (!parseResult.province[0] || !parseResult.city[0] || !parseResult.area[0]) {
+                // 使用TreeParser解析
+                const parseRegionResult = this.treeParser.parse(item, parseResult);
+                // 只更新没有值的字段，保持已解析的结果
+                if (!parseResult.province[0] && parseRegionResult.province.length > 0) {
+                    parseResult.province = parseRegionResult.province;
+                }
+                if (!parseResult.city[0] && parseRegionResult.city.length > 0) {
+                    parseResult.city = parseRegionResult.city;
+                }
+                if (!parseResult.area[0] && parseRegionResult.area.length > 0) {
+                    parseResult.area = parseRegionResult.area;
+                }
+                parseResult.detail = parseResult.detail.concat(parseRegionResult.detail || []);
+            } else {
+                // 省市区都已解析，剩余部分加入detail
+                parseResult.detail.push(item);
+            }
+        });
     }
 }
 

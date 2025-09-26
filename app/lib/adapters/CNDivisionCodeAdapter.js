@@ -4,6 +4,13 @@
  * @author kk
  */
 
+import {
+    getMunicipalityMapping,
+    getProvincialDirectMapping,
+    getMissingStreetData,
+    isChongqingCounty
+} from '../constants/specialCityMappings.js';
+
 class CNDivisionCodeAdapter {
     /**
      * 将cn-division格式转换为内部统一格式
@@ -43,7 +50,7 @@ class CNDivisionCodeAdapter {
         return cities.map((city, index) => ({
             code: city.code || this._generateFallbackCode('city', index),
             name: this._normalizeCityName(city.name, city.provinceName),
-            provinceCode: city.provinceCode
+            provinceCode: parseInt(city.provinceCode) || 0  // 转换为整数
         }));
     }
 
@@ -57,8 +64,8 @@ class CNDivisionCodeAdapter {
         return areas.map((area, index) => ({
             code: area.code || this._generateFallbackCode('area', index),
             name: area.name,
-            cityCode: area.cityCode,
-            provinceCode: area.provinceCode
+            cityCode: area.cityCode,  // 保持字符串类型，因为城市代码本身就是字符串
+            provinceCode: parseInt(area.provinceCode) || 0  // 转换为整数
         }));
     }
 

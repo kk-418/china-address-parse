@@ -145,6 +145,7 @@ class NameExtractor {
 
         return '';
     }
+
 }
 
 export default NameExtractor;

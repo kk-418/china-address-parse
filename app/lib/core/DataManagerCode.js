@@ -8,11 +8,12 @@ import CNDivisionCodeLoader from '../loaders/CNDivisionCodeLoader.js';
 import CNDivisionCodeAdapter from '../adapters/CNDivisionCodeAdapter.js';
 
 class DataManagerCode {
-    constructor() {
+    constructor(propertyMapping = {}) {
         this._provinces = null;
         this._cities = null;
         this._areas = null;
         this._cnDivisionLoader = null;
+        this._propertyMapping = propertyMapping;
 
         this._initData();
     }
@@ -24,7 +25,8 @@ class DataManagerCode {
     _initData() {
         try {
             if (!this._cnDivisionLoader) {
-                this._cnDivisionLoader = new CNDivisionCodeLoader();
+                // 传递属性映射配置给加载器
+                this._cnDivisionLoader = new CNDivisionCodeLoader(this._propertyMapping);
             }
 
             const rawData = this._cnDivisionLoader.getCodeData();

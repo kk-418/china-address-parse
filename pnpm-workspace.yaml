@@ -1,2 +1,6 @@
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - core-js
+
 overrides:
   cn-division: link:../../Library/pnpm/global/5/node_modules/cn-division

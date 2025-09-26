@@ -4,7 +4,7 @@
  * @author kk
  */
 
-import pcaNoCodeRaw from '../data/cn-division/pca-nocode.json' with { type: 'json' };
+import pcaNoCodeRaw from 'cn-division/dist/no-code/pca.json' with { type: 'json' };
 
 class CNDivisionNoCodeLoader {
     constructor() {

@@ -43,7 +43,45 @@ export function cleanAddress(address, textFilter = []) {
  */
 export function cleanParentheses(word) {
     if (!word) return '';
-    return word.replace(PARENTHESES_PATTERN, '');
+
+    // 检查是否包含长括号内容（通常是说明性文字）
+    const longBracketPattern = /[（(]([^）)]{15,})[）)]/;
+    const longMatch = word.match(longBracketPattern);
+
+    if (longMatch) {
+        // 如果包含长括号内容，完全删除括号及其内容
+        // 避免"（注：请原包装退货，否则仓库拒收的，感谢您的配合）"被部分处理
+        const result = word.replace(longBracketPattern, '').trim();
+        // 直接返回结果，不进行后续处理
+        return result;
+    }
+
+    // 对于短括号内容，进行正常的清理
+    let cleaned = word;
+
+    // 匹配各种括号及其内容
+    const bracketPatterns = [
+        /（[^）]*）/g,  // 中文括号
+        /\([^)]*\)/g,   // 英文括号
+        /\[[^\]]*\]/g,  // 方括号
+        /【[^】]*】/g,   // 中文方括号
+    ];
+
+    bracketPatterns.forEach(pattern => {
+        cleaned = cleaned.replace(pattern, '');
+    });
+
+    // 如果清洗后为空或只剩下空白，返回空字符串
+    cleaned = cleaned.trim();
+    if (!cleaned) return '';
+
+    // 如果清洗后的内容太短（小于2个字符），可能是过度清洗了，返回原文
+    if (cleaned.length < 2 && word.length > 10) {
+        // 只删除括号符号，保留内容
+        return word.replace(PARENTHESES_PATTERN, '');
+    }
+
+    return cleaned;
 }
 
 /**
@@ -71,7 +109,10 @@ export function cleanUselessWords(words, provinceName) {
  * @returns {string} - 替换后的字符串
  */
 export function replaceArea(fragment, shortName, fullName) {
-    if (!fragment) return '';
+    // 确保参数都是字符串
+    if (!fragment || typeof fragment !== 'string') return '';
+    if (!shortName || typeof shortName !== 'string') return fragment;
+    if (!fullName || typeof fullName !== 'string') return fragment;
 
     return fragment
         .replace(new RegExp(fullName, 'g'), '')
