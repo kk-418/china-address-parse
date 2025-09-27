@@ -300,6 +300,45 @@ class TreeParser extends BaseParser {
     }
 
     /**
+     * 处理"地名+省市区+地名"的重复模式
+     * @param {string} fragment - 地址片段
+     * @param {string} fullPath - 完整省市区路径
+     * @returns {string|null} 清理后的结果，如果不匹配返回null
+     * @private
+     */
+    _handleRepeatPattern(fragment, fullPath) {
+        if (!fragment || !fullPath) return null;
+
+        // 尝试匹配 "前缀 + 省市区路径 + 后缀" 模式
+        const index = fragment.indexOf(fullPath);
+        if (index === -1) return null;
+
+        const prefix = fragment.substring(0, index);
+        const suffix = fragment.substring(index + fullPath.length);
+
+        // 如果没有前缀，说明不是重复模式
+        if (!prefix) return null;
+
+        console.log('[DEBUG] 匹配到重复模式 - prefix:', prefix, ', suffix:', suffix);
+
+        // Case 1: 后缀完全等于前缀（完全重复），只保留一个
+        if (suffix === prefix) {
+            console.log('[DEBUG] 完全重复，只保留prefix');
+            return prefix;
+        }
+
+        // Case 2: 后缀以前缀开头，清理省市区，保留前后
+        if (suffix.startsWith(prefix)) {
+            console.log('[DEBUG] 后缀以前缀开头，保留前缀和后缀');
+            return prefix + suffix;
+        }
+
+        // Case 3: 前缀和后缀不同，清理省市区，保留前后
+        console.log('[DEBUG] 前后不同，保留前缀和后缀');
+        return prefix + suffix;
+    }
+
+    /**
      * 检查地址片段是否需要保护（避免过度清理）
      * @param {string} fragment - 地址片段
      * @returns {boolean} 是否需要保护
@@ -308,15 +347,15 @@ class TreeParser extends BaseParser {
     _shouldProtectFragment(fragment) {
         if (!fragment) return false;
 
-        // 保护规则：包含教育机构的地址
+        // 保护规则：包含教育机构的地址（镇后面紧跟教育机构才保护）
         const educationPatterns = [
-            /[市区县镇乡村街道][^市区县镇乡村街道]*(大学|学院|学校|中学|小学|师范)/,
-            /[市区县镇乡村街道][^市区县镇乡村街道]*(医院|银行|酒店|商场|公园|广场|大厦)/
+            /[市区县街道][^市区县镇乡村街道]*(大学|学院|学校|中学|小学|师范)/,
+            /[市区县街道][^市区县镇乡村街道]*(医院|银行|酒店|商场|公园|广场|大厦)/
         ];
 
-        // 保护规则：街道社区等地标
+        // 保护规则：街道社区等地标（从开头匹配）
         const landmarkPatterns = [
-            /^[^省市区县]{2,4}(街道|社区|小区|花园|大厦|广场)/
+            /^[^省市区县镇]{2,4}(街道|社区|小区|花园|大厦|广场)/
         ];
 
         const allPatterns = [...educationPatterns, ...landmarkPatterns];
@@ -375,17 +414,17 @@ class TreeParser extends BaseParser {
         console.log('[DEBUG] 输入参数 - city:', city);
         console.log('[DEBUG] 输入参数 - area:', area);
 
-        // 1. 检查是否需要保护
+        // 检查是否需要保护
         if (this._shouldProtectFragment(fragment)) {
             console.log('[DEBUG] 片段受保护，使用保护模式清理');
-            // 对于需要保护的内容，只做最基础的重复路径清理
             const fullPath = this._buildFullRegionPath(province, city, area);
             return this._removeCompleteRepeatedPath(fragment, fullPath);
         }
 
         console.log('[DEBUG] 片段不受保护，使用完整清理模式');
 
-        // 2. 对于不需要保护的内容，进行完整的重复信息清理
+        // 对于不需要保护的内容，进行完整的重复信息清理
+        const fullPath = this._buildFullRegionPath(province, city, area);
         let cleanedFragment = fragment;
 
         // 构建所有可能的重复路径组合

@@ -159,19 +159,11 @@ class AddressParserCode {
             cityName: cityName || '',
             subCityDivisionName: countyName || '',
             address: address || '',
-            postalCode: postalCodeResult.postalCode || ''
+            postalCode: postalCodeResult.postalCode || '',
+            provinceCode: provinceCode || '',
+            cityCode: cityCode || '',
+            subCityDivisionCode: countyCode || ''
         };
-
-        // 添加编码信息
-        if (provinceCode) {
-            result.provinceCode = provinceCode;
-        }
-        if (cityCode) {
-            result.cityCode = cityCode;
-        }
-        if (countyCode) {
-            result.subCityDivisionCode = countyCode;
-        }
 
         return result;
     }
@@ -200,8 +192,28 @@ class AddressParserCode {
                 }
                 parseResult.detail = parseResult.detail.concat(parseRegionResult.detail || []);
             } else {
-                // 省市区都已解析，剩余部分加入detail
-                parseResult.detail.push(item);
+                // 省市区都已解析，剩余部分需要清理后加入detail
+                let cleanedItem = item.replace(/\s+/g, ''); // 清理空格
+
+                // 分别去除省、市、区的名称
+                if (parseResult.province[0] && parseResult.province[0].name) {
+                    cleanedItem = cleanedItem.replace(new RegExp(parseResult.province[0].name, 'g'), '');
+                }
+                if (parseResult.city[0] && parseResult.city[0].name) {
+                    cleanedItem = cleanedItem.replace(new RegExp(parseResult.city[0].name, 'g'), '');
+                }
+                if (parseResult.area[0] && parseResult.area[0].name) {
+                    cleanedItem = cleanedItem.replace(new RegExp(parseResult.area[0].name, 'g'), '');
+                }
+
+                // 清理多余的标点
+                cleanedItem = cleanedItem
+                    .replace(/^[，。、；：！？\s]+|[，。、；：！？\s]+$/g, '')
+                    .trim();
+
+                if (cleanedItem) {
+                    parseResult.detail.push(cleanedItem);
+                }
             }
         });
     }
