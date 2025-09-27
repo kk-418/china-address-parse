@@ -143,7 +143,16 @@ class TreeParser extends BaseParser {
             }
 
             if (replaceName) {
-                const cleanedFragment = this.cleanFragment(fragment, replaceName, name);
+                let cleanedFragment = this.cleanFragment(fragment, replaceName, name);
+
+                // 特殊处理：如果城市是"省直辖县级行政区划"，使用正则表达式清理相关字符串
+                if (name === '省直辖县级行政区划') {
+                    // 使用正则表达式清理"省直辖县级行政单位"或"省直辖县级行政区划"
+                    cleanedFragment = cleanedFragment.replace(/省直辖县级行政[单位|区划]/g, '');
+                    // 清理可能的部分匹配残留字符
+                    cleanedFragment = cleanedFragment.replace(/^[区划单位行政级县辖直省]{1,3}/, '');
+                }
+
                 // 如果没有省份，通过城市补充省份
                 let matchedProvince = null;
                 if (!currentProvince) {

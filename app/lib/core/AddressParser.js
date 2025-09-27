@@ -207,6 +207,11 @@ class AddressParser {
             cityName = provinceName;
         }
 
+        // 特殊城市名称映射：省直辖县级行政区划 -> 省直辖县级行政单位
+        if (cityName === '省直辖县级行政区划') {
+            cityName = '省直辖县级行政单位';
+        }
+
         // 构建返回结果
         const result = {
             name: parseResult.name || '',
