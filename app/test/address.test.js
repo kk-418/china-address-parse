@@ -50,3 +50,95 @@ describe(`---${versionName}测试---`, () => {
         })
     }
 })
+
+// 自定义关键字功能测试
+describe(`---${versionName} 自定义关键字测试---`, () => {
+    // 高级地址清洗正则表达式示例
+    const ADVANCED_ADDRESS_CLEAN_KEYWORDS = [
+        '(不|拒|勿).*到付件?',
+        '到付.*(不|拒)(收|签)',
+        '建议使用官方推荐',
+        '(支持.*)?上门取件(服务)?',
+        '感?谢.*配合',
+        '请?(寄|退)回.*(清单|产品)',
+        '请.*拒(收|签)?',
+        '仓?库?签收.*处理',
+        '(拒|不|建议).*(百世|极兔|信丰|京东|申通|圆通|中通|韵达|平邮|邮政|EMS|顺丰|到付|平邮|联昊通|丹鸟|安能|宅急送|国通)(快递|物流)?',
+        '(如?有赠品|人为损坏|已清洗|优先|安排|退款|订单|编号|旺旺名|您|写上)'
+    ];
+
+    test('自定义姓名称呼关键字测试', () => {
+        const address = '张三boss 13800138000 北京市朝阳区某某街道123号';
+
+        const result = zhAddressParse(address, {
+            customNameTitles: ['boss', '经理', '总监']
+        });
+
+        expect(result.name).toEqual('张三boss');
+        expect(result.telNumber).toEqual('13800138000');
+        expect(result.provinceName).toEqual('北京市');
+        expect(result.cityName).toEqual('北京市');
+        expect(result.subCityDivisionName).toEqual('朝阳区');
+    });
+
+    test('高级地址清洗正则表达式测试 - 到付相关', () => {
+        const address = '李四先生 13900139000 上海市浦东新区 勿到付件 某某路456号';
+
+        const result = zhAddressParse(address, {
+            customAddressCleanRegexs: ADVANCED_ADDRESS_CLEAN_KEYWORDS
+        });
+
+        expect(result.name).toEqual('李四先生');
+        expect(result.telNumber).toEqual('13900139000');
+        expect(result.provinceName).toEqual('上海市');
+        expect(result.cityName).toEqual('上海市');
+        expect(result.subCityDivisionName).toEqual('浦东新区');
+        expect(result.address).toEqual('某某路456号');
+    });
+
+    test('高级地址清洗正则表达式测试 - 快递公司相关', () => {
+        const address = '王五 15800158000 广州市天河区 请勿使用圆通快递 天河路789号';
+
+        const result = zhAddressParse(address, {
+            customAddressCleanRegexs: ADVANCED_ADDRESS_CLEAN_KEYWORDS
+        });
+
+        expect(result.name).toEqual('王五');
+        expect(result.telNumber).toEqual('15800158000');
+        expect(result.provinceName).toEqual('广东省');
+        expect(result.cityName).toEqual('广州市');
+        expect(result.subCityDivisionName).toEqual('天河区');
+        expect(result.address).toEqual('天河路789号');
+    });
+
+    test('高级地址清洗正则表达式测试 - 感谢配合', () => {
+        const address = '赵六女士 18600186000 深圳市南山区 感谢您的配合 科技园路123号';
+
+        const result = zhAddressParse(address, {
+            customAddressCleanRegexs: ADVANCED_ADDRESS_CLEAN_KEYWORDS
+        });
+
+        expect(result.name).toEqual('赵六女士');
+        expect(result.telNumber).toEqual('18600186000');
+        expect(result.provinceName).toEqual('广东省');
+        expect(result.cityName).toEqual('深圳市');
+        expect(result.subCityDivisionName).toEqual('南山区');
+        expect(result.address).toEqual('科技园路123号');
+    });
+
+    test('同时使用自定义姓名称呼和地址清洗关键字', () => {
+        const address = '刘总监 17700177000 杭州市西湖区 请退回清单 文三路456号 感谢配合';
+
+        const result = zhAddressParse(address, {
+            customNameTitles: ['总监', '主管', 'boss'],
+            customAddressCleanRegexs: ADVANCED_ADDRESS_CLEAN_KEYWORDS
+        });
+
+        expect(result.name).toEqual('刘总监');
+        expect(result.telNumber).toEqual('17700177000');
+        expect(result.provinceName).toEqual('浙江省');
+        expect(result.cityName).toEqual('杭州市');
+        expect(result.subCityDivisionName).toEqual('西湖区');
+        expect(result.address).toEqual('文三路456号');
+    });
+})

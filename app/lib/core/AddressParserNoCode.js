@@ -13,7 +13,7 @@ import Logger from '../utils/logger.js';
 import { cleanAddress, cleanUselessWords } from '../utils/cleaner.js';
 import { absolutelyNotName, hasChinese } from '../utils/validator.js';
 import { DEFAULT_OPTIONS, PARSE_TYPE, RUN_MODE } from '../constants/config.js';
-import { MINIAPP_REWRITE_CITY_NAMES } from '../constants/keywords.js';
+import { MINIAPP_REWRITE_CITY_NAMES, getMergedNameTitles, getMergedAddressCleanKeywords } from '../constants/keywords.js';
 
 class AddressParserNoCode {
     constructor() {
@@ -47,7 +47,12 @@ class AddressParserNoCode {
             this.logger.info(`解析选项:`, mergedOptions);
         }
 
-        let cleanedAddress = cleanAddress(address);
+        // 合并自定义关键字到配置中（一次性合并）
+        mergedOptions.mergedAddressCleanKeywords = getMergedAddressCleanKeywords(mergedOptions.customAddressCleanRegexs);
+        mergedOptions.mergedNameTitles = getMergedNameTitles(mergedOptions.customNameTitles);
+
+        // 使用合并后的清洗关键字清洗地址
+        let cleanedAddress = this._cleanAddressWithCustomKeywords(address, mergedOptions.textFilter, mergedOptions.mergedAddressCleanKeywords);
         this.logger.info(`清理后地址: ${cleanedAddress}`);
 
         // 提取电话号码
@@ -109,7 +114,7 @@ class AddressParserNoCode {
         const nameResult = { name };
 
         // 组装最终结果
-        const result = this._buildResult(parseResult, phoneResult, postalCodeResult, nameResult);
+        const result = this._buildResult(parseResult, phoneResult, postalCodeResult, nameResult, mergedOptions);
 
         this.logger.info(`最终解析结果:`, result);
         return result;
@@ -124,7 +129,7 @@ class AddressParserNoCode {
      * @returns {Object} 最终结果
      * @private
      */
-    _buildResult(parseResult, phoneResult, postalCodeResult, nameResult) {
+    _buildResult(parseResult, phoneResult, postalCodeResult, nameResult, config = {}) {
         const province = parseResult.province[0];
         const city = parseResult.city[0];
         const area = parseResult.area[0];
@@ -133,8 +138,13 @@ class AddressParserNoCode {
         let cityName = city ? city.name : '';
         let countyName = area ? area.name : '';
 
+        // 清洗detail数组
+        let detail = parseResult.detail;
+        detail = Array.from(new Set(detail));
+        detail = cleanUselessWords(detail, provinceName, config.mergedAddressCleanKeywords);
+
         // 将detail数组合并为地址字符串
-        const address = parseResult.detail.join('').trim();
+        const address = detail.join('').trim();
 
         // 重写城市名称规则
         for (const [oldName, newName] of Object.entries(MINIAPP_REWRITE_CITY_NAMES)) {
@@ -187,6 +197,34 @@ class AddressParserNoCode {
                 parseResult.detail.push(item);
             }
         });
+    }
+
+    /**
+     * 使用自定义关键字清洗地址
+     * @private
+     */
+    _cleanAddressWithCustomKeywords(address, textFilter = [], mergedAddressCleanKeywords = []) {
+        if (!address) return '';
+
+        // 去除换行等空白字符
+        address = address
+            .replace(/\r\n/g, ' ')
+            .replace(/\n/g, ' ')
+            .replace(/\t/g, ' ');
+
+        // 清洗预定义关键字和自定义关键字
+        const allFilters = [...mergedAddressCleanKeywords, ...textFilter];
+        allFilters.forEach(filter => {
+            address = address.replace(new RegExp(filter, 'g'), ' ');
+        });
+
+        // 去除特殊字符
+        address = address.replace(/[^\u4e00-\u9fa5\u3400-\u4dbf\uf900-\ufaff\u3040-\u309f\u30a0-\u30ff\uff00-\uffef\u0020-\u007e\u00a0-\u00be\u2e80-\ua4cf\uf900-\ufaff\ufe30-\ufe4f\ufe10-\ufe19\ufe30-\ufe6f\u2013\u2014\u2018\u2019\u201c\u201d\u2026\u3001\u3002\u300a\u300b\u300e\u300f\u3010\u3011\uff01\uff02\uff03\uff04\uff05\uff06\uff07\uff08\uff09\uff0a\uff0b\uff0c\uff0d\uff0e\uff0f\uff1a\uff1b\uff1c\uff1d\uff1e\uff1f\uff20\uff3b\uff3c\uff3d\uff3e\uff3f\uff40\uff5b\uff5c\uff5d\uff5e\uff5f\uff60\uffe0-\uffe6]/g, ' ');
+
+        // 多个空格替换为一个
+        address = address.replace(/ {2,}/g, ' ');
+
+        return address.trim();
     }
 }
 

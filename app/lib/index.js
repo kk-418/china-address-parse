@@ -1,4 +1,4 @@
-import AddressParserCode from './core/AddressParserCode.js';
+import AddressParser from './core/AddressParser.js';
 import { DATA_SOURCE } from './constants/config.js';
 import { DEFAULT_CN_DIVISION_MAPPING, STANDARD_MAPPING } from './constants/propertyMapping.js';
 
@@ -10,7 +10,7 @@ const AddressParse = (address, options = {}) => {
         if (!globalParser) {
             // 如果options中包含propertyMapping，使用它创建新的解析器
             const propertyMapping = options.propertyMapping || {};
-            globalParser = new AddressParserCode(propertyMapping);
+            globalParser = new AddressParser(propertyMapping);
         }
 
         const result = globalParser.parse(address, options);
@@ -31,7 +31,7 @@ AddressParse.PROPERTY_MAPPINGS = {
 
 // 提供创建特定配置解析器的工厂方法
 AddressParse.createParser = (propertyMapping = {}) => {
-    return new AddressParserCode(propertyMapping);
+    return new AddressParser(propertyMapping);
 };
 
 export default AddressParse;

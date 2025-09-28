@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 
-const dirApp = path.join(__dirname, 'app');
+const dirApp = path.join(__dirname, '../app');
 
 /**
  * Webpack Configuration for NoCode Version
@@ -34,7 +34,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: path.join(__dirname, 'index.html'),
+            template: path.join(__dirname, '../index.html'),
             title: 'zh-address-parse-nocode'
         })
     ],

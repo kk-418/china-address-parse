@@ -34,6 +34,8 @@ declare namespace zhAddressParse {
         includeCode?: boolean;
         debug?: boolean;
         extraGovData?: Partial<Record<'province' | 'city' | 'area', GovData[]>>;
+        customNameTitles?: string[];
+        customAddressCleanRegexs?: string[];
     }
 
     export const DATA_SOURCE: {
@@ -41,6 +43,8 @@ declare namespace zhAddressParse {
         CN_DIVISION_CODE: 'cn-code';
         CN_DIVISION_NOCODE: 'cn-nocode';
     };
+
+    export const ADVANCED_ADDRESS_CLEAN_KEYWORDS: string[];
 
     export function createParser(dataSource?: DataSource, includeCode?: boolean): {
         parse: (address: string, option?: OptionType) => ParseResult;

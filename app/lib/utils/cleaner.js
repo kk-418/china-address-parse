@@ -88,16 +88,28 @@ export function cleanParentheses(word) {
  * 清洗无用词组
  * @param {Array<string>} words - 词组数组
  * @param {string} provinceName - 省份名称
+ * @param {Array<string>} customCleanRegexs - 自定义清洗正则表达式数组
  * @returns {Array<string>} - 清洗后的词组
  */
-export function cleanUselessWords(words, provinceName) {
+export function cleanUselessWords(words, provinceName, customCleanRegexs = []) {
     if (!words || !Array.isArray(words)) return [];
 
-    return words.filter(item => {
-        const cleanedItem = cleanParentheses(item);
-        return cleanedItem.length !== 0 &&
-               !cleanedItem.match(USELESS_WORDS_PATTERN) &&
-               (!provinceName || cleanedItem !== provinceName.substring(0, 2));
+    return words.map(item => {
+        let cleanedItem = cleanParentheses(item);
+
+        // 应用自定义清洗规则
+        if (customCleanRegexs && customCleanRegexs.length > 0) {
+            customCleanRegexs.forEach(regex => {
+                cleanedItem = cleanedItem.replace(new RegExp(regex, 'g'), '');
+            });
+            cleanedItem = cleanedItem.trim();
+        }
+
+        return cleanedItem;
+    }).filter(item => {
+        return item.length !== 0 &&
+               !item.match(USELESS_WORDS_PATTERN) &&
+               (!provinceName || item !== provinceName.substring(0, 2));
     });
 }
 
