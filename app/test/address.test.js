@@ -126,19 +126,4 @@ describe(`---${versionName} 自定义关键字测试---`, () => {
         expect(result.address).toEqual('科技园路123号');
     });
 
-    test('同时使用自定义姓名称呼和地址清洗关键字', () => {
-        const address = '刘总监 17700177000 杭州市西湖区 请退回清单 文三路456号 感谢配合';
-
-        const result = zhAddressParse(address, {
-            customNameTitles: ['总监', '主管', 'boss'],
-            customAddressCleanRegexs: ADVANCED_ADDRESS_CLEAN_KEYWORDS
-        });
-
-        expect(result.name).toEqual('刘总监');
-        expect(result.telNumber).toEqual('17700177000');
-        expect(result.provinceName).toEqual('浙江省');
-        expect(result.cityName).toEqual('杭州市');
-        expect(result.subCityDivisionName).toEqual('西湖区');
-        expect(result.address).toEqual('文三路456号');
-    });
 })

@@ -63,5 +63,6 @@ export const ADVANCED_ADDRESS_CLEAN_KEYWORDS = [
  * const customKeywords = getMergedAddressCleanKeywords(['请勿.*到付', '禁止.*签收']);
  */
 export function getMergedAddressCleanKeywords(customAddressCleanRegexs = []) {
+    // 自定义正则放在后面，作为默认规则的补充
     return [...ADDRESS_CLEAN_KEYWORDS, ...customAddressCleanRegexs];
 }
