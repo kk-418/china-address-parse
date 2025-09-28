@@ -127,9 +127,12 @@ class TreeParser extends BaseParser {
             const { name, provinceCode } = tempCity;
             if (!name || typeof name !== 'string') continue;
 
-            // 如果有省份，必须匹配省份代码
-            if (currentProvince && currentProvince.code !== provinceCode) {
-                continue;
+            // 如果有省份，必须匹配省份（支持编码和名称两种模式）
+            if (currentProvince) {
+                const provinceMatched = currentProvince.code
+                    ? currentProvince.code === provinceCode
+                    : currentProvince.name === tempCity.provinceName;
+                if (!provinceMatched) continue;
             }
 
             let replaceName = '';
@@ -155,7 +158,9 @@ class TreeParser extends BaseParser {
                 // 如果没有省份，通过城市补充省份
                 let matchedProvince = null;
                 if (!currentProvince) {
-                    matchedProvince = this.getProvinceByCode(provinceCode);
+                    matchedProvince = provinceCode
+                        ? this.getProvinceByCode(provinceCode)
+                        : this._getProvinceByName(tempCity.provinceName);
                 }
                 return { fragment: cleanedFragment, city: tempCity, province: matchedProvince };
             }
@@ -209,14 +214,20 @@ class TreeParser extends BaseParser {
             const { name, provinceCode, cityCode } = tempArea;
             if (!name || typeof name !== 'string') continue;
 
-            // 省份必须匹配
-            if (currentProvince && currentProvince.code !== provinceCode) {
-                continue;
+            // 省份必须匹配（支持编码和名称两种模式）
+            if (currentProvince) {
+                const provinceMatched = currentProvince.code
+                    ? currentProvince.code === provinceCode
+                    : currentProvince.name === tempArea.provinceName;
+                if (!provinceMatched) continue;
             }
 
-            // 城市必须匹配
-            if (currentCity && currentCity.code !== cityCode) {
-                continue;
+            // 城市必须匹配（支持编码和名称两种模式）
+            if (currentCity) {
+                const cityMatched = currentCity.code
+                    ? currentCity.code === cityCode
+                    : currentCity.name === tempArea.cityName;
+                if (!cityMatched) continue;
             }
 
             this.logger.log('匹配区县，有省或者市，currentProvince:', currentProvince, 'currentCity:', currentCity);
@@ -247,8 +258,12 @@ class TreeParser extends BaseParser {
 
         if (bestMatch) {
             const cleanedFragment = this.cleanFragment(fragment, bestReplaceName, bestMatch.name);
-            const matchedCity = !currentCity ? this.getCityByCode(bestMatch.cityCode) : null;
-            const matchedProvince = !currentProvince ? this.getProvinceByCode(bestMatch.provinceCode) : null;
+            const matchedCity = !currentCity
+                ? (bestMatch.cityCode ? this.getCityByCode(bestMatch.cityCode) : this._getCityByName(bestMatch.cityName))
+                : null;
+            const matchedProvince = !currentProvince
+                ? (bestMatch.provinceCode ? this.getProvinceByCode(bestMatch.provinceCode) : this._getProvinceByName(bestMatch.provinceName))
+                : null;
 
             return {
                 fragment: cleanedFragment,
@@ -276,8 +291,8 @@ class TreeParser extends BaseParser {
 
             if (name && typeof name === 'string' && typeof fragment === 'string' && fragment.startsWith(name)) {
                 const cleanedFragment = fragment.replace(name, '');
-                const matchedCity = this.getCityByCode(cityCode);
-                const matchedProvince = this.getProvinceByCode(provinceCode);
+                const matchedCity = cityCode ? this.getCityByCode(cityCode) : this._getCityByName(tempArea.cityName);
+                const matchedProvince = provinceCode ? this.getProvinceByCode(provinceCode) : this._getProvinceByName(tempArea.provinceName);
 
                 return {
                     fragment: cleanedFragment,
