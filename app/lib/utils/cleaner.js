@@ -7,39 +7,6 @@ import { SPECIAL_CHARS_PATTERN, PARENTHESES_PATTERN, USELESS_WORDS_PATTERN } fro
 import { ADDRESS_CLEAN_KEYWORDS } from '../constants/keywords.js';
 
 /**
- * 清洗地址字符串
- * @param {string} address - 原始地址
- * @param {Array<string>} textFilter - 自定义过滤词
- * @returns {string} - 清洗后的地址
- */
-export function cleanAddress(address, textFilter = []) {
-    if (!address) return '';
-
-    // 去除换行等空白字符
-    address = address
-        .replace(/\r\n/g, ' ')
-        .replace(/\n/g, ' ')
-        .replace(/\t/g, ' ');
-
-    // 智能清洗括号（在删除特殊字符前处理）
-    address = cleanParentheses(address);
-
-    // 清洗预定义关键字和自定义关键字
-    const allFilters = [...ADDRESS_CLEAN_KEYWORDS, ...textFilter];
-    allFilters.forEach(filter => {
-        address = address.replace(new RegExp(filter, 'g'), ' ');
-    });
-
-    // 去除特殊字符
-    address = address.replace(SPECIAL_CHARS_PATTERN, ' ');
-
-    // 多个空格替换为一个
-    address = address.replace(/ {2,}/g, ' ');
-
-    return address.trim();
-}
-
-/**
  * 清洗括号
  * @param {string} word - 待处理的词
  * @returns {string} - 处理后的词
@@ -114,6 +81,39 @@ export function cleanParentheses(word) {
     }
 
     return result;
+}
+
+/**
+ * 清洗地址字符串
+ * @param {string} address - 原始地址
+ * @param {Array<string>} textFilter - 自定义过滤词
+ * @returns {string} - 清洗后的地址
+ */
+export function cleanAddress(address, textFilter = []) {
+    if (!address) return '';
+
+    // 去除换行等空白字符
+    address = address
+        .replace(/\r\n/g, ' ')
+        .replace(/\n/g, ' ')
+        .replace(/\t/g, ' ');
+
+    // 智能清洗括号（在删除特殊字符前处理）
+    address = cleanParentheses(address);
+
+    // 清洗预定义关键字和自定义关键字
+    const allFilters = [...ADDRESS_CLEAN_KEYWORDS, ...textFilter];
+    allFilters.forEach(filter => {
+        address = address.replace(new RegExp(filter, 'g'), ' ');
+    });
+
+    // 去除特殊字符
+    address = address.replace(SPECIAL_CHARS_PATTERN, ' ');
+
+    // 多个空格替换为一个
+    address = address.replace(/ {2,}/g, ' ');
+
+    return address.trim();
 }
 
 /**
