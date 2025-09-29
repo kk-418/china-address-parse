@@ -67,19 +67,6 @@
     "options": {}
   },
   {
-    "s": "收件人: (唐哈)张哈哈\n收件电话: 13111111111\n收件地址: 江苏省南通市海门市叠石桥村委会有赠品请退回寄回产品如已清洗或人为损坏或到付件一律拒签",
-    "parsedResult": {
-      "name": "(唐哈)张哈哈",
-      "telNumber": "13111111111",
-      "provinceName": "江苏省",
-      "cityName": "南通市",
-      "subCityDivisionName": "海门区",
-      "address": "叠石桥村委会",
-      "postalCode": ""
-    },
-    "options": {}
-  },
-  {
     "s": "北京市东城区北京师范大学",
     "parsedResult": {
       "name": "",
@@ -646,7 +633,7 @@
       "provinceName": "辽宁省",
       "cityName": "盘锦市",
       "subCityDivisionName": "盘山县",
-      "address": "东郭镇东郭镇",
+      "address": "东郭镇",
       "postalCode": "000000"
     },
     "options": {}

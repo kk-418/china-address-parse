@@ -149,7 +149,7 @@ class TreeParser extends BaseParser {
                 let cleanedFragment;
 
                 // 特殊处理：省直辖县级行政区划的清理
-                if (name === '省直辖县级行政区划') {
+                if (/^省直辖县级行政(单位|区划)$/.test(name)) {
                     cleanedFragment = fragment.replace(/省直辖县级行政(单位|区划)/g, '');
                 } else {
                     cleanedFragment = this.cleanFragment(fragment, replaceName, name);
@@ -257,7 +257,14 @@ class TreeParser extends BaseParser {
         }
 
         if (bestMatch) {
-            const cleanedFragment = this.cleanFragment(fragment, bestReplaceName, bestMatch.name);
+            // 特殊处理：如果当前城市匹配"省直辖县级行政(单位|区划)"，先清理相关字符串
+            let preprocessedFragment = fragment;
+            if (currentCity && /^省直辖县级行政(单位|区划)$/.test(currentCity.name)) {
+                preprocessedFragment = fragment.replace(/省直辖县级行政(单位|区划)/g, '');
+            }
+
+            const cleanedFragment = this.cleanFragment(preprocessedFragment, bestReplaceName, bestMatch.name);
+
             const matchedCity = !currentCity
                 ? (bestMatch.cityCode ? this.getCityByCode(bestMatch.cityCode) : this._getCityByName(bestMatch.cityName))
                 : null;
