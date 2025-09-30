@@ -24,9 +24,6 @@ export const ADDRESS_CLEAN_KEYWORDS = [
 // 特殊市名处理
 export const SPECIAL_CITY_NAMES = ['市辖区', '区', '县', '镇'];
 
-// 小程序模式下需要重写的市名
-export const MINIAPP_REWRITE_CITY_NAMES = ['市辖区'];
-
 /**
  * 合并自定义姓名称呼关键字
  * @param {Array<string>} customNameTitles - 自定义姓名称呼关键字

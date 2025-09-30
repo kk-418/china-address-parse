@@ -7,7 +7,6 @@ import DataManagerCode from './DataManagerCode.js';
 import BaseAddressParser from './BaseAddressParser.js';
 import { cleanUselessWords } from '../utils/cleaner.js';
 import { RUN_MODE } from '../constants/config.js';
-import { MINIAPP_REWRITE_CITY_NAMES } from '../constants/keywords.js';
 
 class AddressParser extends BaseAddressParser {
     constructor(propertyMapping = {}) {
@@ -88,14 +87,14 @@ class AddressParser extends BaseAddressParser {
         detail = Array.from(new Set(detail));
         detail = cleanUselessWords(detail, provinceName, config.mergedAddressCleanKeywords);
 
-        // 小程序模式处理
-        if (config.mode === RUN_MODE.MINIAPP && MINIAPP_REWRITE_CITY_NAMES.includes(cityName)) {
-            cityName = provinceName;
-        }
-
         // 特殊城市名称映射：省直辖县级行政区划 -> 省直辖县级行政单位
         if (cityName === '省直辖县级行政区划') {
             cityName = '省直辖县级行政单位';
+        }
+
+        // 小程序模式：将"省直辖县级行政单位"重写为"省直辖县级行政区划"
+        if (config.mode === RUN_MODE.MINIAPP && cityName === '省直辖县级行政单位') {
+            cityName = '省直辖县级行政区划';
         }
 
         // 构建返回结果
