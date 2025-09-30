@@ -62,13 +62,7 @@ class TreeParser extends BaseParser {
 
         // 剩余部分作为详细地址，但需要去除重复的省市区信息
         if (fragment.length > 0) {
-            console.log('[DEBUG] 调用 _removeRepeatedRegions');
-            console.log('[DEBUG] fragment:', fragment);
-            console.log('[DEBUG] province[0]:', province[0]);
-            console.log('[DEBUG] city[0]:', city[0]);
-            console.log('[DEBUG] area[0]:', area[0]);
             const cleanedFragment = this._removeRepeatedRegions(fragment, province[0], city[0], area[0]);
-            console.log('[DEBUG] cleanedFragment:', cleanedFragment);
             if (cleanedFragment.length > 0) {
                 detail.push(cleanedFragment);
             }
@@ -136,7 +130,10 @@ class TreeParser extends BaseParser {
             }
 
             let replaceName = '';
-            for (let i = name.length; i > 1; i--) {
+            // 修复：支持单字城市，但只对特定的单字城市（如"县"）才匹配单字
+            // 其他城市名至少匹配2个字符，避免误匹配（如"大庆市"误匹配"大"）
+            const minMatchLength = SINGLE_WORD_CITIES.includes(name) ? 1 : 2;
+            for (let i = name.length; i >= minMatchLength; i--) {
                 const temp = name.substring(0, i);
                 if (fragment.indexOf(temp) === 0) {
                     this.logger.log('市信息关键字:', temp);
@@ -166,11 +163,43 @@ class TreeParser extends BaseParser {
             }
         }
 
-        // 检查单字城市
+        // 检查单字城市（后备机制，正常情况应该已经在上面的主循环中匹配）
+        // 修复：尝试查找实际的city对象而不是返回null
         for (const singleWordCity of SINGLE_WORD_CITIES) {
             if (fragment.indexOf(singleWordCity) === 0) {
-                this.logger.log('市信息关键字:', singleWordCity);
+                this.logger.log('单字城市后备匹配:', singleWordCity);
+
+                // 尝试在cities中查找匹配的城市
+                const matchedCity = this.cities.find(c => {
+                    if (c.name !== singleWordCity) return false;
+
+                    // 如果有省份信息，必须匹配
+                    if (currentProvince) {
+                        return currentProvince.code
+                            ? currentProvince.code === c.provinceCode
+                            : currentProvince.name === c.provinceName;
+                    }
+                    return true;
+                });
+
                 const cleanedFragment = fragment.replace(new RegExp(singleWordCity), '');
+
+                if (matchedCity) {
+                    // 找到匹配的city，返回完整信息
+                    const matchedProvince = !currentProvince && matchedCity.provinceCode
+                        ? this.getProvinceByCode(matchedCity.provinceCode)
+                        : (!currentProvince && matchedCity.provinceName
+                            ? this._getProvinceByName(matchedCity.provinceName)
+                            : null);
+
+                    return {
+                        fragment: cleanedFragment,
+                        city: matchedCity,
+                        province: matchedProvince
+                    };
+                }
+
+                // 未找到city对象，只清理fragment
                 return { fragment: cleanedFragment, city: null };
             }
         }
@@ -438,23 +467,13 @@ class TreeParser extends BaseParser {
     _removeRepeatedRegions(fragment, province, city, area) {
         if (!fragment) return '';
 
-        console.log('[DEBUG] _removeRepeatedRegions 被调用');
-        console.log('[DEBUG] 输入参数 - fragment:', fragment);
-        console.log('[DEBUG] 输入参数 - province:', province);
-        console.log('[DEBUG] 输入参数 - city:', city);
-        console.log('[DEBUG] 输入参数 - area:', area);
-
         // 检查是否需要保护
         if (this._shouldProtectFragment(fragment)) {
-            console.log('[DEBUG] 片段受保护，使用保护模式清理');
             const fullPath = this._buildFullRegionPath(province, city, area);
             return this._removeCompleteRepeatedPath(fragment, fullPath);
         }
 
-        console.log('[DEBUG] 片段不受保护，使用完整清理模式');
-
         // 对于不需要保护的内容，进行完整的重复信息清理
-        const fullPath = this._buildFullRegionPath(province, city, area);
         let cleanedFragment = fragment;
 
         // 构建所有可能的重复路径组合
@@ -463,14 +482,15 @@ class TreeParser extends BaseParser {
         // 按长度从长到短排序，优先清理较长的重复路径
         repeatedPaths.sort((a, b) => b.length - a.length);
 
-        // 逐个清理重复路径
+        // 逐个清理重复路径 - 使用全局替换
         for (const path of repeatedPaths) {
             if (path.length >= 4) { // 只清理长度>=4的路径，避免误删
                 // 先检查是否包含这个路径
                 if (cleanedFragment.includes(path)) {
                     this.logger.log(`清理重复路径: ${path}`);
-                    // 只替换第一次出现的，不使用全局替换
-                    cleanedFragment = cleanedFragment.replace(path, '');
+                    // 使用全局替换，清理所有出现的重复路径
+                    const escapedPath = this._escapeRegExp(path);
+                    cleanedFragment = cleanedFragment.replace(new RegExp(escapedPath, 'g'), '');
                 }
             }
         }

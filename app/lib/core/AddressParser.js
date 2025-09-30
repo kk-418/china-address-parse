@@ -36,11 +36,52 @@ class AddressParser extends BaseAddressParser {
         // 清理详细地址
         let detail = parseResult.detail;
 
-        // 移除省市区名称
+        // 移除省市区名称 - 增强版清理逻辑
         if (province || city || area) {
-            detail = detail.map(item =>
-                item.replace(new RegExp(`${provinceName}|${cityName}|${countyName}`, 'g'), '')
-            );
+            // 构建所有可能的省市区组合路径
+            const repeatedPaths = [];
+
+            // 完整路径组合
+            if (provinceName && cityName && countyName) {
+                repeatedPaths.push(provinceName + cityName + countyName);
+            }
+            if (provinceName && cityName) {
+                repeatedPaths.push(provinceName + cityName);
+            }
+            if (cityName && countyName) {
+                repeatedPaths.push(cityName + countyName);
+            }
+
+            // 单独的省市区名称（只添加长度>=3的，避免误删）
+            if (provinceName && provinceName.length >= 3) {
+                repeatedPaths.push(provinceName);
+            }
+            if (cityName && cityName.length >= 3) {
+                repeatedPaths.push(cityName);
+            }
+            if (countyName && countyName.length >= 3) {
+                repeatedPaths.push(countyName);
+            }
+
+            // 按长度从长到短排序，优先清理较长的重复路径
+            repeatedPaths.sort((a, b) => b.length - a.length);
+
+            // 对每个detail项进行清理
+            detail = detail.map(item => {
+                let cleaned = item;
+
+                // 逐个清理重复路径
+                for (const path of repeatedPaths) {
+                    if (path && path.length >= 4) {
+                        // 转义正则特殊字符
+                        const escapedPath = path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                        // 全局替换
+                        cleaned = cleaned.replace(new RegExp(escapedPath, 'g'), '');
+                    }
+                }
+
+                return cleaned;
+            });
         }
 
         // 去重和清理

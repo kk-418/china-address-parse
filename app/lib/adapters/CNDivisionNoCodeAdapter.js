@@ -67,6 +67,18 @@ class CNDivisionNoCodeAdapter {
      * @private
      */
     static _normalizeCityName(cityName, provinceName) {
+        // 特殊城市名称，需要保持原样（不进行标准化）
+        const specialCityNames = [
+            '县',                      // 重庆市-县层级
+            '省直辖县级行政区划',       // 海南省等
+            '省直辖县级行政单位'        // 部分省份的特殊层级
+        ];
+
+        // 如果是特殊城市名称，保持原名不变
+        if (specialCityNames.includes(cityName)) {
+            return cityName;
+        }
+
         // 直辖市列表
         const municipalities = ['北京市', '天津市', '上海市', '重庆市'];
 
