@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概述
 
-这是一个中国地址解析库（zh-address-parse），用于解析中国的快递地址，提取省、市、区、详细地址、姓名、电话等信息。
+这是一个中国地址解析库(zh-address-parse),用于解析中国的快递地址,提取省、市、县、详细地址、姓名、电话等信息。
 
 ## 核心架构
 
 ### 主要文件结构
 - `/app/index.js` - 演示页面入口，包含jQuery UI交互逻辑
 - `/app/lib/address-parse.js` - 核心地址解析算法
-- `/app/lib/data/area.json` - 中国行政区划数据（省市区三级数据）
+- `/app/lib/data/area.json` - 中国行政区划数据(省市县三级数据)
 - `/app/lib/names.json` - 中文姓名数据库
 - `/index.js` - NPM包入口，导向构建后的文件
 - `/dist/zh-address-parse.min.js` - 构建后的压缩文件
@@ -26,7 +26,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 {
   province: string,  // 省份
   city: string,      // 城市
-  area: string,      // 区县
+  county: string,    // 县级行政区
   detail: string,    // 详细地址
   name: string,      // 姓名
   telNumber: string, // 电话号码

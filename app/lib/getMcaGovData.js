@@ -10,7 +10,7 @@ const Province = () => ({
     children: []
 })
 
-const Area = () => ({
+const County = () => ({
     code: '',
     name: '',
 })
@@ -62,7 +62,7 @@ class GetMcaGovData {
                     console.log('省市总计数量：' + elementsProAndCity.length / 2)
                     console.log('区总计数量：' + elementsArea.length / 2)
                     let total = (elementsArea.length + elementsProAndCity.length) / 2
-                    console.log('省市区总计数量：' + total)
+                    console.log('省市区(县)总计数量：' + total)
 
                     const listProvince = []
                     for(let i = 0; i <= elementsProAndCity.length; i += 2) {
@@ -111,28 +111,28 @@ class GetMcaGovData {
                             let regExp = new RegExp(`^${prefixProvinceCode}`)
                             if (/\d/.test(codeOrName)) {
                                 if (regExp.test(codeOrName)) {
-                                    const area = new Area()
-                                    area.code = codeOrName
-                                    area.name = next
+                                    const county = new County()
+                                    county.code = codeOrName
+                                    county.name = next
 
                                     // 取区中间两位市的代号
                                     const prefixCityCode = codeOrName.substring(2, 4)
                                     regExp = new RegExp(`^${prefixProvinceCode}${prefixCityCode}`)
 
-                                    // 找出市，找到就加入到市里的下面的区
+                                    // 找出市，找到就加入到市里的下面的县级行政区
                                     const currentCity = cityList.find(cityItem => regExp.test(cityItem.code) && cityItem.code.endsWith('00'))
                                     if (cityList.length && currentCity) {
-                                        currentCity.children.push(area)
+                                        currentCity.children.push(county)
                                     } else {
-                                        // 解析直辖市下面的区和县
+                                        // 解析直辖市下面的县级行政区
                                         if (cityList.length === 0) {
                                             const city = new City()
                                             city.name = item.name
                                             city.code = item.code
-                                            city.children.push(area)
+                                            city.children.push(county)
                                             cityList.push(city)
                                         } else {
-                                            cityList[0].children.push(area)
+                                            cityList[0].children.push(county)
                                         }
                                     }
                                     elementsArea.splice(0, 2)

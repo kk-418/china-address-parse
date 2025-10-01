@@ -94,7 +94,7 @@ class BaseAddressParser {
 
         this.logger.log('分割后地址:', splitAddress);
 
-        // 6. 解析省市区和详细地址
+        // 6. 解析省市区(县)和详细地址
         this._parseRegions(splitAddress, parseResult, config);
 
         // 7. 从详细地址中提取姓名 - 使用带自定义关键字的提取器
@@ -147,7 +147,7 @@ class BaseAddressParser {
     }
 
     /**
-     * 解析省市区
+     * 解析省市区(县)
      * @private
      */
     _parseRegions(splitAddress, parseResult, config) {

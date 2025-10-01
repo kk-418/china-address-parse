@@ -359,16 +359,16 @@ class TreeParser extends BaseParser {
     }
 
     /**
-     * 处理"地名+省市区+地名"的重复模式
+     * 处理"地名+省市区(县)+地名"的重复模式
      * @param {string} fragment - 地址片段
-     * @param {string} fullPath - 完整省市区路径
+     * @param {string} fullPath - 完整省市区(县)路径
      * @returns {string|null} 清理后的结果，如果不匹配返回null
      * @private
      */
     _handleRepeatPattern(fragment, fullPath) {
         if (!fragment || !fullPath) return null;
 
-        // 尝试匹配 "前缀 + 省市区路径 + 后缀" 模式
+        // 尝试匹配 "前缀 + 省市区(县)路径 + 后缀" 模式
         const index = fragment.indexOf(fullPath);
         if (index === -1) return null;
 
@@ -386,13 +386,13 @@ class TreeParser extends BaseParser {
             return prefix;
         }
 
-        // Case 2: 后缀以前缀开头，清理省市区，保留前后
+        // Case 2: 后缀以前缀开头，清理省市区(县)，保留前后
         if (suffix.startsWith(prefix)) {
             console.log('[DEBUG] 后缀以前缀开头，保留前缀和后缀');
             return prefix + suffix;
         }
 
-        // Case 3: 前缀和后缀不同，清理省市区，保留前后
+        // Case 3: 前缀和后缀不同，清理省市区(县)，保留前后
         console.log('[DEBUG] 前后不同，保留前缀和后缀');
         return prefix + suffix;
     }
@@ -440,7 +440,7 @@ class TreeParser extends BaseParser {
     /**
      * 只清理完整的重复路径
      * @param {string} fragment - 地址片段
-     * @param {string} fullPath - 完整省市区路径
+     * @param {string} fullPath - 完整省市区(县)路径
      * @returns {string} 清理后的片段
      * @private
      */

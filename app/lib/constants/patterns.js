@@ -18,8 +18,8 @@ export const PROVINCE_PATTERN_TEMPLATE = (str) =>
 export const CITY_PATTERN_TEMPLATE = (str, provinceCode) =>
     new RegExp(`\{"code":[0-9]{4},"name":"${str}[\u4E00-\u9FA5]*?","provinceCode":${provinceCode || '[0-9]{2}'}\}`, 'g');
 
-// 区县正则模板
-export const AREA_PATTERN_TEMPLATE = (str, cityCode, provinceCode) =>
+// 县级行政区正则模板
+export const COUNTY_PATTERN_TEMPLATE = (str, cityCode, provinceCode) =>
     new RegExp(`\{"code":([0-9]{6}|[0-9]{9}),"name":"${str}[\u4E00-\u9FA5]*?","cityCode":${cityCode || '[0-9]{4}'},"provinceCode":${provinceCode || '[0-9]{2}'}\}`, 'g');
 
 // 特殊字符正则

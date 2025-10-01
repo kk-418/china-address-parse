@@ -146,13 +146,13 @@ export function cleanUselessWords(words, provinceName, customCleanRegexs = []) {
 }
 
 /**
- * 替换区域名称
+ * 替换县级行政区名称
  * @param {string} fragment - 原始字符串
  * @param {string} shortName - 短名称
  * @param {string} fullName - 全名称
  * @returns {string} - 替换后的字符串
  */
-export function replaceArea(fragment, shortName, fullName) {
+export function replaceCounty(fragment, shortName, fullName) {
     // 确保参数都是字符串
     if (!fragment || typeof fragment !== 'string') return '';
     if (!shortName || typeof shortName !== 'string') return fragment;

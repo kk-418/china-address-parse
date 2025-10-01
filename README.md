@@ -16,7 +16,7 @@ option可选参数属性列表
 |type| 解析方式     | Number                                                     | 否    | 0   |
 |textFilter| 预过滤字段    | Array                                                      | 否    | []  |
 |nameMaxLength| 中文名最大长度  | Number                                                     | 否    | 4   |
-|extraGovData| 额外的省市区数据 | { city?: GovData[]; area: GovData[]; province: GovData[] } | 否    | -   |
+|extraGovData| 额外的省市县数据 | { city?: GovData[]; county: GovData[]; province: GovData[] } | 否    | -   |
 
 
 extraGovData 定义如下：
@@ -46,11 +46,11 @@ const options = {
   type: 0, // 哪种方式解析，0：正则，1：树查找
   textFilter: [], // 预清洗的字段
   nameMaxLength: 4, // 查找最大的中文名字长度
-  extraGovData: { city: [{ name: 'name', code: 'code', provinceCode: 'provinceCode' }], province: [{ name: 'name', code: 'code' }], area: [{ name: 'name', code: 'code', provinceCode: 'provinceCode', cityCode: 'cityCode' }] }
+  extraGovData: { city: [{ name: 'name', code: 'code', provinceCode: 'provinceCode' }], province: [{ name: 'name', code: 'code' }], county: [{ name: 'name', code: 'code', provinceCode: 'provinceCode', cityCode: 'cityCode' }] }
 }
 // type参数0表示使用正则解析，1表示采用树查找, textFilter地址预清洗过滤字段。
 const parseResult = AddressParse('your address', options)
-// The parseResult is an object contain { province: '', name: '', city: '', area: '', detail: '', phone: '', postalCode: '' }
+// The parseResult is an object contain { provinceName: '', name: '', cityName: '', countyName: '', address: '', telNumber: '', postalCode: '' }
 ```
 > script引入
 
@@ -61,7 +61,7 @@ const parseResult = AddressParse('your address', options)
         const onTextAreaBlur = (e) => {
             const address = e.target.value
             const parseResult = window.ZhAddressParse(address, { type: 0, textFilter: ['电話', '電話', '聯系人'] })
-            // The parseResult is an object contain { province: '', name: '', city: '', area: '', detail: '', phone: '', postalCode: '' }
+            // The parseResult is an object contain { provinceName: '', name: '', cityName: '', countyName: '', address: '', telNumber: '', postalCode: '' }
             console.log(parseResult)
             $('#result').empty();
             $('#result').append(`<ul>${Object.entries(parseResult).map(([k, v]) => `<li>${k}：${v}</li>`).join('')}</ul>`)

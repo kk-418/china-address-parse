@@ -3,7 +3,7 @@
  * @author kk
  */
 
-import { replaceArea } from '../utils/cleaner.js';
+import { replaceCounty } from '../utils/cleaner.js';
 
 class BaseParser {
     constructor(provinces, cities, counties, logger) {
@@ -79,7 +79,7 @@ class BaseParser {
      * @returns {string} - 清理后的片段
      */
     cleanFragment(fragment, matchStr, fullName) {
-        return replaceArea(fragment, matchStr, fullName);
+        return replaceCounty(fragment, matchStr, fullName);
     }
 }
 

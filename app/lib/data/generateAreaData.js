@@ -2,25 +2,25 @@ const newestAreaData = require('./newestAreaData.json')
 const fs = require("fs");
 
 
-const cleanArea = (area)=>{
-    if(area.children){
-        area.children = area.children.map((children)=>{
-            return cleanArea(children)
+const cleanRegion = (region)=>{
+    if(region.children){
+        region.children = region.children.map((children)=>{
+            return cleanRegion(children)
         })
     }
-    if(area.level <= 4 && area.level >= 3){
-        area.code = area.code/Math.pow(1000,5-area.level)
-    } else if(area.level < 3){
-        area.code = area.code/1000000/Math.pow(100,3-area.level)
+    if(region.level <= 4 && region.level >= 3){
+        region.code = region.code/Math.pow(1000,5-region.level)
+    } else if(region.level < 3){
+        region.code = region.code/1000000/Math.pow(100,3-region.level)
     }
-    // area.code = area.code/1000
-    delete area["level"]
-    delete area["pcode"]
-    return area;
+    // region.code = region.code/1000
+    delete region["level"]
+    delete region["pcode"]
+    return region;
 }
 
 const areaJson = newestAreaData.map((province) => {
-    return  cleanArea(province)
+    return  cleanRegion(province)
 
 })
 

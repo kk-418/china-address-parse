@@ -103,10 +103,10 @@ export function getMissingStreetData(cityName) {
 
 /**
  * 检查是否为重庆市的县级区域
- * @param {string} areaName - 区域名称
+ * @param {string} countyName - 县级行政区名称
  * @returns {boolean} 是否为县级区域
  */
-export function isChongqingCounty(areaName) {
+export function isChongqingCounty(countyName) {
     const chongqingMapping = SPECIAL_CITY_MAPPINGS['重庆市'];
-    return chongqingMapping && chongqingMapping.countyAreas.includes(areaName);
+    return chongqingMapping && chongqingMapping.countyAreas.includes(countyName);
 }
