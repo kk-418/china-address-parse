@@ -12,12 +12,12 @@ class CNDivisionAdapter {
      * @returns {Object} 转换后的数据
      */
     static adapt(cnDivisionData, includeCode = false) {
-        const { provinces, cities, areas } = cnDivisionData;
+        const { provinces, cities, counties } = cnDivisionData;
 
         return {
             provinces: this._adaptProvinces(provinces, includeCode),
             cities: this._adaptCities(cities, includeCode),
-            areas: this._adaptAreas(areas, includeCode)
+            counties: this._adaptCounties(counties, includeCode)
         };
     }
 
@@ -70,25 +70,25 @@ class CNDivisionAdapter {
     }
 
     /**
-     * 转换区县数据
-     * @param {Array} areas - 区县数组
+     * 转换县级行政区数据
+     * @param {Array} counties - 县级行政区数组
      * @param {boolean} includeCode - 是否包含编码
-     * @returns {Array} 转换后的区县数据
+     * @returns {Array} 转换后的县级行政区数据
      * @private
      */
-    static _adaptAreas(areas, includeCode) {
-        return areas.map((area, index) => {
+    static _adaptCounties(counties, includeCode) {
+        return counties.map((county, index) => {
             const result = {
-                name: area.name
+                name: county.name
             };
 
             if (includeCode) {
-                result.code = area.code || this._generateFallbackCode('area', index);
-                result.cityCode = area.cityCode;
-                result.provinceCode = area.provinceCode;
+                result.code = county.code || this._generateFallbackCode('county', index);
+                result.cityCode = county.cityCode;
+                result.provinceCode = county.provinceCode;
             } else {
-                result.cityName = area.cityName;
-                result.provinceName = area.provinceName;
+                result.cityName = county.cityName;
+                result.provinceName = county.provinceName;
             }
 
             return result;
@@ -125,7 +125,7 @@ class CNDivisionAdapter {
         const prefixes = {
             province: '99',
             city: '9999',
-            area: '999999'
+            county: '999999'
         };
 
         const prefix = prefixes[type] || '999999';
@@ -139,23 +139,23 @@ class CNDivisionAdapter {
      * @returns {Object} 查找映射表
      */
     static createLookupMaps(adaptedData, includeCode) {
-        const { provinces, cities, areas } = adaptedData;
+        const { provinces, cities, counties } = adaptedData;
 
         const maps = {
             provinceByName: new Map(),
             cityByName: new Map(),
-            areaByName: new Map()
+            countyByName: new Map()
         };
 
         if (includeCode) {
             maps.provinceByCode = new Map();
             maps.cityByCode = new Map();
-            maps.areaByCode = new Map();
+            maps.countyByCode = new Map();
             maps.citiesByProvinceCode = new Map();
-            maps.areasByCityCode = new Map();
+            maps.countiesByCityCode = new Map();
         } else {
             maps.citiesByProvinceName = new Map();
-            maps.areasByCityName = new Map();
+            maps.countiesByCityName = new Map();
         }
 
         // 建立省份映射
@@ -190,26 +190,26 @@ class CNDivisionAdapter {
             }
         });
 
-        // 建立区县映射
-        areas.forEach(area => {
-            maps.areaByName.set(area.name, area);
+        // 建立县级行政区映射
+        counties.forEach(county => {
+            maps.countyByName.set(county.name, county);
 
             if (includeCode) {
-                if (area.code) {
-                    maps.areaByCode.set(area.code, area);
+                if (county.code) {
+                    maps.countyByCode.set(county.code, county);
                 }
-                if (area.cityCode) {
-                    if (!maps.areasByCityCode.has(area.cityCode)) {
-                        maps.areasByCityCode.set(area.cityCode, []);
+                if (county.cityCode) {
+                    if (!maps.countiesByCityCode.has(county.cityCode)) {
+                        maps.countiesByCityCode.set(county.cityCode, []);
                     }
-                    maps.areasByCityCode.get(area.cityCode).push(area);
+                    maps.countiesByCityCode.get(county.cityCode).push(county);
                 }
             } else {
-                if (area.cityName) {
-                    if (!maps.areasByCityName.has(area.cityName)) {
-                        maps.areasByCityName.set(area.cityName, []);
+                if (county.cityName) {
+                    if (!maps.countiesByCityName.has(county.cityName)) {
+                        maps.countiesByCityName.set(county.cityName, []);
                     }
-                    maps.areasByCityName.get(area.cityName).push(area);
+                    maps.countiesByCityName.get(county.cityName).push(county);
                 }
             }
         });
@@ -223,7 +223,7 @@ class CNDivisionAdapter {
      * @returns {Object} 验证结果
      */
     static validateData(data) {
-        const { provinces, cities, areas } = data;
+        const { provinces, cities, counties } = data;
 
         const result = {
             isValid: true,
@@ -241,9 +241,9 @@ class CNDivisionAdapter {
             result.issues.push('城市数据为空');
         }
 
-        if (!areas || areas.length === 0) {
+        if (!counties || counties.length === 0) {
             result.isValid = false;
-            result.issues.push('区县数据为空');
+            result.issues.push('县级行政区数据为空');
         }
 
         // 检查数据结构完整性
@@ -261,10 +261,10 @@ class CNDivisionAdapter {
             }
         });
 
-        areas.forEach((area, index) => {
-            if (!area.name) {
+        counties.forEach((county, index) => {
+            if (!county.name) {
                 result.isValid = false;
-                result.issues.push(`区县[${index}]缺少名称`);
+                result.issues.push(`县级行政区[${index}]缺少名称`);
             }
         });
 

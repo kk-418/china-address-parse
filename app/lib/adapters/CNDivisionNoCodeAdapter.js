@@ -11,12 +11,12 @@ class CNDivisionNoCodeAdapter {
      * @returns {Object} 转换后的数据
      */
     static adapt(cnDivisionData) {
-        const { provinces, cities, areas } = cnDivisionData;
+        const { provinces, cities, counties } = cnDivisionData;
 
         return {
             provinces: this._adaptProvinces(provinces),
             cities: this._adaptCities(cities),
-            areas: this._adaptAreas(areas)
+            counties: this._adaptCounties(counties)
         };
     }
 
@@ -46,16 +46,16 @@ class CNDivisionNoCodeAdapter {
     }
 
     /**
-     * 转换区县数据
-     * @param {Array} areas - 区县数组
-     * @returns {Array} 转换后的区县数据
+     * 转换县级行政区数据
+     * @param {Array} counties - 县级行政区数组
+     * @returns {Array} 转换后的县级行政区数据
      * @private
      */
-    static _adaptAreas(areas) {
-        return areas.map(area => ({
-            name: area.name,
-            cityName: area.cityName,
-            provinceName: area.provinceName
+    static _adaptCounties(counties) {
+        return counties.map(county => ({
+            name: county.name,
+            cityName: county.cityName,
+            provinceName: county.provinceName
         }));
     }
 
@@ -96,14 +96,14 @@ class CNDivisionNoCodeAdapter {
      * @returns {Object} 查找映射表
      */
     static createLookupMaps(adaptedData) {
-        const { provinces, cities, areas } = adaptedData;
+        const { provinces, cities, counties } = adaptedData;
 
         const maps = {
             provinceByName: new Map(),
             cityByName: new Map(),
-            areaByName: new Map(),
+            countyByName: new Map(),
             citiesByProvinceName: new Map(),
-            areasByCityName: new Map()
+            countiesByCityName: new Map()
         };
 
         // 建立省份映射
@@ -123,15 +123,15 @@ class CNDivisionNoCodeAdapter {
             }
         });
 
-        // 建立区县映射
-        areas.forEach(area => {
-            maps.areaByName.set(area.name, area);
+        // 建立县级行政区映射
+        counties.forEach(county => {
+            maps.countyByName.set(county.name, county);
 
-            if (area.cityName) {
-                if (!maps.areasByCityName.has(area.cityName)) {
-                    maps.areasByCityName.set(area.cityName, []);
+            if (county.cityName) {
+                if (!maps.countiesByCityName.has(county.cityName)) {
+                    maps.countiesByCityName.set(county.cityName, []);
                 }
-                maps.areasByCityName.get(area.cityName).push(area);
+                maps.countiesByCityName.get(county.cityName).push(county);
             }
         });
 

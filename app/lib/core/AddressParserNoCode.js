@@ -7,7 +7,7 @@
 import DataManagerNoCode from './DataManagerNoCode.js';
 import BaseAddressParser from './BaseAddressParser.js';
 import { cleanUselessWords } from '../utils/cleaner.js';
-import { MINIAPP_REWRITE_CITY_NAMES } from '../constants/keywords.js';
+import { RUN_MODE } from '../constants/config.js';
 
 class AddressParserNoCode extends BaseAddressParser {
     constructor() {
@@ -26,18 +26,18 @@ class AddressParserNoCode extends BaseAddressParser {
     _formatResult(parseResult, config) {
         const province = parseResult.province[0];
         const city = parseResult.city[0];
-        const area = parseResult.area[0];
+        const county = parseResult.county[0];
 
         let provinceName = province ? province.name : '';
         let cityName = city ? city.name : '';
-        let countyName = area ? area.name : '';
+        let countyName = county ? county.name : '';
 
         // 清洗detail数组
         let detail = parseResult.detail;
 
-        // 移除省市区名称 - 增强版清理逻辑
-        if (province || city || area) {
-            // 构建所有可能的省市区组合路径
+        // 移除省市县名称 - 增强版清理逻辑
+        if (province || city || county) {
+            // 构建所有可能的省市县组合路径
             const repeatedPaths = [];
 
             // 完整路径组合
@@ -51,7 +51,7 @@ class AddressParserNoCode extends BaseAddressParser {
                 repeatedPaths.push(cityName + countyName);
             }
 
-            // 单独的省市区名称（只添加长度>=3的，避免误删）
+            // 单独的省市县名称（只添加长度>=3的，避免误删）
             if (provinceName && provinceName.length >= 3) {
                 repeatedPaths.push(provinceName);
             }
@@ -90,12 +90,14 @@ class AddressParserNoCode extends BaseAddressParser {
         // 将detail数组合并为地址字符串
         const address = detail.join('').trim();
 
-        // 重写城市名称规则
-        for (const [oldName, newName] of Object.entries(MINIAPP_REWRITE_CITY_NAMES)) {
-            if (cityName === oldName) {
-                cityName = newName;
-                break;
-            }
+        // 特殊城市名称映射：省直辖县级行政区划 -> 省直辖县级行政单位
+        if (cityName === '省直辖县级行政区划') {
+            cityName = '省直辖县级行政单位';
+        }
+
+        // 小程序模式：将"省直辖县级行政单位"重写为"省直辖县级行政区划"
+        if (config.mode === RUN_MODE.MINIAPP && cityName === '省直辖县级行政单位') {
+            cityName = '省直辖县级行政区划';
         }
 
         const result = {
@@ -103,7 +105,7 @@ class AddressParserNoCode extends BaseAddressParser {
             telNumber: parseResult.telNumber || '',
             provinceName: provinceName || '',
             cityName: cityName || '',
-            subCityDivisionName: countyName || '',
+            countyName: countyName || '',
             address: address || '',
             postalCode: parseResult.postalCode || ''
         };
@@ -124,7 +126,7 @@ class AddressParserNoCode extends BaseAddressParser {
             telNumber: '',
             provinceName: '',
             cityName: '',
-            subCityDivisionName: '',
+            countyName: '',
             address: '',
             postalCode: ''
         };

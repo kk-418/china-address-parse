@@ -37,7 +37,7 @@ class CNDivisionNoCodeLoader {
     _parseNoCodeData(data) {
         const provinces = [];
         const cities = [];
-        const areas = [];
+        const counties = [];
 
         Object.keys(data).forEach(provinceName => {
             // 省份数据
@@ -55,10 +55,10 @@ class CNDivisionNoCodeLoader {
 
                 const cityData = provinceData[cityName];
                 if (Array.isArray(cityData)) {
-                    cityData.forEach(areaName => {
-                        // 区县数据
-                        areas.push({
-                            name: areaName,
+                    cityData.forEach(countyName => {
+                        // 县级行政区数据
+                        counties.push({
+                            name: countyName,
                             cityName: cityName,
                             provinceName: provinceName
                         });
@@ -67,7 +67,7 @@ class CNDivisionNoCodeLoader {
             });
         });
 
-        return { provinces, cities, areas };
+        return { provinces, cities, counties };
     }
 
     /**

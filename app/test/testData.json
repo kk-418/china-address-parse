@@ -6,7 +6,7 @@
       "telNumber": "13311111111",
       "provinceName": "北京市",
       "cityName": "北京市",
-      "subCityDivisionName": "顺义区",
+      "countyName": "顺义区",
       "address": "胜利街道宜宾南区2-2-401小程序模式测试",
       "postalCode": ""
     },
@@ -21,7 +21,7 @@
       "telNumber": "13311111111",
       "provinceName": "浙江省",
       "cityName": "台州市",
-      "subCityDivisionName": "椒江区",
+      "countyName": "椒江区",
       "address": "景和大厦",
       "postalCode": ""
     },
@@ -34,7 +34,7 @@
       "telNumber": "13311111111",
       "provinceName": "云南省",
       "cityName": "红河哈尼族彝族自治州",
-      "subCityDivisionName": "弥勒市",
+      "countyName": "弥勒市",
       "address": "弥阳镇铺田社区弥西哨村",
       "postalCode": ""
     },
@@ -47,7 +47,7 @@
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "广州市",
-      "subCityDivisionName": "番禺区",
+      "countyName": "番禺区",
       "address": "东环街道东沙村下黄坊汪波三街北七巷4号",
       "postalCode": ""
     },
@@ -60,7 +60,7 @@
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "龙岗区",
+      "countyName": "龙岗区",
       "address": "布吉华龙新村60栋002[9859]",
       "postalCode": ""
     },
@@ -73,7 +73,7 @@
       "telNumber": "",
       "provinceName": "北京市",
       "cityName": "北京市",
-      "subCityDivisionName": "东城区",
+      "countyName": "东城区",
       "address": "北京师范大学",
       "postalCode": ""
     },
@@ -86,7 +86,7 @@
       "telNumber": "13311111111",
       "provinceName": "浙江省",
       "cityName": "嘉兴市",
-      "subCityDivisionName": "平湖市",
+      "countyName": "平湖市",
       "address": "新埭镇平兴公路199号1号库115门",
       "postalCode": ""
     },
@@ -99,7 +99,7 @@
       "telNumber": "13311111111",
       "provinceName": "北京市",
       "cityName": "北京市",
-      "subCityDivisionName": "顺义区",
+      "countyName": "顺义区",
       "address": "胜利街道宜宾南区2-2-401",
       "postalCode": ""
     },
@@ -112,7 +112,7 @@
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "汕头市",
-      "subCityDivisionName": "潮南区",
+      "countyName": "潮南区",
       "address": "胪岗镇祁妍服饰（一楼静蜜电商）",
       "postalCode": ""
     },
@@ -125,7 +125,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "盐田区",
+      "countyName": "盐田区",
       "address": "山海四季城F栋17A",
       "postalCode": ""
     },
@@ -138,7 +138,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "盐田区",
+      "countyName": "盐田区",
       "address": "山海四季城F栋2f",
       "postalCode": ""
     },
@@ -151,7 +151,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "龙岗区",
+      "countyName": "龙岗区",
       "address": "南湾街道尚峰花园4C2231",
       "postalCode": ""
     },
@@ -164,7 +164,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "盐田区",
+      "countyName": "盐田区",
       "address": "山海四季城D栋17A",
       "postalCode": ""
     },
@@ -177,7 +177,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "盐田区",
+      "countyName": "盐田区",
       "address": "东海三街山海四季城F4E",
       "postalCode": ""
     },
@@ -190,7 +190,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "盐田区",
+      "countyName": "盐田区",
       "address": "大梅沙万科东海岸221栋",
       "postalCode": ""
     },
@@ -203,7 +203,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "龙岗区",
+      "countyName": "龙岗区",
       "address": "龙岗街道格水村三巷十号三楼",
       "postalCode": ""
     },
@@ -216,7 +216,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "盐田区",
+      "countyName": "盐田区",
       "address": "山海四季城A栋32D",
       "postalCode": ""
     },
@@ -229,7 +229,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "龙华区",
+      "countyName": "龙华区",
       "address": "新区樟坑一区通博花园181栋",
       "postalCode": ""
     },
@@ -242,7 +242,7 @@
       "telNumber": "13111111111",
       "provinceName": "湖南省",
       "cityName": "株洲市",
-      "subCityDivisionName": "醴陵市",
+      "countyName": "醴陵市",
       "address": "金牛居委会金牛路5号国超刘娇",
       "postalCode": ""
     },
@@ -255,7 +255,7 @@
       "telNumber": "13111111111",
       "provinceName": "江西省",
       "cityName": "南昌市",
-      "subCityDivisionName": "青山湖区",
+      "countyName": "青山湖区",
       "address": "广兰大道418号东华理工大学核工系南区9栋1112室",
       "postalCode": ""
     },
@@ -268,7 +268,7 @@
       "telNumber": "13111111111",
       "provinceName": "湖北省",
       "cityName": "黄石市",
-      "subCityDivisionName": "",
+      "countyName": "",
       "address": "牧羊湖水机路华瑞南岸星城一栋一单元2202",
       "postalCode": ""
     },
@@ -281,7 +281,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "盐田区",
+      "countyName": "盐田区",
       "address": "北山道山海四季城F20D",
       "postalCode": ""
     },
@@ -294,7 +294,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "盐田区",
+      "countyName": "盐田区",
       "address": "盐田街道东海三街8号山海四季花园",
       "postalCode": ""
     },
@@ -307,7 +307,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "罗湖区",
+      "countyName": "罗湖区",
       "address": "凤凰路中山花园1栋582室",
       "postalCode": ""
     },
@@ -320,7 +320,7 @@
       "telNumber": "13111111111",
       "provinceName": "四川省",
       "cityName": "成都市",
-      "subCityDivisionName": "",
+      "countyName": "",
       "address": "高新西区百叶路1号电子科技大学成都学院计算机(分院)",
       "postalCode": ""
     },
@@ -333,7 +333,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "盐田区",
+      "countyName": "盐田区",
       "address": "山海四季城F栋1B",
       "postalCode": ""
     },
@@ -346,7 +346,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "佛山市",
-      "subCityDivisionName": "顺德区",
+      "countyName": "顺德区",
       "address": "乐从天佑城E座2005室",
       "postalCode": ""
     },
@@ -359,7 +359,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "南山区",
+      "countyName": "南山区",
       "address": "南光路龙坤居2栋D座714",
       "postalCode": ""
     },
@@ -372,7 +372,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "盐田区",
+      "countyName": "盐田区",
       "address": "万科东海岸21-102",
       "postalCode": ""
     },
@@ -385,7 +385,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "深圳市",
-      "subCityDivisionName": "南山区",
+      "countyName": "南山区",
       "address": "南商路碧海天家园A89B",
       "postalCode": ""
     },
@@ -398,7 +398,7 @@
       "telNumber": "13111111111",
       "provinceName": "贵州省",
       "cityName": "黔南布依族苗族自治州",
-      "subCityDivisionName": "都匀市",
+      "countyName": "都匀市",
       "address": "水岸绿洲小区2栋二单元2033",
       "postalCode": ""
     },
@@ -411,7 +411,7 @@
       "telNumber": "13111111111",
       "provinceName": "贵州省",
       "cityName": "黔南布依族苗族自治州",
-      "subCityDivisionName": "都匀市",
+      "countyName": "都匀市",
       "address": "甘塘镇绿茵湖村一组2号",
       "postalCode": ""
     },
@@ -424,7 +424,7 @@
       "telNumber": "0755-22107333",
       "provinceName": "广东省",
       "cityName": "湛江市",
-      "subCityDivisionName": "廉江市",
+      "countyName": "廉江市",
       "address": "车板镇人才市场",
       "postalCode": "713200"
     },
@@ -437,7 +437,7 @@
       "telNumber": "13111111111",
       "provinceName": "广东省",
       "cityName": "清远市",
-      "subCityDivisionName": "清城区",
+      "countyName": "清城区",
       "address": "洲心街道金茂家园一栋一楼100号商铺",
       "postalCode": ""
     },
@@ -450,7 +450,7 @@
       "telNumber": "13911111111",
       "provinceName": "江苏省",
       "cityName": "苏州市",
-      "subCityDivisionName": "吴江区",
+      "countyName": "吴江区",
       "address": "干将东路678号江苏大厦11楼",
       "postalCode": "215000"
     },
@@ -463,7 +463,7 @@
       "telNumber": "13911111111",
       "provinceName": "湖南省",
       "cityName": "郴州市",
-      "subCityDivisionName": "桂东县",
+      "countyName": "桂东县",
       "address": "清泉镇",
       "postalCode": ""
     },
@@ -476,7 +476,7 @@
       "telNumber": "13911111111",
       "provinceName": "广西壮族自治区",
       "cityName": "柳州市",
-      "subCityDivisionName": "柳北区",
+      "countyName": "柳北区",
       "address": "跃进路42号4栋20楼",
       "postalCode": ""
     },
@@ -489,7 +489,7 @@
       "telNumber": "13911111111",
       "provinceName": "安徽省",
       "cityName": "安庆市",
-      "subCityDivisionName": "太湖县",
+      "countyName": "太湖县",
       "address": "新仓镇塔山村前进组",
       "postalCode": ""
     },
@@ -502,7 +502,7 @@
       "telNumber": "13311111111",
       "provinceName": "北京市",
       "cityName": "北京市",
-      "subCityDivisionName": "东城区",
+      "countyName": "东城区",
       "address": "建设路紫薇花园",
       "postalCode": ""
     },
@@ -515,7 +515,7 @@
       "telNumber": "13311111111",
       "provinceName": "上海市",
       "cityName": "上海市",
-      "subCityDivisionName": "黄浦区",
+      "countyName": "黄浦区",
       "address": "建设路紫薇花园",
       "postalCode": ""
     },
@@ -528,7 +528,7 @@
       "telNumber": "13311111111",
       "provinceName": "重庆市",
       "cityName": "县",
-      "subCityDivisionName": "垫江县",
+      "countyName": "垫江县",
       "address": "太平镇",
       "postalCode": ""
     },
@@ -541,7 +541,7 @@
       "telNumber": "13311111111",
       "provinceName": "甘肃省",
       "cityName": "兰州市",
-      "subCityDivisionName": "城关区",
+      "countyName": "城关区",
       "address": "东岗街道向阳街道",
       "postalCode": ""
     },
@@ -554,7 +554,7 @@
       "telNumber": "13311111111",
       "provinceName": "河南省",
       "cityName": "省直辖县级行政单位",
-      "subCityDivisionName": "济源市",
+      "countyName": "济源市",
       "address": "沁园路丹尼斯",
       "postalCode": ""
     },
@@ -567,7 +567,7 @@
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "东莞市",
-      "subCityDivisionName": "中堂镇",
+      "countyName": "中堂镇",
       "address": "潢涌大坦村二街四巷1号",
       "postalCode": ""
     },
@@ -580,7 +580,7 @@
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "东莞市",
-      "subCityDivisionName": "望牛墩镇",
+      "countyName": "望牛墩镇",
       "address": "赤滘村南昌南路53号",
       "postalCode": ""
     },
@@ -593,7 +593,7 @@
       "telNumber": "13311111111",
       "provinceName": "江苏省",
       "cityName": "盐城市",
-      "subCityDivisionName": "",
+      "countyName": "",
       "address": "其它区神州路御景湾71104",
       "postalCode": ""
     },
@@ -606,7 +606,7 @@
       "telNumber": "13311111111",
       "provinceName": "黑龙江省",
       "cityName": "大兴安岭地区",
-      "subCityDivisionName": "加格达奇区",
+      "countyName": "加格达奇区",
       "address": "铁路南小区29号楼4单元5658sf",
       "postalCode": ""
     },
@@ -619,7 +619,7 @@
       "telNumber": "13311111111",
       "provinceName": "江西省",
       "cityName": "抚州市",
-      "subCityDivisionName": "临川区",
+      "countyName": "临川区",
       "address": "上顿渡镇上顿渡镇老公安局",
       "postalCode": ""
     },
@@ -632,7 +632,7 @@
       "telNumber": "13311111111",
       "provinceName": "辽宁省",
       "cityName": "盘锦市",
-      "subCityDivisionName": "盘山县",
+      "countyName": "盘山县",
       "address": "东郭镇",
       "postalCode": "000000"
     },
@@ -645,7 +645,7 @@
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "江门市",
-      "subCityDivisionName": "恩平市",
+      "countyName": "恩平市",
       "address": "牛江镇岭南娟姑水果店",
       "postalCode": ""
     },
@@ -658,7 +658,7 @@
       "telNumber": "18210997754",
       "provinceName": "北京市",
       "cityName": "北京市",
-      "subCityDivisionName": "顺义区",
+      "countyName": "顺义区",
       "address": "胜利街道宜宾南区2-2-401",
       "postalCode": ""
     },
@@ -671,7 +671,7 @@
       "telNumber": "13311111111",
       "provinceName": "重庆市",
       "cityName": "县",
-      "subCityDivisionName": "酉阳土家族苗族自治县",
+      "countyName": "酉阳土家族苗族自治县",
       "address": "龙潭镇龙潭一中新校门",
       "postalCode": ""
     },
@@ -684,7 +684,7 @@
       "telNumber": "13311111111",
       "provinceName": "新疆维吾尔自治区",
       "cityName": "和田地区",
-      "subCityDivisionName": "和田市",
+      "countyName": "和田市",
       "address": "xx小区",
       "postalCode": ""
     },
@@ -697,7 +697,7 @@
       "telNumber": "13311111111",
       "provinceName": "新疆维吾尔自治区",
       "cityName": "和田地区",
-      "subCityDivisionName": "和田市",
+      "countyName": "和田市",
       "address": "xx小区",
       "postalCode": ""
     },
@@ -710,7 +710,7 @@
       "telNumber": "13311111111",
       "provinceName": "福建省",
       "cityName": "福州市",
-      "subCityDivisionName": "闽侯县",
+      "countyName": "闽侯县",
       "address": "祥谦镇五虎山工业区洋山路与辅澜路交叉口五虎山小学旁福州优选仓储",
       "postalCode": ""
     },
@@ -723,7 +723,7 @@
       "telNumber": "13311111111",
       "provinceName": "江苏省",
       "cityName": "苏州市",
-      "subCityDivisionName": "昆山市",
+      "countyName": "昆山市",
       "address": "王家甸路99号",
       "postalCode": ""
     },
@@ -736,7 +736,7 @@
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "揭阳市",
-      "subCityDivisionName": "普宁市",
+      "countyName": "普宁市",
       "address": "池尾镇池尾街道上寮园53栋298网批",
       "postalCode": ""
     },
@@ -749,7 +749,7 @@
       "telNumber": "13311111111",
       "provinceName": "海南省",
       "cityName": "省直辖县级行政单位",
-      "subCityDivisionName": "东方市",
+      "countyName": "东方市",
       "address": "龙潭镇龙潭一中新校门",
       "postalCode": ""
     },
@@ -762,7 +762,7 @@
       "telNumber": "13311111111",
       "provinceName": "广东省",
       "cityName": "中山市",
-      "subCityDivisionName": "西区街道",
+      "countyName": "西区街道",
       "address": "沙朗镇盈通二街",
       "postalCode": ""
     },
@@ -775,7 +775,7 @@
       "telNumber": "13311111111",
       "provinceName": "江苏省",
       "cityName": "南京市",
-      "subCityDivisionName": "鼓楼区",
+      "countyName": "鼓楼区",
       "address": "建宁路搜索发的",
       "postalCode": ""
     },
@@ -788,7 +788,7 @@
       "telNumber": "13311111111",
       "provinceName": "内蒙古自治区",
       "cityName": "巴彦淖尔市",
-      "subCityDivisionName": "乌拉特后旗",
+      "countyName": "乌拉特后旗",
       "address": "财苑华府东门北7号",
       "postalCode": ""
     },

@@ -6,14 +6,14 @@ declare namespace zhAddressParse {
     export type ParseResult = {
         provinceName: string;
         cityName: string;
-        subCityDivisionName: string;
+        countyName: string;
         address: string;
         name: string;
         telNumber: string;
         postalCode: string;
         provinceCode?: number;
         cityCode?: number;
-        subCityDivisionCode?: number;
+        countyCode?: number;
     }
 
     export type GovData = {
@@ -33,7 +33,7 @@ declare namespace zhAddressParse {
         dataSource?: DataSource;
         includeCode?: boolean;
         debug?: boolean;
-        extraGovData?: Partial<Record<'province' | 'city' | 'area', GovData[]>>;
+        extraGovData?: Partial<Record<'province' | 'city' | 'county', GovData[]>>;
         customNameTitles?: string[];
         customAddressCleanRegexs?: string[];
     }

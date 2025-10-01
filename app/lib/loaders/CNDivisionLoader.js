@@ -56,7 +56,7 @@ class CNDivisionLoader {
     _parseCodeData(data) {
         const provinces = [];
         const cities = [];
-        const areas = [];
+        const counties = [];
 
         data.forEach(provinceItem => {
             // 省份数据
@@ -75,11 +75,11 @@ class CNDivisionLoader {
                     });
 
                     if (cityItem.ch && cityItem.ch.length > 0) {
-                        cityItem.ch.forEach(areaItem => {
-                            // 区县数据
-                            areas.push({
-                                code: areaItem.c,
-                                name: areaItem.n,
+                        cityItem.ch.forEach(countyItem => {
+                            // 县级行政区数据
+                            counties.push({
+                                code: countyItem.c,
+                                name: countyItem.n,
                                 cityCode: cityItem.c,
                                 provinceCode: provinceItem.c
                             });
@@ -89,7 +89,7 @@ class CNDivisionLoader {
             }
         });
 
-        return { provinces, cities, areas };
+        return { provinces, cities, counties };
     }
 
     /**
@@ -101,7 +101,7 @@ class CNDivisionLoader {
     _parseNoCodeData(data) {
         const provinces = [];
         const cities = [];
-        const areas = [];
+        const counties = [];
 
         Object.keys(data).forEach(provinceName => {
             // 省份数据
@@ -119,10 +119,10 @@ class CNDivisionLoader {
 
                 const cityData = provinceData[cityName];
                 if (Array.isArray(cityData)) {
-                    cityData.forEach(areaName => {
-                        // 区县数据
-                        areas.push({
-                            name: areaName,
+                    cityData.forEach(countyName => {
+                        // 县级行政区数据
+                        counties.push({
+                            name: countyName,
                             cityName: cityName,
                             provinceName: provinceName
                         });
@@ -131,7 +131,7 @@ class CNDivisionLoader {
             });
         });
 
-        return { provinces, cities, areas };
+        return { provinces, cities, counties };
     }
 
     /**

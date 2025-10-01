@@ -6,10 +6,10 @@
 import { replaceArea } from '../utils/cleaner.js';
 
 class BaseParser {
-    constructor(provinces, cities, areas, logger) {
+    constructor(provinces, cities, counties, logger) {
         this.provinces = provinces;
         this.cities = cities;
-        this.areas = areas;
+        this.counties = counties;
         this.logger = logger;
     }
 
@@ -43,13 +43,13 @@ class BaseParser {
     }
 
     /**
-     * 查找区县
+     * 查找县级行政区
      * @param {string} fragment - 地址片段
      * @param {Object} province - 省份信息
      * @param {Object} city - 城市信息
-     * @returns {Object|null} - 区县信息
+     * @returns {Object|null} - 县级行政区信息
      */
-    findArea(fragment, province, city) {
+    findCounty(fragment, province, city) {
         return null;
     }
 
@@ -63,7 +63,7 @@ class BaseParser {
     }
 
     /**
-     * 通过区县代码获取城市
+     * 通过县级行政区代码获取城市
      * @param {string} cityCode - 城市代码
      * @returns {Object|null} - 城市信息
      */

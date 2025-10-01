@@ -12,7 +12,7 @@ class DataManager {
     constructor(dataSource = DATA_SOURCE.DEFAULT, includeCode = false) {
         this._provinces = null;
         this._cities = null;
-        this._areas = null;
+        this._counties = null;
         this._dataSource = dataSource;
         this._includeCode = includeCode;
         this._cnDivisionLoader = null;
@@ -56,7 +56,7 @@ class DataManager {
             })) : []);
         }, []);
 
-        this._areas = addressJson.reduce((acc, cur) => {
+        this._counties = addressJson.reduce((acc, cur) => {
             const provinceCode = cur.code;
             return acc.concat(cur.children ? cur.children.reduce((cityAcc, cityItem) => {
                 const cityCode = cityItem.code;
@@ -88,7 +88,7 @@ class DataManager {
 
             this._provinces = adaptedData.provinces;
             this._cities = adaptedData.cities;
-            this._areas = adaptedData.areas;
+            this._counties = adaptedData.counties;
 
         } catch (error) {
             console.warn(`初始化cn-division数据失败，回退到默认数据: ${error.message}`);
@@ -113,11 +113,11 @@ class DataManager {
     }
 
     /**
-     * 获取所有区县
-     * @returns {Array} 区县数组
+     * 获取所有县级行政区
+     * @returns {Array} 县级行政区数组
      */
-    getAreas() {
-        return this._areas;
+    getCounties() {
+        return this._counties;
     }
 
     /**
@@ -139,12 +139,12 @@ class DataManager {
     }
 
     /**
-     * 根据代码查找区县
-     * @param {string} code - 区县代码
-     * @returns {Object|null} 区县信息
+     * 根据代码查找县级行政区
+     * @param {string} code - 县级行政区代码
+     * @returns {Object|null} 县级行政区信息
      */
-    findAreaByCode(code) {
-        return this._areas.find(a => a.code === code) || null;
+    findCountyByCode(code) {
+        return this._counties.find(a => a.code === code) || null;
     }
 
     /**
@@ -157,12 +157,12 @@ class DataManager {
     }
 
     /**
-     * 根据城市代码获取该市下的所有区县
+     * 根据城市代码获取该市下的所有县级行政区
      * @param {string} cityCode - 城市代码
-     * @returns {Array} 区县数组
+     * @returns {Array} 县级行政区数组
      */
-    getAreasByCity(cityCode) {
-        return this._areas.filter(a => a.cityCode === cityCode);
+    getCountiesByCity(cityCode) {
+        return this._counties.filter(a => a.cityCode === cityCode);
     }
 }
 

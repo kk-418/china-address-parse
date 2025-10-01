@@ -23,21 +23,21 @@ class AddressParser extends BaseAddressParser {
     _formatResult(parseResult, config) {
         const province = parseResult.province[0];
         const city = parseResult.city[0];
-        const area = parseResult.area[0];
+        const county = parseResult.county[0];
 
         let provinceName = province ? province.name : '';
         let provinceCode = province ? province.code : '';
         let cityName = city ? city.name : '';
         let cityCode = city ? city.code : '';
-        let countyName = area ? area.name : '';
-        let countyCode = area ? area.code : '';
+        let countyName = county ? county.name : '';
+        let countyCode = county ? county.code : '';
 
         // 清理详细地址
         let detail = parseResult.detail;
 
-        // 移除省市区名称 - 增强版清理逻辑
-        if (province || city || area) {
-            // 构建所有可能的省市区组合路径
+        // 移除省市县名称 - 增强版清理逻辑
+        if (province || city || county) {
+            // 构建所有可能的省市县组合路径
             const repeatedPaths = [];
 
             // 完整路径组合
@@ -51,7 +51,7 @@ class AddressParser extends BaseAddressParser {
                 repeatedPaths.push(cityName + countyName);
             }
 
-            // 单独的省市区名称（只添加长度>=3的，避免误删）
+            // 单独的省市县名称（只添加长度>=3的，避免误删）
             if (provinceName && provinceName.length >= 3) {
                 repeatedPaths.push(provinceName);
             }
@@ -103,7 +103,7 @@ class AddressParser extends BaseAddressParser {
             telNumber: parseResult.telNumber || '',
             provinceName: provinceName,
             cityName: cityName,
-            subCityDivisionName: countyName,
+            countyName: countyName,
             address: (detail && detail.length > 0 && detail.join('')) || '',
             postalCode: parseResult.postalCode || ''
         };
@@ -111,7 +111,7 @@ class AddressParser extends BaseAddressParser {
         // 默认包含编码（带编码版本）
         result.provinceCode = provinceCode;
         result.cityCode = cityCode;
-        result.subCityDivisionCode = countyCode;
+        result.countyCode = countyCode;
 
         return result;
     }
@@ -126,7 +126,7 @@ class AddressParser extends BaseAddressParser {
             telNumber: '',
             provinceName: '',
             cityName: '',
-            subCityDivisionName: '',
+            countyName: '',
             address: '',
             postalCode: ''
         };
@@ -134,7 +134,7 @@ class AddressParser extends BaseAddressParser {
         // 默认包含编码字段（带编码版本）
         result.provinceCode = '';
         result.cityCode = '';
-        result.subCityDivisionCode = '';
+        result.countyCode = '';
 
         return result;
     }

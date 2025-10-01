@@ -12,12 +12,12 @@ import {
 import { SINGLE_WORD_CITIES } from '../constants/keywords.js';
 
 class RegexpParser extends BaseParser {
-    constructor(provinces, cities, areas, logger) {
-        super(provinces, cities, areas, logger);
+    constructor(provinces, cities, counties, logger) {
+        super(provinces, cities, counties, logger);
         // 预处理数据为字符串，提高匹配性能
         this.provinceString = JSON.stringify(provinces);
         this.cityString = JSON.stringify(cities);
-        this.areaString = JSON.stringify(areas);
+        this.countyString = JSON.stringify(counties);
     }
 
     /**
@@ -31,7 +31,7 @@ class RegexpParser extends BaseParser {
 
         let province = hasParseResult.province || [];
         let city = hasParseResult.city || [];
-        let area = hasParseResult.area || [];
+        let county = hasParseResult.county || [];
         let detail = [];
 
         // 解析省份
@@ -52,17 +52,17 @@ class RegexpParser extends BaseParser {
             }
         }
 
-        // 解析区县
-        const areaResult = this._parseArea(fragment, province, city, area);
-        if (areaResult.area) {
-            area = [areaResult.area];
-            fragment = areaResult.fragment;
-            // 如果通过区县找到了省份和城市
-            if (!province.length && areaResult.province) {
-                province = [areaResult.province];
+        // 解析县级行政区
+        const countyResult = this._parseCounty(fragment, province, city, county);
+        if (countyResult.county) {
+            county = [countyResult.county];
+            fragment = countyResult.fragment;
+            // 如果通过县级行政区找到了省份和城市
+            if (!province.length && countyResult.province) {
+                province = [countyResult.province];
             }
-            if (!city.length && areaResult.city) {
-                city = [areaResult.city];
+            if (!city.length && countyResult.city) {
+                city = [countyResult.city];
             }
         }
 
@@ -71,7 +71,7 @@ class RegexpParser extends BaseParser {
             detail.push(fragment);
         }
 
-        return { province, city, area, detail };
+        return { province, city, county, detail };
     }
 
     /**
@@ -162,16 +162,16 @@ class RegexpParser extends BaseParser {
     }
 
     /**
-     * 解析区县
+     * 解析县级行政区
      * @private
      */
-    _parseArea(fragment, province, city, area) {
-        if (area.length > 0) {
-            return { fragment, area: null, province: null, city: null };
+    _parseCounty(fragment, province, city, county) {
+        if (county.length > 0) {
+            return { fragment, county: null, province: null, city: null };
         }
 
         let matchStr = '';
-        let matchedArea = null;
+        let matchedCounty = null;
 
         for (let i = 1; i < fragment.length; i++) {
             const str = fragment.substring(0, i + 1);
@@ -180,10 +180,10 @@ class RegexpParser extends BaseParser {
                 city[0] ? city[0].code : '[0-9]{4}',
                 province[0] ? province[0].code : '[0-9]{2}'
             );
-            const matches = this.areaString.match(regex);
+            const matches = this.countyString.match(regex);
 
             if (matches && matches.length === 1) {
-                matchedArea = JSON.parse(matches[0]);
+                matchedCounty = JSON.parse(matches[0]);
                 matchStr = str;
             } else if (!matches) {
                 break;
@@ -193,19 +193,19 @@ class RegexpParser extends BaseParser {
         let matchedProvince = null;
         let matchedCity = null;
 
-        if (matchedArea) {
-            fragment = this.cleanFragment(fragment, matchStr, matchedArea.name);
+        if (matchedCounty) {
+            fragment = this.cleanFragment(fragment, matchStr, matchedCounty.name);
 
-            // 通过区县找省份和城市
+            // 通过县级行政区找省份和城市
             if (province.length === 0) {
-                matchedProvince = this.getProvinceByCode(matchedArea.provinceCode);
+                matchedProvince = this.getProvinceByCode(matchedCounty.provinceCode);
             }
             if (city.length === 0) {
-                matchedCity = this.getCityByCode(matchedArea.cityCode);
+                matchedCity = this.getCityByCode(matchedCounty.cityCode);
             }
         }
 
-        return { fragment, area: matchedArea, province: matchedProvince, city: matchedCity };
+        return { fragment, county: matchedCounty, province: matchedProvince, city: matchedCity };
     }
 }
 

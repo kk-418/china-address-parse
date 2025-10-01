@@ -55,7 +55,7 @@ console.log(DATA_SOURCE);
   "telNumber": "13800138000",
   "provinceName": "北京市",
   "cityName": "市辖区",        // 直辖市显示为"市辖区"
-  "subCityDivisionName": "朝阳区",
+  "countyName": "朝阳区",
   "address": "朝外大街19号华普大厦",
   "postalCode": ""
 }
@@ -68,12 +68,12 @@ console.log(DATA_SOURCE);
   "telNumber": "13800138000",
   "provinceName": "北京市",
   "cityName": "北京市",         // 直辖市显示为省名
-  "subCityDivisionName": "朝阳区",
+  "countyName": "朝阳区",
   "address": "朝外大街19号华普大厦",
   "postalCode": "",
   "provinceCode": 11,      // 省份编码
   "cityCode": 1101,        // 城市编码
-  "subCityDivisionCode": 110105       // 市级以下区划编码
+  "countyCode": 110105       // 市级以下区划编码
 }
 ```
 
@@ -84,7 +84,7 @@ console.log(DATA_SOURCE);
   "telNumber": "13800138000",
   "provinceName": "北京市",
   "cityName": "北京市",         // 直辖市显示为省名
-  "subCityDivisionName": "朝阳区",
+  "countyName": "朝阳区",
   "address": "朝外大街19号华普大厦",
   "postalCode": ""
   // 无编码字段

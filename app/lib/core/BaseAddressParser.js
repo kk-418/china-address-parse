@@ -27,7 +27,7 @@ class BaseAddressParser {
         this.treeParser = new TreeParser(
             dataManager.getProvinces(),
             dataManager.getCities(),
-            dataManager.getAreas(),
+            dataManager.getCounties(),
             this.logger
         );
     }
@@ -61,7 +61,7 @@ class BaseAddressParser {
             telNumber: '',
             province: [],
             city: [],
-            area: [],
+            county: [],
             detail: [],
             name: '',
             postalCode: ''
@@ -152,11 +152,11 @@ class BaseAddressParser {
      */
     _parseRegions(splitAddress, parseResult, config) {
         splitAddress.forEach(item => {
-            if (!parseResult.province[0] || !parseResult.city[0] || !parseResult.area[0]) {
+            if (!parseResult.province[0] || !parseResult.city[0] || !parseResult.county[0]) {
                 const parseRegionResult = this.treeParser.parse(item, parseResult);
                 parseResult.province = parseRegionResult.province || [];
                 parseResult.city = parseRegionResult.city || [];
-                parseResult.area = parseRegionResult.area || [];
+                parseResult.county = parseRegionResult.county || [];
                 parseResult.detail = parseResult.detail.concat(parseRegionResult.detail || []);
             } else {
                 parseResult.detail.push(item);

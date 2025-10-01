@@ -40,7 +40,7 @@ class CNDivisionCodeLoader {
     _parseCodeData(data) {
         const provinces = [];
         const cities = [];
-        const areas = [];
+        const counties = [];
 
         // 使用可配置的属性名
         const { codeKey, nameKey, childrenKey } = this.mapping;
@@ -64,11 +64,11 @@ class CNDivisionCodeLoader {
 
                     const cityChildren = cityItem[childrenKey];
                     if (cityChildren && cityChildren.length > 0) {
-                        cityChildren.forEach(areaItem => {
-                            // 区县数据
-                            areas.push({
-                                code: areaItem[codeKey],
-                                name: areaItem[nameKey],
+                        cityChildren.forEach(countyItem => {
+                            // 县级行政区数据
+                            counties.push({
+                                code: countyItem[codeKey],
+                                name: countyItem[nameKey],
                                 cityCode: cityItem[codeKey],
                                 provinceCode: provinceItem[codeKey]
                             });
@@ -78,7 +78,7 @@ class CNDivisionCodeLoader {
             }
         });
 
-        return { provinces, cities, areas };
+        return { provinces, cities, counties };
     }
 
     /**

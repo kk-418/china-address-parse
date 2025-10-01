@@ -11,7 +11,7 @@ class DataManagerNoCode {
     constructor() {
         this._provinces = null;
         this._cities = null;
-        this._areas = null;
+        this._counties = null;
         this._cnDivisionLoader = null;
 
         this._initData();
@@ -32,7 +32,7 @@ class DataManagerNoCode {
 
             this._provinces = adaptedData.provinces;
             this._cities = adaptedData.cities;
-            this._areas = adaptedData.areas;
+            this._counties = adaptedData.counties;
 
         } catch (error) {
             throw new Error(`初始化cn-division非编码数据失败: ${error.message}`);
@@ -56,11 +56,11 @@ class DataManagerNoCode {
     }
 
     /**
-     * 获取所有区县
-     * @returns {Array} 区县数组
+     * 获取所有县级行政区
+     * @returns {Array} 县级行政区数组
      */
-    getAreas() {
-        return this._areas;
+    getCounties() {
+        return this._counties;
     }
 
     /**
@@ -82,12 +82,12 @@ class DataManagerNoCode {
     }
 
     /**
-     * 根据名称查找区县
-     * @param {string} name - 区县名称
-     * @returns {Object|null} 区县信息
+     * 根据名称查找县级行政区
+     * @param {string} name - 县级行政区名称
+     * @returns {Object|null} 县级行政区信息
      */
-    findAreaByName(name) {
-        return this._areas.find(a => a.name === name) || null;
+    findCountyByName(name) {
+        return this._counties.find(a => a.name === name) || null;
     }
 
     /**
@@ -100,12 +100,12 @@ class DataManagerNoCode {
     }
 
     /**
-     * 根据城市名称获取该市下的所有区县
+     * 根据城市名称获取该市下的所有县级行政区
      * @param {string} cityName - 城市名称
-     * @returns {Array} 区县数组
+     * @returns {Array} 县级行政区数组
      */
-    getAreasByCity(cityName) {
-        return this._areas.filter(a => a.cityName === cityName);
+    getCountiesByCity(cityName) {
+        return this._counties.filter(a => a.cityName === cityName);
     }
 }
 

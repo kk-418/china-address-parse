@@ -48,7 +48,7 @@ describe(`---${versionName} example.js示例测试---`, () => {
         expect(result.telNumber).toEqual('13800138000');
         expect(result.provinceName).toEqual('北京市');
         expect(result.cityName).toEqual('北京市');
-        expect(result.subCityDivisionName).toEqual('朝阳区');
+        expect(result.countyName).toEqual('朝阳区');
         expect(result.address).toEqual('某某街道123号');
     });
 
@@ -62,7 +62,7 @@ describe(`---${versionName} example.js示例测试---`, () => {
         expect(result.telNumber).toEqual('13900139000');
         expect(result.provinceName).toEqual('上海市');
         expect(result.cityName).toEqual('上海市');
-        expect(result.subCityDivisionName).toEqual('浦东新区');
+        expect(result.countyName).toEqual('浦东新区');
         expect(result.address).toEqual('某某路456号');
     });
 
@@ -76,7 +76,7 @@ describe(`---${versionName} example.js示例测试---`, () => {
         expect(result.telNumber).toEqual('15800158000');
         expect(result.provinceName).toEqual('广东省');
         expect(result.cityName).toEqual('广州市');
-        expect(result.subCityDivisionName).toEqual('天河区');
+        expect(result.countyName).toEqual('天河区');
         expect(result.address).toEqual('天河路789号');
     });
 
@@ -91,7 +91,7 @@ describe(`---${versionName} example.js示例测试---`, () => {
         expect(result.telNumber).toEqual('18888888888');
         expect(result.provinceName).toEqual('广东省');
         expect(result.cityName).toEqual('深圳市');
-        expect(result.subCityDivisionName).toEqual('南山区');
+        expect(result.countyName).toEqual('南山区');
         expect(result.address).toEqual('科技园路100号');
     });
 
@@ -109,7 +109,7 @@ describe(`---${versionName} example.js示例测试---`, () => {
         expect(result.telNumber).toEqual('18600186000');
         expect(result.provinceName).toEqual('广东省');
         expect(result.cityName).toEqual('深圳市');
-        expect(result.subCityDivisionName).toEqual('南山区');
+        expect(result.countyName).toEqual('南山区');
         expect(result.address).toEqual('科技园路123号');
     });
 
@@ -123,17 +123,17 @@ describe(`---${versionName} example.js示例测试---`, () => {
         expect(result.telNumber).toEqual('13800138000');
         expect(result.provinceName).toEqual('北京市');
         expect(result.cityName).toEqual('北京市');
-        expect(result.subCityDivisionName).toEqual('朝阳区');
+        expect(result.countyName).toEqual('朝阳区');
         expect(result.address).toEqual('某某街道123号');
 
         // 检查编码字段
         if (!isNoCodeVersion) {
             expect(result).toHaveProperty('provinceCode');
             expect(result).toHaveProperty('cityCode');
-            expect(result).toHaveProperty('subCityDivisionCode');
+            expect(result).toHaveProperty('countyCode');
             expect(result.provinceCode).toEqual(11);
             expect(result.cityCode).toEqual('1101');
-            expect(result.subCityDivisionCode).toEqual('110105');
+            expect(result.countyCode).toEqual('110105');
         }
     });
 
@@ -165,7 +165,7 @@ describe(`---${versionName} example.js示例测试---`, () => {
         expect(customResult.telNumber).toEqual(defaultResult.telNumber);
         expect(customResult.provinceName).toEqual(defaultResult.provinceName);
         expect(customResult.cityName).toEqual(defaultResult.cityName);
-        expect(customResult.subCityDivisionName).toEqual(defaultResult.subCityDivisionName);
+        expect(customResult.countyName).toEqual(defaultResult.countyName);
 
         // 自定义清洗后的地址应该更干净（不包含快递相关文字）
         expect(customResult.address).not.toContain('申通快递');
