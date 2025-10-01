@@ -5,15 +5,15 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  cn-division: link:../../Library/pnpm/global/5/node_modules/cn-division
+  cn-division: link:../../program/fe/cn-division
 
 importers:
 
   .:
     dependencies:
       cn-division:
-        specifier: link:../../Library/pnpm/global/5/node_modules/cn-division
-        version: link:../../Library/pnpm/global/5/node_modules/cn-division
+        specifier: link:../../program/fe/cn-division
+        version: link:../../program/fe/cn-division
       jest:
         specifier: ^28.1.1
         version: 28.1.3(@types/node@24.5.2)
