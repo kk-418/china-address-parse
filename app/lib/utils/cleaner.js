@@ -179,3 +179,97 @@ export function formatPhoneNumber(address) {
 
     return address;
 }
+
+/**
+ * 转义正则表达式特殊字符
+ * @param {string} string - 要转义的字符串
+ * @returns {string} - 转义后的字符串
+ */
+export function escapeRegExp(string) {
+    if (!string) return '';
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * 构建所有可能的省市县路径组合
+ * @param {Object} province - 省份对象
+ * @param {Object} city - 城市对象
+ * @param {Object} county - 县级行政区对象
+ * @returns {Array<string>} - 所有可能的重复路径
+ */
+export function buildRepeatedPaths(province, city, county) {
+    const paths = [];
+
+    if (province && province.name) {
+        if (city && city.name) {
+            if (county && county.name) {
+                // 完整路径：省+市+县
+                paths.push(province.name + city.name + county.name);
+                // 省+市
+                paths.push(province.name + city.name);
+                // 市+县
+                paths.push(city.name + county.name);
+            } else {
+                // 省+市
+                paths.push(province.name + city.name);
+            }
+        }
+    } else if (city && city.name && county && county.name) {
+        // 市+县
+        paths.push(city.name + county.name);
+    }
+
+    // 添加单独的省市县名称（用于清理零散重复，只添加长度>=3的避免误删）
+    if (province && province.name && province.name.length >= 3) {
+        paths.push(province.name);
+    }
+    if (city && city.name && city.name.length >= 3) {
+        paths.push(city.name);
+    }
+    if (county && county.name && county.name.length >= 3) {
+        paths.push(county.name);
+    }
+
+    return paths;
+}
+
+/**
+ * 清理详细地址中重复的省市县信息
+ * @param {Array<string>|string} detail - 详细地址（数组或字符串）
+ * @param {Object} province - 省份对象
+ * @param {Object} city - 城市对象
+ * @param {Object} county - 县级行政区对象
+ * @returns {Array<string>|string} - 清理后的详细地址
+ */
+export function removeRepeatedRegions(detail, province, city, county) {
+    if (!detail) return Array.isArray(detail) ? [] : '';
+
+    const isArray = Array.isArray(detail);
+    const detailArray = isArray ? detail : [detail];
+
+    // 构建所有可能的重复路径组合
+    const repeatedPaths = buildRepeatedPaths(province, city, county);
+
+    // 按长度从长到短排序，优先清理较长的重复路径
+    repeatedPaths.sort((a, b) => b.length - a.length);
+
+    // 清理每个detail项
+    const cleanedDetail = detailArray.map(item => {
+        if (!item) return item;
+
+        let cleaned = item;
+
+        // 逐个清理重复路径
+        for (const path of repeatedPaths) {
+            if (path && path.length >= 4) {
+                // 转义正则特殊字符并全局替换
+                const escapedPath = escapeRegExp(path);
+                cleaned = cleaned.replace(new RegExp(escapedPath, 'g'), '');
+            }
+        }
+
+        return cleaned;
+    });
+
+    return isArray ? cleanedDetail : cleanedDetail[0] || '';
+}

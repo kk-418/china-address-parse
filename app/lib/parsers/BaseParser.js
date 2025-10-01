@@ -11,6 +11,38 @@ class BaseParser {
         this.cities = cities;
         this.counties = counties;
         this.logger = logger;
+
+        // 构建 Map 索引加速查找
+        this.provinceCodeMap = new Map();
+        this.cityCodeMap = new Map();
+        this.cityNameMap = new Map();
+        this.provinceNameMap = new Map();
+
+        // 初始化索引
+        this._buildIndexes();
+    }
+
+    /**
+     * 构建索引
+     * @private
+     */
+    _buildIndexes() {
+        // 省份索引
+        this.provinces.forEach(p => {
+            if (p.code) this.provinceCodeMap.set(p.code, p);
+            if (p.name) this.provinceNameMap.set(p.name, p);
+        });
+
+        // 城市索引
+        this.cities.forEach(c => {
+            if (c.code) this.cityCodeMap.set(c.code, c);
+            if (c.name) {
+                if (!this.cityNameMap.has(c.name)) {
+                    this.cityNameMap.set(c.name, []);
+                }
+                this.cityNameMap.get(c.name).push(c);
+            }
+        });
     }
 
     /**
@@ -54,21 +86,21 @@ class BaseParser {
     }
 
     /**
-     * 通过城市代码获取省份
+     * 通过省份代码获取省份（使用Map索引优化）
      * @param {string} provinceCode - 省份代码
      * @returns {Object|null} - 省份信息
      */
     getProvinceByCode(provinceCode) {
-        return this.provinces.find(p => p.code === provinceCode);
+        return this.provinceCodeMap.get(provinceCode) || null;
     }
 
     /**
-     * 通过县级行政区代码获取城市
+     * 通过城市代码获取城市（使用Map索引优化）
      * @param {string} cityCode - 城市代码
      * @returns {Object|null} - 城市信息
      */
     getCityByCode(cityCode) {
-        return this.cities.find(c => c.code === cityCode);
+        return this.cityCodeMap.get(cityCode) || null;
     }
 
     /**

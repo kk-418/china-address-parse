@@ -5,6 +5,7 @@
 
 import BaseParser from './BaseParser.js';
 import { SINGLE_WORD_CITIES } from '../constants/keywords.js';
+import { escapeRegExp, buildRepeatedPaths } from '../utils/cleaner.js';
 
 class TreeParser extends BaseParser {
     /**
@@ -343,19 +344,20 @@ class TreeParser extends BaseParser {
     }
 
     /**
-     * 根据省份名称查找省份对象
+     * 根据省份名称查找省份对象（使用Map索引优化）
      * @private
      */
     _getProvinceByName(provinceName) {
-        return this.provinces.find(p => p.name === provinceName) || null;
+        return this.provinceNameMap.get(provinceName) || null;
     }
 
     /**
-     * 根据城市名称查找城市对象
+     * 根据城市名称查找城市对象（使用Map索引优化）
      * @private
      */
     _getCityByName(cityName) {
-        return this.cities.find(c => c.name === cityName) || null;
+        const cities = this.cityNameMap.get(cityName);
+        return cities && cities.length > 0 ? cities[0] : null;
     }
 
     /**
@@ -477,7 +479,7 @@ class TreeParser extends BaseParser {
         let cleanedFragment = fragment;
 
         // 构建所有可能的重复路径组合
-        const repeatedPaths = this._buildAllRepeatedPaths(province, city, county);
+        const repeatedPaths = buildRepeatedPaths(province, city, county);
 
         // 按长度从长到短排序，优先清理较长的重复路径
         repeatedPaths.sort((a, b) => b.length - a.length);
@@ -489,7 +491,7 @@ class TreeParser extends BaseParser {
                 if (cleanedFragment.includes(path)) {
                     this.logger.log(`清理重复路径: ${path}`);
                     // 使用全局替换，清理所有出现的重复路径
-                    const escapedPath = this._escapeRegExp(path);
+                    const escapedPath = escapeRegExp(path);
                     cleanedFragment = cleanedFragment.replace(new RegExp(escapedPath, 'g'), '');
                 }
             }
@@ -504,61 +506,6 @@ class TreeParser extends BaseParser {
         return cleanedFragment;
     }
 
-    /**
-     * 构建所有可能的重复路径组合
-     * @param {Object} province - 省份对象
-     * @param {Object} city - 城市对象
-     * @param {Object} county - 县级行政区对象
-     * @returns {Array<string>} 所有可能的重复路径
-     * @private
-     */
-    _buildAllRepeatedPaths(province, city, county) {
-        const paths = [];
-
-        if (province && province.name) {
-            if (city && city.name) {
-                if (county && county.name) {
-                    // 完整路径：省+市+县
-                    paths.push(province.name + city.name + county.name);
-
-                    // 省+市
-                    paths.push(province.name + city.name);
-
-                    // 市+县
-                    paths.push(city.name + county.name);
-                } else {
-                    // 省+市
-                    paths.push(province.name + city.name);
-                }
-            }
-        } else if (city && city.name && county && county.name) {
-            // 市+县
-            paths.push(city.name + county.name);
-        }
-
-        // 添加单独的省市县名称（用于清理零散重复）
-        if (province && province.name && province.name.length >= 3) {
-            paths.push(province.name);
-        }
-        if (city && city.name && city.name.length >= 3) {
-            paths.push(city.name);
-        }
-        if (county && county.name && county.name.length >= 3) {
-            paths.push(county.name);
-        }
-
-        return paths;
-    }
-
-    /**
-     * 转义正则表达式特殊字符
-     * @param {string} string - 要转义的字符串
-     * @returns {string} 转义后的字符串
-     * @private
-     */
-    _escapeRegExp(string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    }
 }
 
 export default TreeParser;
