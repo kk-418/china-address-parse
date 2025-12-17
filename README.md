@@ -2,7 +2,7 @@ China's delivery address parse
 ===========
 ## New Feature
 
-> 增加自定义解析[国家统计局数据](http://www.mca.gov.cn/article/sj/xzqh/2020/2020/2020112010001.html)，数据更新至 2020-11-20，代码：[https://github.com/ldwonday/zh-address-parse/blob/master/app/lib/getMcaGovData.js](https://github.com/ldwonday/zh-address-parse/blob/master/app/lib/getMcaGovData.js)
+> v1.1.0 新增 [cn-division](https://www.npmjs.com/package/cn-division) 外部数据源支持，数据来源更可靠，更新更及时。
 
 ## Preview
 [Test page](https://ldwonday.github.io/zh-address-parse/)
@@ -16,8 +16,9 @@ option可选参数属性列表
 |type| 解析方式     | Number                                                     | 否    | 0   |
 |textFilter| 预过滤字段    | Array                                                      | 否    | []  |
 |nameMaxLength| 中文名最大长度  | Number                                                     | 否    | 4   |
+|dataSource| 数据源类型    | 'default' \| 'cn-code' \| 'cn-nocode'                       | 否    | 'default' |
+|includeCode| 是否返回行政区划编码 | Boolean                                                  | 否    | false |
 |extraGovData| 额外的省市县数据 | { city?: GovData[]; county: GovData[]; province: GovData[] } | 否    | -   |
-
 
 extraGovData 定义如下：
 
@@ -31,26 +32,79 @@ type GovData = {
 ```
 
 ## Usage
-> npm
-```sh
-npm i zh-address-parse -s
 
-import AddressParse from 'zh-address-parse'
+### 安装
+```sh
+npm i china-address-parse cn-division -s
 ```
-> import
+
+### 基础使用
+```js
+import AddressParse from 'china-address-parse'
+
+// 默认使用内置数据源
+const result = AddressParse('北京市朝阳区朝外大街19号华普大厦 张三 13800138000')
+// { provinceName: '北京市', cityName: '北京市', countyName: '朝阳区', address: '朝外大街19号华普大厦', name: '张三', telNumber: '13800138000', postalCode: '' }
+```
+
+### 使用外部数据源 cn-division（推荐）
+
+cn-division 提供更准确、更及时的行政区划数据。
 
 ```js
-import AddressParse from './dist/zh-address-parse.min.js'
-// options为可选参数，不传默认使用正则查找
+import AddressParse from 'china-address-parse'
+
+// 使用 cn-division 带编码数据源
+const result = AddressParse('北京市朝阳区朝外大街19号华普大厦 张三 13800138000', {
+    dataSource: 'cn-code',
+    includeCode: true  // 返回行政区划编码
+})
+// {
+//   provinceName: '北京市',
+//   cityName: '北京市',
+//   countyName: '朝阳区',
+//   address: '朝外大街19号华普大厦',
+//   name: '张三',
+//   telNumber: '13800138000',
+//   postalCode: '',
+//   provinceCode: 11,
+//   cityCode: 1101,
+//   countyCode: 110105
+// }
+
+// 使用 cn-division 不带编码数据源（体积更小）
+const result2 = AddressParse('your address', {
+    dataSource: 'cn-nocode'
+})
+```
+
+### 使用 nocode 独立入口（体积最小）
+
+如果不需要行政区划编码，可使用 nocode 入口，打包体积更小：
+
+```js
+import AddressParse from 'china-address-parse/nocode'
+
+const result = AddressParse('北京市朝阳区朝外大街19号华普大厦 张三 13800138000')
+```
+
+### 完整配置示例
+```js
+import AddressParse from 'china-address-parse'
+
 const options = {
-  type: 0, // 哪种方式解析，0：正则，1：树查找
+  type: 0, // 解析方式：0-正则，1-树查找
   textFilter: [], // 预清洗的字段
-  nameMaxLength: 4, // 查找最大的中文名字长度
-  extraGovData: { city: [{ name: 'name', code: 'code', provinceCode: 'provinceCode' }], province: [{ name: 'name', code: 'code' }], county: [{ name: 'name', code: 'code', provinceCode: 'provinceCode', cityCode: 'cityCode' }] }
+  nameMaxLength: 4, // 中文名最大长度
+  dataSource: 'cn-code', // 数据源：'default' | 'cn-code' | 'cn-nocode'
+  includeCode: true, // 是否返回行政区划编码
+  extraGovData: { // 额外的省市县数据
+    city: [{ name: 'name', code: 'code', provinceCode: 'provinceCode' }],
+    province: [{ name: 'name', code: 'code' }],
+    county: [{ name: 'name', code: 'code', provinceCode: 'provinceCode', cityCode: 'cityCode' }]
+  }
 }
-// type参数0表示使用正则解析，1表示采用树查找, textFilter地址预清洗过滤字段。
 const parseResult = AddressParse('your address', options)
-// The parseResult is an object contain { provinceName: '', name: '', cityName: '', countyName: '', address: '', telNumber: '', postalCode: '' }
 ```
 > script引入
 
