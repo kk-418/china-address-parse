@@ -3,6 +3,7 @@ China's delivery address parse
 ## New Feature
 
 > v1.1.0 新增 [cn-division](https://www.npmjs.com/package/cn-division) 外部数据源支持，数据来源更可靠，更新更及时。
+> v1.1.1 **Breaking change**：`provinceCode`、`cityCode`、`countyCode` 类型由 `number` 改为 `string`（如 `'11'`、`'1101'`、`'110105'`）。
 
 ## Preview
 [Test page](https://ldwonday.github.io/zh-address-parse/)
@@ -67,9 +68,9 @@ const result = AddressParse('北京市朝阳区朝外大街19号华普大厦 张
 //   name: '张三',
 //   telNumber: '13800138000',
 //   postalCode: '',
-//   provinceCode: 11,
-//   cityCode: 1101,
-//   countyCode: 110105
+//   provinceCode: '11',
+//   cityCode: '1101',
+//   countyCode: '110105'
 // }
 
 // 使用 cn-division 不带编码数据源（体积更小）
