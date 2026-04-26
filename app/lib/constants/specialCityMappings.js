@@ -57,14 +57,6 @@ export const MISSING_STREET_DATA = {
     ]
 };
 
-// 特殊地区映射
-export const SPECIAL_REGION_MAPPINGS = {
-    // 大兴安岭地区的映射
-    '大兴安岭地区': {
-        '加格达奇区': { parentCity: '大兴安岭地区', parentProvince: '黑龙江省' }
-    }
-};
-
 /**
  * 获取直辖市的期望名称
  * @param {string} cityName - 城市名称

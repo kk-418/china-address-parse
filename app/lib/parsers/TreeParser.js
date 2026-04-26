@@ -20,7 +20,7 @@ class TreeParser extends BaseParser {
         let province = hasParseResult.province || [];
         let city = hasParseResult.city || [];
         let county = hasParseResult.county || [];
-        let detail = [];
+        const detail = [];
 
         // 解析省份
         if (province.length === 0) {

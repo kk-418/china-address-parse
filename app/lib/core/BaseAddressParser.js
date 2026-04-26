@@ -13,7 +13,7 @@ import { cleanAddress, cleanUselessWords } from '../utils/cleaner.js';
 import { absolutelyNotName, hasChinese } from '../utils/validator.js';
 import { SPECIAL_CHARS_PATTERN } from '../constants/patterns.js';
 import { DEFAULT_OPTIONS, PARSE_TYPE, RUN_MODE } from '../constants/config.js';
-import { MINIAPP_REWRITE_CITY_NAMES, getMergedNameTitles, getMergedAddressCleanKeywords } from '../constants/keywords.js';
+import { getMergedNameTitles, getMergedAddressCleanKeywords } from '../constants/keywords.js';
 
 class BaseAddressParser {
     constructor(dataManager) {
@@ -84,7 +84,7 @@ class BaseAddressParser {
         this.logger.log('提取邮编后:', address);
 
         // 4. 分割地址
-        let splitAddress = address.split(' ').filter(item => item).map(item => item.trim());
+        const splitAddress = address.split(' ').filter(item => item).map(item => item.trim());
 
         // 5. 检查第一个是否是姓名
         if (splitAddress.length > 0 && !absolutelyNotName(splitAddress[0], this.dataManager.getProvinces())) {
@@ -102,7 +102,7 @@ class BaseAddressParser {
             // 只剩最后一个字符串了,姓名应该是在详细地址里面
             if (parseResult.detail.length === 1 && parseResult.detail[0].length > config.nameMaxLength) {
                 const addressDetail = parseResult.detail[0];
-                this.logger.log("匹配名字;只剩最后一个字符串;待匹配字符串:", addressDetail);
+                this.logger.log('匹配名字;只剩最后一个字符串;待匹配字符串:', addressDetail);
                 // 从detail里面找 - 使用自定义姓名称呼检查
                 const name = this._getNameFromStringWithCustom(addressDetail, config.nameMaxLength, config.mergedNameTitles);
                 // 如果找到了,就从字符串里面删除

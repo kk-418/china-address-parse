@@ -54,7 +54,7 @@ class CNDivisionNoCodeAdapter {
     static _adaptCounties(counties) {
         return counties.map(county => ({
             name: county.name,
-            cityName: county.cityName,
+            cityName: this._normalizeCityName(county.cityName, county.provinceName),
             provinceName: county.provinceName
         }));
     }
@@ -85,6 +85,11 @@ class CNDivisionNoCodeAdapter {
         // 如果是直辖市，城市名称保持和省份名称一致
         if (provinceName && municipalities.includes(provinceName)) {
             return provinceName;
+        }
+
+        // cn-division 新版数据将省直辖县级行政区放在“省名”中间节点下
+        if (provinceName && cityName === provinceName) {
+            return '省直辖县级行政区划';
         }
 
         return cityName;

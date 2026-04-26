@@ -11,6 +11,12 @@ const dirApp = path.join(__dirname, '../app');
  */
 module.exports = {
     entry: path.join(dirApp, 'lib/index-nocode.js'),
+    externals: ({ request }, callback) => {
+        if (request && request.startsWith('cn-division')) {
+            return callback(null, `commonjs ${request}`);
+        }
+        return callback();
+    },
     output: {
         filename: 'zh-address-parse.nocode.min.js', //打包之后生成的文件名，可以随意写。
         library: 'ZhAddressParse', // 指定类库名,主要用于直接引用的方式(比如使用script 标签)

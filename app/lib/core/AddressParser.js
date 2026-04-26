@@ -25,12 +25,12 @@ class AddressParser extends BaseAddressParser {
         const city = parseResult.city[0];
         const county = parseResult.county[0];
 
-        let provinceName = province ? province.name : '';
-        let provinceCode = province ? province.code : '';
+        const provinceName = province ? province.name : '';
+        const provinceCode = province ? province.code : '';
         let cityName = city ? city.name : '';
-        let cityCode = city ? city.code : '';
-        let countyName = county ? county.name : '';
-        let countyCode = county ? county.code : '';
+        const cityCode = city ? city.code : '';
+        const countyName = county ? county.name : '';
+        const countyCode = county ? county.code : '';
 
         // 清理详细地址 - 使用统一的清理函数
         let detail = removeRepeatedRegions(parseResult.detail, province, city, county);

@@ -26,16 +26,16 @@ class DataManager {
      */
     _initData() {
         switch (this._dataSource) {
-            case DATA_SOURCE.CN_DIVISION_CODE:
-                this._initCNDivisionData(true);
-                break;
-            case DATA_SOURCE.CN_DIVISION_NOCODE:
-                this._initCNDivisionData(false);
-                break;
-            case DATA_SOURCE.DEFAULT:
-            default:
-                this._initDefaultData();
-                break;
+        case DATA_SOURCE.CN_DIVISION_CODE:
+            this._initCNDivisionData(true);
+            break;
+        case DATA_SOURCE.CN_DIVISION_NOCODE:
+            this._initCNDivisionData(false);
+            break;
+        case DATA_SOURCE.DEFAULT:
+        default:
+            this._initDefaultData();
+            break;
         }
     }
 

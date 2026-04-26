@@ -1,10 +1,10 @@
 /**
  * cn-division 不带编码数据加载器
- * 只加载不带编码的数据，用于减小包体积
+ * 复用 cn-division/cascader-pca 公开入口，避免解析库内置另一份行政区划数据
  * @author kk
  */
 
-import pcaNoCodeRaw from 'cn-division/dist/no-code/pca.json' with { type: 'json' };
+import { getCascaderData } from 'cn-division/cascader-pca';
 
 class CNDivisionNoCodeLoader {
     constructor() {
@@ -21,7 +21,7 @@ class CNDivisionNoCodeLoader {
         }
 
         try {
-            this._cachedData = this._parseNoCodeData(pcaNoCodeRaw);
+            this._cachedData = this._parseCascaderData(getCascaderData());
             return this._cachedData;
         } catch (error) {
             throw new Error(`加载cn-division非编码数据失败: ${error.message}`);
@@ -29,41 +29,36 @@ class CNDivisionNoCodeLoader {
     }
 
     /**
-     * 解析不带编码的JSON数据
-     * @param {Object} data - 原始JSON对象数据
+     * 解析 Cascader 数据
+     * @param {Array} data - Cascader 选项数组
      * @returns {Object} 解析后的数据
      * @private
      */
-    _parseNoCodeData(data) {
+    _parseCascaderData(data) {
         const provinces = [];
         const cities = [];
         const counties = [];
 
-        Object.keys(data).forEach(provinceName => {
-            // 省份数据
+        data.forEach(provinceItem => {
+            const provinceName = provinceItem.label;
             provinces.push({
                 name: provinceName
             });
 
-            const provinceData = data[provinceName];
-            Object.keys(provinceData).forEach(cityName => {
-                // 城市数据
+            (provinceItem.children || []).forEach(cityItem => {
+                const cityName = cityItem.label;
                 cities.push({
                     name: cityName,
-                    provinceName: provinceName
+                    provinceName
                 });
 
-                const cityData = provinceData[cityName];
-                if (Array.isArray(cityData)) {
-                    cityData.forEach(countyName => {
-                        // 县级行政区数据
-                        counties.push({
-                            name: countyName,
-                            cityName: cityName,
-                            provinceName: provinceName
-                        });
+                (cityItem.children || []).forEach(countyItem => {
+                    counties.push({
+                        name: countyItem.label,
+                        cityName,
+                        provinceName
                     });
-                }
+                });
             });
         });
 

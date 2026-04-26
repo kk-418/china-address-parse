@@ -4,13 +4,6 @@
  * @author kk
  */
 
-import {
-    getMunicipalityMapping,
-    getProvincialDirectMapping,
-    getMissingStreetData,
-    isChongqingCounty
-} from '../constants/specialCityMappings.js';
-
 class CNDivisionCodeAdapter {
     /**
      * 将cn-division格式转换为内部统一格式
@@ -22,7 +15,7 @@ class CNDivisionCodeAdapter {
 
         return {
             provinces: this._adaptProvinces(provinces),
-            cities: this._adaptCities(cities),
+            cities: this._adaptCities(cities, provinces),
             counties: this._adaptCounties(counties)
         };
     }
@@ -35,7 +28,7 @@ class CNDivisionCodeAdapter {
      */
     static _adaptProvinces(provinces) {
         return provinces.map((province, index) => ({
-            code: parseInt(province.code) || this._generateFallbackCode('province', index),
+            code: province.code || this._generateFallbackCode('province', index),
             name: province.name
         }));
     }
@@ -46,11 +39,13 @@ class CNDivisionCodeAdapter {
      * @returns {Array} 转换后的城市数据
      * @private
      */
-    static _adaptCities(cities) {
+    static _adaptCities(cities, provinces) {
+        const provinceNameByCode = this._createProvinceNameByCodeMap(provinces);
+
         return cities.map((city, index) => ({
             code: city.code || this._generateFallbackCode('city', index),
-            name: this._normalizeCityName(city.name, city.provinceName),
-            provinceCode: parseInt(city.provinceCode) || 0  // 转换为整数
+            name: this._normalizeCityName(city.name, city.provinceName || provinceNameByCode.get(city.provinceCode)),
+            provinceCode: city.provinceCode || ''
         }));
     }
 
@@ -65,7 +60,7 @@ class CNDivisionCodeAdapter {
             code: county.code || this._generateFallbackCode('county', index),
             name: county.name,
             cityCode: county.cityCode,  // 保持字符串类型，因为城市代码本身就是字符串
-            provinceCode: parseInt(county.provinceCode) || 0  // 转换为整数
+            provinceCode: county.provinceCode || ''
         }));
     }
 
@@ -77,6 +72,16 @@ class CNDivisionCodeAdapter {
      * @private
      */
     static _normalizeCityName(cityName, provinceName) {
+        const specialCityNames = ['县', '省直辖县级行政区划', '省直辖县级行政单位'];
+
+        if (cityName === '县') {
+            return cityName;
+        }
+
+        if (specialCityNames.includes(cityName)) {
+            return '省直辖县级行政区划';
+        }
+
         // 直辖市列表
         const municipalities = ['北京市', '天津市', '上海市', '重庆市'];
 
@@ -85,7 +90,30 @@ class CNDivisionCodeAdapter {
             return provinceName;
         }
 
+        // cn-division 新版数据将省直辖县级行政区放在“省名”中间节点下
+        if (provinceName && cityName === provinceName) {
+            return '省直辖县级行政区划';
+        }
+
         return cityName;
+    }
+
+    /**
+     * 创建省份编码到名称的映射
+     * @param {Array} provinces - 省份数组
+     * @returns {Map} 省份编码名称映射
+     * @private
+     */
+    static _createProvinceNameByCodeMap(provinces) {
+        const provinceNameByCode = new Map();
+
+        provinces.forEach(province => {
+            if (province.code) {
+                provinceNameByCode.set(province.code, province.name);
+            }
+        });
+
+        return provinceNameByCode;
     }
 
     /**

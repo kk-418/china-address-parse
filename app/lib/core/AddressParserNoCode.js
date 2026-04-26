@@ -28,9 +28,9 @@ class AddressParserNoCode extends BaseAddressParser {
         const city = parseResult.city[0];
         const county = parseResult.county[0];
 
-        let provinceName = province ? province.name : '';
+        const provinceName = province ? province.name : '';
         let cityName = city ? city.name : '';
-        let countyName = county ? county.name : '';
+        const countyName = county ? county.name : '';
 
         // 清洗detail数组
         let detail = parseResult.detail;
