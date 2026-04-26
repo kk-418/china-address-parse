@@ -103,6 +103,7 @@ class AddressParserNoCode extends BaseAddressParser {
         const result = {
             name: parseResult.name || '',
             telNumber: parseResult.telNumber || '',
+            telExtension: parseResult.telExtension || '',
             provinceName: provinceName || '',
             cityName: cityName || '',
             countyName: countyName || '',
@@ -111,6 +112,18 @@ class AddressParserNoCode extends BaseAddressParser {
         };
 
         // 不带编码版本不包含编码字段
+
+        // telExtensionIn 选项处理：将分机号以 [分机号] 格式追加到指定位置
+        if (parseResult.telExtension) {
+            const ext = `[${parseResult.telExtension}]`;
+            const appendTo = config.telExtensionIn;
+            if (appendTo === 'both' || appendTo === 'address') {
+                result.address = result.address ? `${result.address}${ext}` : ext;
+            }
+            if (appendTo === 'both' || appendTo === 'name') {
+                result.name = result.name ? `${result.name}${ext}` : ext;
+            }
+        }
 
         return result;
     }
@@ -124,6 +137,7 @@ class AddressParserNoCode extends BaseAddressParser {
         return {
             name: '',
             telNumber: '',
+            telExtension: '',
             provinceName: '',
             cityName: '',
             countyName: '',

@@ -5,6 +5,7 @@ export interface AddressParseResult {
   address: string;
   name: string;
   telNumber: string;
+  telExtension: string;
   postalCode: string;
 }
 
@@ -13,6 +14,7 @@ export interface AddressParseOptions {
   mode?: 0 | 1;
   textFilter?: string[];
   nameMaxLength?: number;
+  telExtensionIn?: 'both' | 'address' | 'name' | 'none';
 }
 
 declare function AddressParse(address: string, options?: AddressParseOptions): AddressParseResult;

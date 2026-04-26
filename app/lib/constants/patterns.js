@@ -7,26 +7,29 @@
 export const MOBILE_PATTERN = /(86-?1[3-9][0-9]{9})|(1[3-9][0-9]{9})|(0\d{2,3}-?\d{7,8})|((4|8)00[0-9]{7})/g;
 export const PHONE_86_PATTERN = /^86-*/;
 
+// 分机号正则：匹配电话号码后紧跟的 -分机号（3-6位数字）
+export const TEL_EXTENSION_PATTERN = /^-(\d{3,6})/;
+
 // 邮政编码正则
 export const POSTAL_CODE_PATTERN = /\d{6}/g;
 
 // 省份正则模板
 export const PROVINCE_PATTERN_TEMPLATE = (str) =>
-    new RegExp(`\{"code":[0-9]{2},"name":"${str}[\u4E00-\u9FA5]*?"\}`, 'g');
+    new RegExp(`{"code":[0-9]{2},"name":"${str}[\u4E00-\u9FA5]*?"}`, 'g');
 
 // 城市正则模板
 export const CITY_PATTERN_TEMPLATE = (str, provinceCode) =>
-    new RegExp(`\{"code":[0-9]{4},"name":"${str}[\u4E00-\u9FA5]*?","provinceCode":${provinceCode || '[0-9]{2}'}\}`, 'g');
+    new RegExp(`{"code":[0-9]{4},"name":"${str}[\u4E00-\u9FA5]*?","provinceCode":${provinceCode || '[0-9]{2}'}}`, 'g');
 
 // 县级行政区正则模板
 export const COUNTY_PATTERN_TEMPLATE = (str, cityCode, provinceCode) =>
-    new RegExp(`\{"code":([0-9]{6}|[0-9]{9}),"name":"${str}[\u4E00-\u9FA5]*?","cityCode":${cityCode || '[0-9]{4}'},"provinceCode":${provinceCode || '[0-9]{2}'}\}`, 'g');
+    new RegExp(`{"code":([0-9]{6}|[0-9]{9}),"name":"${str}[\u4E00-\u9FA5]*?","cityCode":${cityCode || '[0-9]{4}'},"provinceCode":${provinceCode || '[0-9]{2}'}}`, 'g');
 
 // 特殊字符正则
-export const SPECIAL_CHARS_PATTERN = /[`~!@#$^&*=|{}':;,\.<>/?！￥…—【】'；：""'。，、？☎]/g;
+export const SPECIAL_CHARS_PATTERN = /[`~!@#$^&*=|{}':;,.<>/?！￥…—【】'；：""'。，、？☎]/g;
 
 // 括号正则
-export const PARENTHESES_PATTERN = /[\[\]（） ()]/g;
+export const PARENTHESES_PATTERN = /[[\]（） ()]/g;
 
 // 中文正则
 export const CHINESE_PATTERN = /[\u4E00-\u9FA5]/;

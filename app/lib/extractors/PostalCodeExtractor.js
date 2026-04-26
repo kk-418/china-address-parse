@@ -3,7 +3,7 @@
  * @author kk
  */
 
-import { POSTAL_CODE_PATTERN } from '../constants/patterns.js';
+// POSTAL_CODE_PATTERN is not used
 
 class PostalCodeExtractor {
     /**

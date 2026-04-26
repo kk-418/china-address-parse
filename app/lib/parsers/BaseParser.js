@@ -51,7 +51,7 @@ class BaseParser {
      * @param {Object} hasParseResult - 已解析的结果
      * @returns {Object} - 解析结果
      */
-    parse(fragment, hasParseResult) {
+    parse(_fragment, _hasParseResult) {
         throw new Error('子类必须实现parse方法');
     }
 
@@ -60,7 +60,7 @@ class BaseParser {
      * @param {string} fragment - 地址片段
      * @returns {Object|null} - 省份信息
      */
-    findProvince(fragment) {
+    findProvince(_fragment) {
         return null;
     }
 
@@ -70,7 +70,7 @@ class BaseParser {
      * @param {Object} province - 省份信息
      * @returns {Object|null} - 城市信息
      */
-    findCity(fragment, province) {
+    findCity(_fragment, _province) {
         return null;
     }
 
@@ -81,7 +81,7 @@ class BaseParser {
      * @param {Object} city - 城市信息
      * @returns {Object|null} - 县级行政区信息
      */
-    findCounty(fragment, province, city) {
+    findCounty(_fragment, _province, _city) {
         return null;
     }
 

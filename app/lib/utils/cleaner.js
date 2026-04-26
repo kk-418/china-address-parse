@@ -39,7 +39,7 @@ export function cleanParentheses(word) {
         const bracketPatterns = [
             { pattern: /（([^（）]*)）/g, type: 'fullwidth' },  // 中文圆括号
             { pattern: /\(([^()]*)\)/g, type: 'round' },        // 英文圆括号
-            { pattern: /\[([^\[\]]*)\]/g, type: 'square' },     // 方括号
+            { pattern: /\[([^[]*)\]/g, type: 'square' },     // 方括号
             { pattern: /【([^【】]*)】/g, type: 'corner' },      // 中文方括号
         ];
 

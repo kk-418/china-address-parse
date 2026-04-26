@@ -127,3 +127,49 @@ describe(`---${versionName} 自定义关键字测试---`, () => {
     });
 
 })
+
+// 分机号解析测试
+describe(`---${versionName} 分机号解析测试---`, () => {
+    test('默认 both 模式：分机号以[分机号]格式追加到姓名和地址末尾', () => {
+        const address = '王先生，13186844346-3060， 福建省福州市仓山区盖山填茂帝封江1区';
+        const result = zhAddressParse(address);
+        expect(result.name).toEqual('王先生[3060]');
+        expect(result.telNumber).toEqual('13186844346');
+        expect(result.telExtension).toEqual('3060');
+        expect(result.provinceName).toEqual('福建省');
+        expect(result.cityName).toEqual('福州市');
+        expect(result.countyName).toEqual('仓山区');
+        expect(result.address).toEqual('盖山填茂帝封江1区[3060]');
+    });
+
+    test('telExtensionIn=address 仅追加到地址末尾', () => {
+        const address = '王先生，13186844346-3060， 福建省福州市仓山区盖山填茂帝封江1区';
+        const result = zhAddressParse(address, { telExtensionIn: 'address' });
+        expect(result.telExtension).toEqual('3060');
+        expect(result.address).toEqual('盖山填茂帝封江1区[3060]');
+        expect(result.name).toEqual('王先生');
+    });
+
+    test('telExtensionIn=name 仅追加到姓名末尾', () => {
+        const address = '王先生，13186844346-3060， 福建省福州市仓山区盖山填茂帝封江1区';
+        const result = zhAddressParse(address, { telExtensionIn: 'name' });
+        expect(result.telExtension).toEqual('3060');
+        expect(result.name).toEqual('王先生[3060]');
+        expect(result.address).toEqual('盖山填茂帝封江1区');
+    });
+
+    test('telExtensionIn=none 不追加，仅保留 telExtension 字段', () => {
+        const address = '王先生，13186844346-3060， 福建省福州市仓山区盖山填茂帝封江1区';
+        const result = zhAddressParse(address, { telExtensionIn: 'none' });
+        expect(result.telExtension).toEqual('3060');
+        expect(result.name).toEqual('王先生');
+        expect(result.address).toEqual('盖山填茂帝封江1区');
+    });
+
+    test('无分机号时 telExtension 为空字符串，姓名和地址无变化', () => {
+        const address = '张三 13800138000 北京市朝阳区某某路123号';
+        const result = zhAddressParse(address);
+        expect(result.telExtension).toEqual('');
+        expect(result.name).toEqual('张三');
+    });
+})

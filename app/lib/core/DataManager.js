@@ -44,14 +44,12 @@ class DataManager {
      * @private
      */
     _initDefaultData() {
-        this._provinces = addressJson.reduce((acc, cur) => {
-            const { children, ...others } = cur;
-            return acc.concat(others);
-        }, []);
+        this._provinces = addressJson.map(({ code, name }) => ({ code, name }));
 
         this._cities = addressJson.reduce((acc, cur) => {
-            return acc.concat(cur.children ? cur.children.map(({ children, ...others }) => ({
-                ...others,
+            return acc.concat(cur.children ? cur.children.map(({ code, name }) => ({
+                code,
+                name,
                 provinceCode: cur.code
             })) : []);
         }, []);
@@ -60,8 +58,9 @@ class DataManager {
             const provinceCode = cur.code;
             return acc.concat(cur.children ? cur.children.reduce((cityAcc, cityItem) => {
                 const cityCode = cityItem.code;
-                return cityAcc.concat(cityItem.children ? cityItem.children.map(({ children, ...others }) => ({
-                    ...others,
+                return cityAcc.concat(cityItem.children ? cityItem.children.map(({ code, name }) => ({
+                    code,
+                    name,
                     cityCode,
                     provinceCode,
                 })) : []);

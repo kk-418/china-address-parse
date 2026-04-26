@@ -9,10 +9,9 @@ import PostalCodeExtractor from '../extractors/PostalCodeExtractor.js';
 import NameExtractor from '../extractors/NameExtractor.js';
 import TreeParser from '../parsers/TreeParser.js';
 import Logger from '../utils/logger.js';
-import { cleanAddress, cleanUselessWords } from '../utils/cleaner.js';
-import { absolutelyNotName, hasChinese } from '../utils/validator.js';
-import { SPECIAL_CHARS_PATTERN } from '../constants/patterns.js';
-import { DEFAULT_OPTIONS, PARSE_TYPE, RUN_MODE } from '../constants/config.js';
+import { absolutelyNotName } from '../utils/validator.js';
+import { SPECIAL_CHARS_PATTERN, PARENTHESES_PATTERN } from '../constants/patterns.js';
+import { DEFAULT_OPTIONS } from '../constants/config.js';
 import { getMergedNameTitles, getMergedAddressCleanKeywords } from '../constants/keywords.js';
 
 class BaseAddressParser {
@@ -59,6 +58,7 @@ class BaseAddressParser {
         // 初始化解析结果
         const parseResult = {
             telNumber: '',
+            telExtension: '',
             province: [],
             city: [],
             county: [],
@@ -75,6 +75,7 @@ class BaseAddressParser {
         const phoneResult = this.phoneExtractor.extract(address);
         address = phoneResult.address;
         parseResult.telNumber = phoneResult.telNumber;
+        parseResult.telExtension = phoneResult.telExtension;
         this.logger.log('提取电话后:', address);
 
         // 3. 提取邮政编码
@@ -95,7 +96,7 @@ class BaseAddressParser {
         this.logger.log('分割后地址:', splitAddress);
 
         // 6. 解析省市区(县)和详细地址
-        this._parseRegions(splitAddress, parseResult, config);
+        this._parseRegions(splitAddress, parseResult);
 
         // 7. 从详细地址中提取姓名 - 使用带自定义关键字的提取器
         if (!parseResult.name && parseResult.detail.length > 0) {
@@ -104,14 +105,14 @@ class BaseAddressParser {
                 const addressDetail = parseResult.detail[0];
                 this.logger.log('匹配名字;只剩最后一个字符串;待匹配字符串:', addressDetail);
                 // 从detail里面找 - 使用自定义姓名称呼检查
-                const name = this._getNameFromStringWithCustom(addressDetail, config.nameMaxLength, config.mergedNameTitles);
+                const name = this._getNameFromStringWithCustom(addressDetail, config.nameMaxLength);
                 // 如果找到了,就从字符串里面删除
                 if (name) {
                     parseResult.name = name;
                     parseResult.detail[0] = addressDetail.replace(new RegExp(name), '');
                 }
             } else if (parseResult.detail.length > 1) {
-                const extractedName = this._extractFromDetailWithCustom(parseResult.detail, config.nameMaxLength, config.mergedNameTitles);
+                const extractedName = this._extractFromDetailWithCustom(parseResult.detail, config.nameMaxLength);
                 if (extractedName) {
                     parseResult.name = extractedName;
                     // 从详细地址中移除姓名
@@ -150,7 +151,7 @@ class BaseAddressParser {
      * 解析省市区(县)
      * @private
      */
-    _parseRegions(splitAddress, parseResult, config) {
+    _parseRegions(splitAddress, parseResult) {
         splitAddress.forEach(item => {
             if (!parseResult.province[0] || !parseResult.city[0] || !parseResult.county[0]) {
                 const parseRegionResult = this.treeParser.parse(item, parseResult);
@@ -227,7 +228,7 @@ class BaseAddressParser {
             const bracketPatterns = [
                 { pattern: /（([^（）]*)）/g, type: 'fullwidth' },  // 中文圆括号
                 { pattern: /\(([^()]*)\)/g, type: 'round' },        // 英文圆括号
-                { pattern: /\[([^\[\]]*)\]/g, type: 'square' },     // 方括号
+                { pattern: /\[([^[]*)\]/g, type: 'square' },     // 方括号
                 { pattern: /【([^【】]*)】/g, type: 'corner' },      // 中文方括号
             ];
 
@@ -284,7 +285,7 @@ class BaseAddressParser {
      * 使用自定义关键字从字符串中提取姓名
      * @private
      */
-    _getNameFromStringWithCustom(addressDetail, nameMaxLength, mergedNameTitles) {
+    _getNameFromStringWithCustom(addressDetail, nameMaxLength) {
         // 调用原有的方法，但在判断姓名时使用自定义关键字
         return this.nameExtractor.getNameFromString(addressDetail, nameMaxLength);
     }
@@ -293,7 +294,7 @@ class BaseAddressParser {
      * 使用自定义关键字从详细地址中提取姓名
      * @private
      */
-    _extractFromDetailWithCustom(detail, nameMaxLength, mergedNameTitles) {
+    _extractFromDetailWithCustom(detail, nameMaxLength) {
         // 调用原有的方法，但在判断姓名时使用自定义关键字
         return this.nameExtractor.extractFromDetail(detail, nameMaxLength);
     }
@@ -305,7 +306,7 @@ class BaseAddressParser {
      * @returns {Object} 格式化后的结果
      * @private
      */
-    _formatResult(parseResult, config) {
+    _formatResult(_parseResult, _config) {
         throw new Error('子类必须实现 _formatResult 方法');
     }
 

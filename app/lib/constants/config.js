@@ -11,7 +11,8 @@ export const DEFAULT_OPTIONS = {
     nameMaxLength: 5,           // 姓名最大长度
     debug: false,               // 调试模式
     dataSource: 'default',      // 数据源类型
-    includeCode: false          // 是否在返回结果中包含编码
+    includeCode: false,         // 是否在返回结果中包含编码
+    telExtensionIn: 'both'      // 分机号追加位置：'both'(默认) | 'address' | 'name' | 'none'
 };
 
 // 解析类型

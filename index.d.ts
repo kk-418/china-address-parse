@@ -10,6 +10,7 @@ declare namespace zhAddressParse {
         address: string;
         name: string;
         telNumber: string;
+        telExtension: string;
         postalCode: string;
         provinceCode?: string;
         cityCode?: string;
@@ -36,6 +37,7 @@ declare namespace zhAddressParse {
         extraGovData?: Partial<Record<'province' | 'city' | 'county', GovData[]>>;
         customNameTitles?: string[];
         customAddressCleanRegexs?: string[];
+        telExtensionIn?: 'both' | 'address' | 'name' | 'none';
     }
 
     export const DATA_SOURCE: {
