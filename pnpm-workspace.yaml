@@ -1,6 +1,3 @@
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - core-js
-
-overrides:
-  cn-division: link:../../program/fe/cn-division

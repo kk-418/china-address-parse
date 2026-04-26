@@ -1,12 +1,26 @@
 {
   "name": "china-address-parse",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "chinese address parse",
   "author": "kk",
   "license": "MIT",
   "homepage": "https://github.com/ldwonday/zh-address-parse",
-  "main": "./index.js",
+  "main": "./dist/zh-address-parse.min.js",
+  "module": "./app/lib/index.js",
   "typings": "./index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./app/lib/index.js",
+      "require": "./dist/zh-address-parse.min.js",
+      "types": "./index.d.ts"
+    },
+    "./nocode": {
+      "import": "./app/lib/index-nocode.js",
+      "require": "./dist/zh-address-parse.nocode.min.js",
+      "types": "./index-nocode.d.ts"
+    }
+  },
+  "sideEffects": false,
   "scripts": {
     "dev": "cross-env NODE_ENV=dev webpack serve --progress --mode development --config config/webpack.config.dev.js",
     "build": "cross-env NODE_ENV=production webpack --progress --mode production --config config/webpack.config.build.js",
@@ -26,10 +40,16 @@
     "type": "git",
     "url": "https://github.com/ldwonday/zh-address-parse.git"
   },
-  "dependencies": {
-    "cn-division": "^2025.0.0"
+  "peerDependencies": {
+    "cn-division": ">=2026.0.0"
+  },
+  "peerDependenciesMeta": {
+    "cn-division": {
+      "optional": false
+    }
   },
   "devDependencies": {
+    "cn-division": "2026.0.0",
     "@babel/cli": "^7.28.3",
     "@babel/core": "^7.28.4",
     "@babel/node": "^7.28.0",
