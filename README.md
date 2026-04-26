@@ -4,6 +4,7 @@ China's delivery address parse
 
 > v1.1.0 新增 [cn-division](https://www.npmjs.com/package/cn-division) 外部数据源支持，数据来源更可靠，更新更及时。
 > v1.1.1 **Breaking change**：`provinceCode`、`cityCode`、`countyCode` 类型由 `number` 改为 `string`（如 `'11'`、`'1101'`、`'110105'`）。
+> v1.2.0 升级 `cn-division@2026.0.0`，新增 `nocode` 独立入口（支持 `china-address-parse/nocode`）以减少打包体积，优化多版本构建导出。
 
 ## Preview
 [Test page](https://ldwonday.github.io/zh-address-parse/)
