@@ -9,7 +9,7 @@ China's delivery address parse
 > v1.2.0 升级 `cn-division@2026.0.0`，新增 `nocode` 独立入口（支持 `china-address-parse/nocode`）以减少打包体积，优化多版本构建导出。
 
 ## Preview
-[Test page](https://ldwonday.github.io/zh-address-parse/)
+[Test page](https://cikenerd.github.io/zh-address-parse/)
 ## Syntax
 > AddressParse(address[, [option|0|1]])
 
