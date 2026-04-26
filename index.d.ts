@@ -11,9 +11,9 @@ declare namespace zhAddressParse {
         name: string;
         telNumber: string;
         postalCode: string;
-        provinceCode?: number;
-        cityCode?: number;
-        countyCode?: number;
+        provinceCode?: string;
+        cityCode?: string;
+        countyCode?: string;
     }
 
     export type GovData = {
