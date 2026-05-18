@@ -17,6 +17,18 @@ export interface AddressParseOptions {
   telExtensionIn?: 'both' | 'address' | 'name' | 'none';
 }
 
+export interface DetectAreaPrefixResult {
+  province?: string;
+  city?: string;
+  county?: string;
+  matchedRaw: string;
+  remaining: string;
+}
+
+export interface DetectAreaPrefixOptions {
+  extraGovData?: Partial<Record<'province' | 'city' | 'county', Array<{ name: string }>>>;
+}
+
 declare function AddressParse(address: string, options?: AddressParseOptions): AddressParseResult;
 
 declare namespace AddressParse {
@@ -27,6 +39,13 @@ declare namespace AddressParse {
   function createParser(): {
     parse(address: string, options?: AddressParseOptions): AddressParseResult;
   };
+  const INSTITUTION_PATTERN: RegExp;
+  function detectAreaPrefix(detail: string, options?: DetectAreaPrefixOptions): DetectAreaPrefixResult | null;
+  function isInstitutionAddress(
+    detail: string,
+    detected: DetectAreaPrefixResult,
+    options?: { customInstitutionKeywords?: string[] }
+  ): boolean;
 }
 
 export default AddressParse;

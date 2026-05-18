@@ -11,7 +11,12 @@ module.exports = {
         jest: true
     },
     extends: 'eslint:recommended',
+    parser: '@babel/eslint-parser',
     parserOptions: {
+        requireConfigFile: false,
+        babelOptions: {
+            plugins: ['@babel/plugin-syntax-import-attributes']
+        },
         ecmaVersion: 'latest',
         sourceType: 'module'
     },

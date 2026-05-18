@@ -1,23 +1,20 @@
 import AddressParser from './core/AddressParser.js';
 import { DATA_SOURCE } from './constants/config.js';
 import { DEFAULT_CN_DIVISION_MAPPING, STANDARD_MAPPING } from './constants/propertyMapping.js';
+import { detectAreaPrefix, isInstitutionAddress } from './utils/address-prefix.js';
+import { INSTITUTION_PATTERN } from './constants/institutionKeywords.js';
 
 let globalParser = null;
 
 const AddressParse = (address, options = {}) => {
-    try {
-        // 默认版本使用带编码解析器
-        if (!globalParser) {
-            // 如果options中包含propertyMapping，使用它创建新的解析器
-            const propertyMapping = options.propertyMapping || {};
-            globalParser = new AddressParser(propertyMapping);
-        }
-
-        const result = globalParser.parse(address, options);
-        return result;
-    } catch (error) {
-        throw error;
+    // 默认版本使用带编码解析器
+    if (!globalParser) {
+        // 如果options中包含propertyMapping，使用它创建新的解析器
+        const propertyMapping = options.propertyMapping || {};
+        globalParser = new AddressParser(propertyMapping);
     }
+
+    return globalParser.parse(address, options);
 };
 
 // 导出数据源常量供用户使用
@@ -34,4 +31,13 @@ AddressParse.createParser = (propertyMapping = {}) => {
     return new AddressParser(propertyMapping);
 };
 
+AddressParse.detectAreaPrefix = detectAreaPrefix;
+AddressParse.isInstitutionAddress = isInstitutionAddress;
+AddressParse.INSTITUTION_PATTERN = INSTITUTION_PATTERN;
+
+export {
+    detectAreaPrefix,
+    isInstitutionAddress,
+    INSTITUTION_PATTERN
+};
 export default AddressParse;

@@ -8,6 +8,9 @@ China's delivery address parse
 > v1.1.1 **Breaking change**：`provinceCode`、`cityCode`、`countyCode` 类型由 `number` 改为 `string`（如 `'11'`、`'1101'`、`'110105'`）。
 > v1.2.0 升级 `cn-division@2026.0.0`，新增 `nocode` 独立入口（支持 `china-address-parse/nocode`）以减少打包体积，优化多版本构建导出。
 > v1.2.1 新增分机号解析支持（支持从地址提取 `电话-分机号` 格式，并可通过 `telExtensionIn` 选项配置分机号默认追加到姓名和地址末尾）。
+> v1.2.2 新增详细地址省市区前缀检测和机构名识别 API。
+> v1.2.3 使用预编译正则优化机构名识别。
+> v1.2.5 公开机构名识别正则 `INSTITUTION_PATTERN`。
 
 ## Preview
 [Test page](https://kk-418.github.io/china-address-parse/)
@@ -33,6 +36,37 @@ type GovData = {
     provinceCode?: string;
     cityCode?: string;
     name: string;
+}
+```
+
+### Prefix Detection
+
+`detectAreaPrefix` 只检测详细地址开头的省市区前缀，不提取姓名、电话或邮编；`isInstitutionAddress` 用于判断识别出的前缀是否属于机构名的一部分。
+
+```js
+import AddressParse from 'china-address-parse'
+
+const detected = AddressParse.detectAreaPrefix('广东省广州市天河区天河路1号')
+// { province: '广东省', city: '广州市', county: '天河区', matchedRaw: '广东省广州市天河区', remaining: '天河路1号' }
+
+const shortName = AddressParse.detectAreaPrefix('广东广州天河天河路1号')
+// { province: '广东省', city: '广州市', county: '天河区', matchedRaw: '广东广州天河', remaining: '天河路1号' }
+
+const institution = AddressParse.detectAreaPrefix('广东省人民医院东风路1号')
+AddressParse.isInstitutionAddress('广东省人民医院东风路1号', institution)
+// true
+```
+
+```ts
+type DetectAreaPrefixResult = {
+    province?: string;
+    city?: string;
+    county?: string;
+    matchedRaw: string;
+    remaining: string;
+    provinceCode?: string;
+    cityCode?: string;
+    countyCode?: string;
 }
 ```
 

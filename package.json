@@ -1,6 +1,6 @@
 {
   "name": "china-address-parse",
-  "version": "1.2.1",
+  "version": "1.2.5",
   "description": "chinese address parse",
   "author": "kk",
   "license": "MIT",
@@ -49,14 +49,15 @@
     }
   },
   "devDependencies": {
-    "cn-division": "2026.0.0",
     "@babel/cli": "^7.28.3",
     "@babel/core": "^7.28.4",
+    "@babel/eslint-parser": "^7.28.6",
     "@babel/node": "^7.28.0",
     "@babel/preset-env": "^7.28.3",
     "babel-loader": "^9.2.0",
     "cheerio": "^1.0.0-rc.3",
     "clean-webpack-plugin": "^4.0.0",
+    "cn-division": "2026.0.0",
     "core-js": "^3.45.1",
     "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",
