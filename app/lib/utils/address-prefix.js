@@ -7,6 +7,7 @@ import DataManagerCode from '../core/DataManagerCode.js';
 import DataManagerNoCode from '../core/DataManagerNoCode.js';
 import { DATA_SOURCE } from '../constants/config.js';
 import { INSTITUTION_PATTERN } from '../constants/institutionKeywords.js';
+import { isValidRegionPrefixMatch } from './region-boundary.js';
 
 const AREA_SUFFIXES = [
     '特别行政区',
@@ -138,6 +139,10 @@ function findBestMatch(text, pos, nodes) {
 
         for (const variant of createNameVariants(node.name)) {
             if (!variant || !text.startsWith(variant, pos)) {
+                continue;
+            }
+
+            if (!isValidRegionPrefixMatch(text, pos, variant.length, node.name)) {
                 continue;
             }
 

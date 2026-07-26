@@ -172,4 +172,22 @@ describe(`---${versionName} 分机号解析测试---`, () => {
         expect(result.telExtension).toEqual('');
         expect(result.name).toEqual('张三');
     });
+
+    test('道路名不能被误识别为省份', () => {
+        const result = zhAddressParse('北京路二胶厂三区北院', { mode: 1 });
+
+        expect(result.provinceName).toEqual('');
+        expect(result.cityName).toEqual('');
+        expect(result.countyName).toEqual('');
+        expect(result.address).toEqual('北京路二胶厂三区北院');
+    });
+
+    test('完整行政区前缀后的道路名保持不变', () => {
+        const result = zhAddressParse('河南省南阳市卧龙区北京路二胶厂三区北院', { mode: 1 });
+
+        expect(result.provinceName).toEqual('河南省');
+        expect(result.cityName).toEqual('南阳市');
+        expect(result.countyName).toEqual('卧龙区');
+        expect(result.address).toEqual('北京路二胶厂三区北院');
+    });
 })

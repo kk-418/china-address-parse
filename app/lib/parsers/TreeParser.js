@@ -6,6 +6,7 @@
 import BaseParser from './BaseParser.js';
 import { SINGLE_WORD_CITIES } from '../constants/keywords.js';
 import { escapeRegExp, buildRepeatedPaths } from '../utils/cleaner.js';
+import { isValidRegionPrefixMatch } from '../utils/region-boundary.js';
 
 class TreeParser extends BaseParser {
     /**
@@ -91,7 +92,7 @@ class TreeParser extends BaseParser {
 
             for (let i = name.length; i > 1; i--) {
                 const temp = name.substring(0, i);
-                if (fragment.indexOf(temp) === 0) {
+                if (fragment.indexOf(temp) === 0 && isValidRegionPrefixMatch(fragment, 0, temp.length, name)) {
                     this.logger.log('省份关键字:', temp);
                     replaceName = temp;
                     break;
@@ -136,7 +137,7 @@ class TreeParser extends BaseParser {
             const minMatchLength = SINGLE_WORD_CITIES.includes(name) ? 1 : 2;
             for (let i = name.length; i >= minMatchLength; i--) {
                 const temp = name.substring(0, i);
-                if (fragment.indexOf(temp) === 0) {
+                if (fragment.indexOf(temp) === 0 && isValidRegionPrefixMatch(fragment, 0, temp.length, name)) {
                     this.logger.log('市信息关键字:', temp);
                     replaceName = temp;
                     break;
@@ -264,7 +265,7 @@ class TreeParser extends BaseParser {
 
             for (let i = name.length; i > 1; i--) {
                 const temp = name.substring(0, i);
-                if (fragment.indexOf(temp) === 0) {
+                if (fragment.indexOf(temp) === 0 && isValidRegionPrefixMatch(fragment, 0, temp.length, name)) {
                     const score = i;
 
                     // 完全匹配，直接返回

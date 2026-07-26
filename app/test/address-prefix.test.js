@@ -52,6 +52,11 @@ describe(`---${versionName} detectAreaPrefix---`, () => {
         expect(detectAreaPrefix('天河路1号')).toBeNull();
     });
 
+    test('地名简称后紧跟道路后缀不识别为行政区前缀', () => {
+        expect(detectAreaPrefix('北京路二胶厂三区北院')).toBeNull();
+        expect(detectAreaPrefix('南阳路1号')).toBeNull();
+    });
+
     test('省市区只在中间出现，不算前缀', () => {
         expect(detectAreaPrefix('天河路1号广东省人民医院旁边')).toBeNull();
     });
