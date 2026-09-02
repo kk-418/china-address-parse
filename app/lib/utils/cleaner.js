@@ -116,6 +116,19 @@ export function cleanAddress(address, textFilter = []) {
     return address.trim();
 }
 
+const PROVINCIAL_DIRECT_PLACEHOLDER = /^省直辖县级行政(单位|区划)/;
+
+/**
+ * 去掉历史「省直辖县级行政区划/单位」占位。
+ * 2026.0.1 起这些点已是真实市名（济源市、仙桃市），旧地址文本里仍可能带着占位词。
+ */
+export function stripProvincialDirectPlaceholder(fragment) {
+    if (!fragment || typeof fragment !== 'string') {
+        return fragment;
+    }
+    return fragment.replace(PROVINCIAL_DIRECT_PLACEHOLDER, '');
+}
+
 /**
  * 清洗无用词组
  * @param {Array<string>} words - 词组数组

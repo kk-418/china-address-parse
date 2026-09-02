@@ -1,6 +1,6 @@
 {
   "name": "china-address-parse",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "chinese address parse",
   "author": "kk",
   "license": "MIT",
@@ -57,7 +57,7 @@
     "babel-loader": "^9.2.0",
     "cheerio": "^1.0.0-rc.3",
     "clean-webpack-plugin": "^4.0.0",
-    "cn-division": "2026.0.0",
+    "cn-division": "2026.0.1",
     "core-js": "^3.45.1",
     "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",

@@ -5,7 +5,7 @@
 
 import BaseParser from './BaseParser.js';
 import { SINGLE_WORD_CITIES } from '../constants/keywords.js';
-import { escapeRegExp, buildRepeatedPaths } from '../utils/cleaner.js';
+import { escapeRegExp, buildRepeatedPaths, stripProvincialDirectPlaceholder } from '../utils/cleaner.js';
 import { isValidRegionPrefixMatch } from '../utils/region-boundary.js';
 
 class TreeParser extends BaseParser {
@@ -40,6 +40,9 @@ class TreeParser extends BaseParser {
             if (cityResult.city) {
                 city = [cityResult.city];
                 fragment = cityResult.fragment;
+                if (!province.length && cityResult.province) {
+                    province = [cityResult.province];
+                }
             } else if (cityResult.fragment !== fragment) {
                 // 处理单字城市的情况
                 fragment = cityResult.fragment;
@@ -59,6 +62,11 @@ class TreeParser extends BaseParser {
             }
             if (!city.length && countyResult.city) {
                 city = [countyResult.city];
+            }
+        } else if (city[0]) {
+            const sameNameCounty = this._findSameNameCounty(city[0], province[0]);
+            if (sameNameCounty) {
+                county = [sameNameCounty];
             }
         }
 
@@ -118,6 +126,8 @@ class TreeParser extends BaseParser {
         if (!fragment || typeof fragment !== 'string') {
             return { fragment: '', city: null };
         }
+
+        fragment = stripProvincialDirectPlaceholder(fragment);
 
         for (const tempCity of this.cities) {
             const { name, provinceCode } = tempCity;
@@ -218,6 +228,8 @@ class TreeParser extends BaseParser {
         if (!fragment || typeof fragment !== 'string') {
             return { fragment: '', county: null };
         }
+
+        fragment = stripProvincialDirectPlaceholder(fragment);
 
         if (!currentProvince && !currentCity) {
             // 没有省市信息，直接匹配完整县级行政区名
@@ -342,6 +354,29 @@ class TreeParser extends BaseParser {
         }
 
         return { fragment, county: null };
+    }
+
+    /**
+     * 省直辖县级市在 2026.0.1 起是「市名 / 同名区县」。
+     * 文本里往往只写到市，补上唯一同名区县，避免省市区缺第三级。
+     */
+    _findSameNameCounty(currentCity, currentProvince) {
+        if (!currentCity?.name) {
+            return null;
+        }
+
+        return this.counties.find(county => {
+            if (county.name !== currentCity.name) {
+                return false;
+            }
+            if (currentCity.code && county.cityCode) {
+                return String(county.cityCode) === String(currentCity.code);
+            }
+            if (county.cityName !== currentCity.name) {
+                return false;
+            }
+            return !currentProvince || !county.provinceName || county.provinceName === currentProvince.name;
+        }) || null;
     }
 
     /**

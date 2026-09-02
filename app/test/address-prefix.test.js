@@ -57,6 +57,26 @@ describe(`---${versionName} detectAreaPrefix---`, () => {
         expect(detectAreaPrefix('南阳路1号')).toBeNull();
     });
 
+    test('地名简称后紧跟大学或学院不识别为行政区前缀', () => {
+        expect(detectAreaPrefix('山东大学')).toBeNull();
+        expect(detectAreaPrefix('北京大学')).toBeNull();
+        expect(detectAreaPrefix('长沙学院西门')).toBeNull();
+    });
+
+    test('地名加修饰的大学不识别为行政区前缀', () => {
+        expect(detectAreaPrefix('长沙理工大学云塘校区')).toBeNull();
+        expect(detectAreaPrefix('山东师范大学长清湖校区')).toBeNull();
+    });
+
+    test('完整行政区名称后的大学仍识别前缀', () => {
+        expect(detectAreaPrefix('湖南省长沙市岳麓区湖南大学')).toMatchObject({
+            province: '湖南省',
+            city: '长沙市',
+            county: '岳麓区',
+            remaining: '湖南大学'
+        });
+    });
+
     test('省市区只在中间出现，不算前缀', () => {
         expect(detectAreaPrefix('天河路1号广东省人民医院旁边')).toBeNull();
     });

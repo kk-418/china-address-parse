@@ -190,4 +190,53 @@ describe(`---${versionName} 分机号解析测试---`, () => {
         expect(result.countyName).toEqual('卧龙区');
         expect(result.address).toEqual('北京路二胶厂三区北院');
     });
+
+    test('市命中后回填所属省，后段校名不能改写成别的省', () => {
+        const result = zhAddressParse('长沙市 山东大学', { mode: 1 });
+
+        expect(result.provinceName).toEqual('湖南省');
+        expect(result.cityName).toEqual('长沙市');
+        expect(result.address).toContain('山东大学');
+    });
+
+    test('只有市名时也要从市回填省', () => {
+        const result = zhAddressParse('长沙市解放西路1号', { mode: 1 });
+
+        expect(result.provinceName).toEqual('湖南省');
+        expect(result.cityName).toEqual('长沙市');
+        expect(result.address).toEqual('解放西路1号');
+    });
+
+    test('后段省与已命中市一致时允许补省', () => {
+        const result = zhAddressParse('青岛市 山东省', { mode: 1 });
+
+        expect(result.provinceName).toEqual('山东省');
+        expect(result.cityName).toEqual('青岛市');
+    });
+
+    test('带区县时校名留在详细地址', () => {
+        const result = zhAddressParse('长沙市芙蓉区 山东大学', { mode: 1 });
+
+        expect(result.provinceName).toEqual('湖南省');
+        expect(result.cityName).toEqual('长沙市');
+        expect(result.countyName).toEqual('芙蓉区');
+        expect(result.address).toContain('山东大学');
+    });
+
+    test('地名加修饰的大学不能识别成市', () => {
+        const result = zhAddressParse('长沙理工大学云塘校区', { mode: 1 });
+
+        expect(result.provinceName).toEqual('');
+        expect(result.cityName).toEqual('');
+        expect(result.address).toEqual('长沙理工大学云塘校区');
+    });
+
+    test('完整省市区后的理工大学保持为详细地址', () => {
+        const result = zhAddressParse('湖南省长沙市岳麓区麓山南路湖南大学', { mode: 1 });
+
+        expect(result.provinceName).toEqual('湖南省');
+        expect(result.cityName).toEqual('长沙市');
+        expect(result.countyName).toEqual('岳麓区');
+        expect(result.address).toContain('湖南大学');
+    });
 })
