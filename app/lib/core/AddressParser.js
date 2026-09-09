@@ -66,6 +66,10 @@ class AddressParser extends BaseAddressParser {
         result.cityCode = cityCode;
         result.countyCode = countyCode;
 
+        if (parseResult.notices?.length) {
+            result.notices = parseResult.notices;
+        }
+
         // telExtensionIn 选项处理：将分机号以 [分机号] 格式追加到指定位置
         if (parseResult.telExtension) {
             const ext = `[${parseResult.telExtension}]`;

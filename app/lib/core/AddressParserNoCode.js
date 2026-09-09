@@ -111,7 +111,9 @@ class AddressParserNoCode extends BaseAddressParser {
             postalCode: parseResult.postalCode || ''
         };
 
-        // 不带编码版本不包含编码字段
+        if (parseResult.notices?.length) {
+            result.notices = parseResult.notices;
+        }
 
         // telExtensionIn 选项处理：将分机号以 [分机号] 格式追加到指定位置
         if (parseResult.telExtension) {

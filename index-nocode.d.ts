@@ -1,3 +1,11 @@
+export interface ParseNotice {
+  type: 'division-renamed';
+  from: { province?: string; city?: string; county: string };
+  to: { province: string; city: string; county: string };
+  message: string;
+  autoApplied: true;
+}
+
 export interface AddressParseResult {
   provinceName: string;
   cityName: string;
@@ -7,6 +15,7 @@ export interface AddressParseResult {
   telNumber: string;
   telExtension: string;
   postalCode: string;
+  notices?: ParseNotice[];
 }
 
 export interface AddressParseOptions {

@@ -8,6 +8,7 @@ import DataManagerNoCode from '../core/DataManagerNoCode.js';
 import { DATA_SOURCE } from '../constants/config.js';
 import { INSTITUTION_PATTERN } from '../constants/institutionKeywords.js';
 import { isValidRegionPrefixMatch } from './region-boundary.js';
+import { applyDivisionAliasToPrefix } from './division-alias.js';
 
 const AREA_SUFFIXES = [
     '特别行政区',
@@ -292,7 +293,7 @@ export function detectAreaPrefix(detail, options = {}) {
         return null;
     }
 
-    return createResult(matches, normalizedDetail, matches.includeCode);
+    return applyDivisionAliasToPrefix(createResult(matches, normalizedDetail, matches.includeCode));
 }
 
 export function isInstitutionAddress(detail, detected, options = {}) {

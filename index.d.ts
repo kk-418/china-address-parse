@@ -3,6 +3,14 @@ export = zhAddressParse;
 declare function zhAddressParse(address: string, option?: zhAddressParse.OptionType): zhAddressParse.ParseResult;
 
 declare namespace zhAddressParse {
+    export type ParseNotice = {
+        type: 'division-renamed';
+        from: { province?: string; city?: string; county: string };
+        to: { province: string; city: string; county: string };
+        message: string;
+        autoApplied: true;
+    }
+
     export type ParseResult = {
         provinceName: string;
         cityName: string;
@@ -15,6 +23,7 @@ declare namespace zhAddressParse {
         provinceCode?: string;
         cityCode?: string;
         countyCode?: string;
+        notices?: ParseNotice[];
     }
 
     export type GovData = {

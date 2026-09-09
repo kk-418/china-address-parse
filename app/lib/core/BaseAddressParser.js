@@ -13,6 +13,7 @@ import { absolutelyNotName } from '../utils/validator.js';
 import { SPECIAL_CHARS_PATTERN, PARENTHESES_PATTERN } from '../constants/patterns.js';
 import { DEFAULT_OPTIONS } from '../constants/config.js';
 import { getMergedNameTitles, getMergedAddressCleanKeywords } from '../constants/keywords.js';
+import { applyDivisionAliases } from '../utils/division-alias.js';
 
 class BaseAddressParser {
     constructor(dataManager) {
@@ -127,8 +128,11 @@ class BaseAddressParser {
         this.logger.timeEnd('解析耗时');
         this.logger.log('最终解析结果:', parseResult);
 
+        const aliased = applyDivisionAliases(parseResult, this.dataManager);
+        this.logger.log('区划别名改写后:', aliased);
+
         // 8. 格式化输出结果
-        return this._formatResult(parseResult, config);
+        return this._formatResult(aliased, config);
     }
 
     /**
