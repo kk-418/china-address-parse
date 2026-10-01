@@ -142,6 +142,39 @@ describe(`---${versionName} 分机号解析测试---`, () => {
         expect(result.address).toEqual('盖山填茂帝封江1区[3060]');
     });
 
+    test('详细地址开头的单独加号挪到末尾，后半段省市区留在原处', () => {
+        const address = 'xx，13186844346，河北省唐山市路南区+浙江省台州市临海市大洋街道张洋路桂雨江南府';
+        const result = zhAddressParse(address, {
+            type: 0,
+            textFilter: ['收货人', '联系人', '电话', '收件人', '姓名'],
+            nameMaxLength: 5,
+            mode: 1,
+        });
+
+        expect(result.name).toEqual('xx');
+        expect(result.telNumber).toEqual('13186844346');
+        expect(result.provinceName).toEqual('河北省');
+        expect(result.cityName).toEqual('唐山市');
+        expect(result.countyName).toEqual('路南区');
+        expect(result.address).toEqual('浙江省台州市临海市大洋街道张洋路桂雨江南府+');
+    });
+
+    test('详细地址开头的特殊字符加纯数字挪到末尾', () => {
+        const result = zhAddressParse('#10086浙江省杭州市西湖区文三路100号', { nameMaxLength: 5 });
+
+        expect(result.provinceName).toEqual('浙江省');
+        expect(result.cityName).toEqual('杭州市');
+        expect(result.countyName).toEqual('西湖区');
+        expect(result.address.startsWith('文三路')).toEqual(true);
+        expect(result.address.endsWith('#10086')).toEqual(true);
+    });
+
+    test('详细地址中间的加号保持原位', () => {
+        const result = zhAddressParse('张三 13800138000 浙江省杭州市西湖区文三路+100号', { nameMaxLength: 5 });
+
+        expect(result.address).toEqual('文三路+100号');
+    });
+
     test('telExtensionIn=address 仅追加到地址末尾', () => {
         const address = '王先生，13186844346-3060， 福建省福州市仓山区盖山填茂帝封江1区';
         const result = zhAddressParse(address, { telExtensionIn: 'address' });

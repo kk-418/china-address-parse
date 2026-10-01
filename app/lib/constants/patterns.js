@@ -25,8 +25,17 @@ export const CITY_PATTERN_TEMPLATE = (str, provinceCode) =>
 export const COUNTY_PATTERN_TEMPLATE = (str, cityCode, provinceCode) =>
     new RegExp(`{"code":([0-9]{6}|[0-9]{9}),"name":"${str}[\u4E00-\u9FA5]*?","cityCode":${cityCode || '[0-9]{4}'},"provinceCode":${provinceCode || '[0-9]{2}'}}`, 'g');
 
-// 特殊字符正则
+// 特殊字符正则。+ 不在这里删除，留给详细地址开头记号搬移。
 export const SPECIAL_CHARS_PATTERN = /[`~!@#$^&*=|{}':;,.<>/?！￥…—【】'；：""'。，、？☎]/g;
+
+// 可挪到详细地址末尾的记号字符。不含逗号、句号、分号、冒号，那些仍是字段分隔符。
+const MARK_CHAR_CLASS = '`~!@#$^&*=+|{}<>/?！￥…—【】\'"？☎';
+
+// 详细地址开头的记号：一个或多个记号字符，后面可以紧跟纯数字。
+export const LEADING_MARK_PATTERN = new RegExp('^[' + MARK_CHAR_CLASS + ']+\\d*');
+
+// 文中的「记号字符 + 纯数字」。清洗特殊字符前先占位，避免 #10086 丢掉 #。
+export const MARK_WITH_DIGITS_PATTERN = new RegExp('[' + MARK_CHAR_CLASS + ']+\\d+', 'g');
 
 // 括号正则
 export const PARENTHESES_PATTERN = /[[\]（） ()]/g;

@@ -3,7 +3,7 @@
  * @author kk
  */
 
-import { SPECIAL_CHARS_PATTERN, PARENTHESES_PATTERN, USELESS_WORDS_PATTERN } from '../constants/patterns.js';
+import { LEADING_MARK_PATTERN, MARK_WITH_DIGITS_PATTERN, PARENTHESES_PATTERN, SPECIAL_CHARS_PATTERN, USELESS_WORDS_PATTERN } from '../constants/patterns.js';
 import { ADDRESS_CLEAN_KEYWORDS } from '../constants/keywords.js';
 
 /**
@@ -114,6 +114,72 @@ export function cleanAddress(address, textFilter = []) {
     address = address.replace(/ {2,}/g, ' ');
 
     return address.trim();
+}
+
+const MARK_PLACEHOLDER = '\u0000';
+
+/**
+ * 清洗前先收起「特殊字符 + 纯数字」和单独的 +。
+ * 特殊字符清洗会把 #10086 里的 # 换成空格，这里先占位，洗完再还原。
+ * @param {string} address
+ * @returns {{ address: string, marks: string[] }}
+ */
+export function protectLeadingMarks(address) {
+    if (!address) return { address: '', marks: [] };
+
+    const marks = [];
+    // 段首或汉字后的「特殊字符+纯数字」先占位。紧挨数字的门牌记号（7#1104）仍清掉。
+    const markWithDigits = new RegExp('(^|[^0-9A-Za-z])(' + MARK_WITH_DIGITS_PATTERN.source + ')', 'g');
+    const protectedAddress = address.replace(markWithDigits, (full, lead, mark) => {
+        marks.push(mark);
+        return lead + MARK_PLACEHOLDER;
+    });
+
+    return { address: protectedAddress, marks };
+}
+
+/**
+ * 把占位符还原成保护前的记号。
+ * @param {string} address
+ * @param {string[]} marks
+ * @returns {string}
+ */
+export function restoreLeadingMarks(address, marks = []) {
+    if (!address || marks.length === 0) return address || '';
+
+    let index = 0;
+    return address.replace(new RegExp(MARK_PLACEHOLDER, 'g'), () => marks[index++] || '');
+}
+
+/**
+ * 详细地址以特殊字符（可带纯数字）开头时，把这段挪到末尾。
+ * 「文三路+100号」这类中间记号保持不动。
+ * @param {string} address
+ * @returns {string}
+ */
+export function moveLeadingMarkToTail(address) {
+    if (!address) return '';
+
+    const match = address.match(LEADING_MARK_PATTERN);
+    if (!match || !match[0]) return address;
+
+    const mark = match[0];
+    const rest = address.slice(mark.length).trim();
+    if (!rest) return address;
+
+    return `${rest}${mark}`;
+}
+
+/**
+ * 合并详细地址，并把整段开头摘下的记号接到末尾。
+ * @param {string[]} detail
+ * @param {string} [leadingMark]
+ * @returns {string}
+ */
+export function appendLeadingMark(detail, leadingMark = '') {
+    const address = moveLeadingMarkToTail((detail || []).join('').trim());
+    if (!leadingMark) return address;
+    return `${address}${leadingMark}`;
 }
 
 const PROVINCIAL_DIRECT_PLACEHOLDER = /^省直辖县级行政(单位|区划)/;

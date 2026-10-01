@@ -10,7 +10,8 @@ import NameExtractor from '../extractors/NameExtractor.js';
 import TreeParser from '../parsers/TreeParser.js';
 import Logger from '../utils/logger.js';
 import { absolutelyNotName } from '../utils/validator.js';
-import { SPECIAL_CHARS_PATTERN, PARENTHESES_PATTERN } from '../constants/patterns.js';
+import { LEADING_MARK_PATTERN, PARENTHESES_PATTERN, SPECIAL_CHARS_PATTERN } from '../constants/patterns.js';
+import { protectLeadingMarks, restoreLeadingMarks } from '../utils/cleaner.js';
 import { DEFAULT_OPTIONS } from '../constants/config.js';
 import { getMergedNameTitles, getMergedAddressCleanKeywords } from '../constants/keywords.js';
 import { applyDivisionAliases } from '../utils/division-alias.js';
@@ -84,6 +85,13 @@ class BaseAddressParser {
         address = postalResult.address;
         parseResult.postalCode = postalResult.postalCode;
         this.logger.log('提取邮编后:', address);
+
+        // 省市区匹配要求片段从行政区开头。整段开头的 + 或「特殊字符+纯数字」先摘下，最后接到详细地址末尾。
+        const leadingMark = address.match(LEADING_MARK_PATTERN);
+        if (leadingMark && leadingMark[0] && address.slice(leadingMark[0].length).trim()) {
+            parseResult.leadingMark = leadingMark[0];
+            address = address.slice(leadingMark[0].length).trim();
+        }
 
         // 4. 分割地址
         const splitAddress = address.split(' ').filter(item => item).map(item => item.trim());
@@ -191,8 +199,13 @@ class BaseAddressParser {
             address = address.replace(new RegExp(filter, 'g'), ' ');
         });
 
+        const protectedMarks = protectLeadingMarks(address);
+        address = protectedMarks.address;
+
         // 去除特殊字符
         address = address.replace(SPECIAL_CHARS_PATTERN, ' ');
+
+        address = restoreLeadingMarks(address, protectedMarks.marks);
 
         // 多个空格替换为一个
         address = address.replace(/ {2,}/g, ' ');

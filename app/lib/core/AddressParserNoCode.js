@@ -6,7 +6,7 @@
 
 import DataManagerNoCode from './DataManagerNoCode.js';
 import BaseAddressParser from './BaseAddressParser.js';
-import { cleanUselessWords } from '../utils/cleaner.js';
+import { appendLeadingMark, cleanUselessWords } from '../utils/cleaner.js';
 import { RUN_MODE } from '../constants/config.js';
 
 class AddressParserNoCode extends BaseAddressParser {
@@ -87,8 +87,8 @@ class AddressParserNoCode extends BaseAddressParser {
         detail = Array.from(new Set(detail));
         detail = cleanUselessWords(detail, provinceName, config.mergedAddressCleanKeywords);
 
-        // 将detail数组合并为地址字符串
-        const address = detail.join('').trim();
+        // 将detail数组合并为地址字符串。开头的 + 或「特殊字符+纯数字」挪到末尾。
+        const address = appendLeadingMark(detail, parseResult.leadingMark);
 
         // 特殊城市名称映射：省直辖县级行政区划 -> 省直辖县级行政单位
         if (cityName === '省直辖县级行政区划') {

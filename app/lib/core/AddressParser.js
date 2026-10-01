@@ -5,7 +5,7 @@
 
 import DataManagerCode from './DataManagerCode.js';
 import BaseAddressParser from './BaseAddressParser.js';
-import { cleanUselessWords, removeRepeatedRegions } from '../utils/cleaner.js';
+import { appendLeadingMark, cleanUselessWords, removeRepeatedRegions } from '../utils/cleaner.js';
 import { RUN_MODE } from '../constants/config.js';
 
 class AddressParser extends BaseAddressParser {
@@ -57,7 +57,7 @@ class AddressParser extends BaseAddressParser {
             provinceName: provinceName,
             cityName: cityName,
             countyName: countyName,
-            address: (detail && detail.length > 0 && detail.join('')) || '',
+            address: appendLeadingMark(detail, parseResult.leadingMark),
             postalCode: parseResult.postalCode || ''
         };
 
